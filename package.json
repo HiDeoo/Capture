@@ -8,7 +8,7 @@
   "main": "build/main",
   "homepage": ".",
   "scripts": {
-    "start": "concurrently -n rend,main \"BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && yarn build:main && electron .\"",
+    "start": "concurrently -k -n rend,main \"BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && yarn build:main && electron .\"",
     "build": "yarn build:renderer && yarn build:main",
     "build:main": "tsc -p src/main",
     "build:renderer": "react-scripts build",
