@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "description": "Capture & share screenshots easily",
   "author": "HiDeoo",
+  "license": "MIT",
   "private": true,
   "main": "build/main",
   "homepage": ".",
   "scripts": {
-    "start": "concurrently \"BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && yarn build:main && electron .\"",
+    "start": "concurrently -n rend,main \"BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && yarn build:main && electron .\"",
     "build": "yarn build:renderer && yarn build:main",
     "build:main": "tsc -p src/main",
     "build:renderer": "react-scripts build",
@@ -62,18 +63,9 @@
       "plugin:prettier/recommended"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    "Electron 9.0.4"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -81,5 +73,17 @@
   },
   "lint-staged": {
     "*.{ts,tsx,md}": "prettier --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiDeoo/capture"
+  },
+  "keywords": [
+    "screenshot",
+    "capture",
+    "share"
+  ],
+  "bugs": {
+    "url": "https://github.com/HiDeoo/capture/issues"
   }
 }
