@@ -1,28 +1,66 @@
 {
   "name": "capture",
   "version": "0.1.0",
+  "description": "Capture & share screenshots easily",
+  "author": "HiDeoo",
   "private": true,
+  "main": "build/main",
+  "homepage": ".",
+  "scripts": {
+    "start": "concurrently \"BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && yarn build:main && electron .\"",
+    "build": "yarn build:renderer && yarn build:main",
+    "build:main": "tsc -p src/main",
+    "build:renderer": "react-scripts build",
+    "lint": "eslint --max-warnings=0 --ext ts,tsx src && tsc --noEmit",
+    "dist": "yarn dist:mac",
+    "dist:mac": "electron-builder -m -c.mac.identity=null",
+    "predist:mac": "yarn build"
+  },
+  "build": {
+    "appId": "com.hideoo.capture",
+    "productName": "Capture",
+    "copyright": "Copyright © 2020 HiDeoo",
+    "extends": null,
+    "files": [
+      "build/**/*",
+      "!build/precache-manifest.*.js",
+      "!build/service-worker.js"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dir",
+      "darkModeSupport": true
+    }
+  },
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
+    "electron-is-dev": "1.2.0"
+  },
+  "devDependencies": {
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "concurrently": "5.2.0",
+    "electron": "9.0.4",
+    "electron-builder": "22.7.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "husky": ">=4",
+    "lint-staged": ">=10",
+    "prettier": "2.0.5",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "react-scripts": "3.4.1",
-    "typescript": "~3.7.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "typescript": "3.9.5",
+    "wait-on": "5.0.1"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "plugin:prettier/recommended"
+    ]
   },
   "browserslist": {
     "production": [
@@ -35,5 +73,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,md}": "prettier --write"
   }
 }
