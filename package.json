@@ -59,12 +59,6 @@
     "typescript": "3.9.5",
     "wait-on": "5.0.1"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "plugin:prettier/recommended"
-    ]
-  },
   "browserslist": [
     "Electron 9.0.4"
   ],
@@ -87,5 +81,14 @@
   ],
   "bugs": {
     "url": "https://github.com/HiDeoo/capture/issues"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "no-shadow": "error"
+    }
   }
 }

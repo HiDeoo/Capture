@@ -1,24 +1,32 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
-/**
- * Main browser window.
- */
-let browserWindow: BrowserWindow | null = null
+import { createTray } from './tray'
 
 /**
- * Create the main browser window.
+ * Main browser window instance.
  */
-function createBrowserWindow() {
-  // Create the main window.
-  browserWindow = new BrowserWindow({
+let mainWindow: BrowserWindow | null = null
+
+/**
+ * Application tray instance.
+ */
+let appTray: Tray | null
+
+/**
+ * Creates the main window.
+ */
+function createMainWindow() {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
     height: 600,
+    show: false,
     width: 800,
   })
 
   // Load the renderer application.
-  browserWindow.loadURL(isDev ? 'http://localhost:3000/index.html' : `file://${__dirname}/../index.html`)
+  mainWindow.loadURL(isDev ? 'http://localhost:3000/index.html' : `file://${path.join(__dirname, '..', 'index.html')}`)
 
   if (isDev) {
     // Enable reloading of the main process in dev mode.
@@ -29,16 +37,30 @@ function createBrowserWindow() {
     })
 
     // Open the devtools in dev mode.
-    browserWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
   }
 
-  /**
-   * Triggered when the window is closed.
-   */
-  browserWindow.on('closed', () => (browserWindow = null))
+  // Create the application tray.
+  appTray = createTray(mainWindow)
+
+  // Handle window lifecycle.
+  mainWindow.on('closed', onMainWindowClosed)
 }
+
+/**
+ * Triggered when the main window is closed.
+ */
+function onMainWindowClosed() {
+  appTray?.destroy()
+  appTray = null
+
+  mainWindow = null
+}
+
+// Hide the Dock icon.
+app.dock.hide()
 
 /**
  * Triggered when Electron has finished initializing.
  */
-app.on('ready', createBrowserWindow)
+app.on('ready', createMainWindow)
