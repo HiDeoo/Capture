@@ -15,6 +15,11 @@ let mainWindow: BrowserWindow | null = null
 let appTray: Tray | null
 
 /**
+ * Defines if the application is explicitely quitting (eg. Cmd+Q on macOS).
+ */
+let isApplicationQuitting = false
+
+/**
  * Creates the main window.
  */
 function createMainWindow() {
@@ -44,7 +49,23 @@ function createMainWindow() {
   appTray = createTray(mainWindow)
 
   // Handle window lifecycle.
+  mainWindow.on('close', onMainWindowClose)
   mainWindow.on('closed', onMainWindowClosed)
+}
+
+/**
+ * Triggered when the main window is is going to be closed.
+ * @param event The associated event
+ */
+function onMainWindowClose(event: Event) {
+  // Hide the window instead of closing it if we're not explicitely quitting.
+  if (!isApplicationQuitting) {
+    event.preventDefault()
+
+    if (mainWindow) {
+      mainWindow.hide()
+    }
+  }
 }
 
 /**
@@ -57,10 +78,18 @@ function onMainWindowClosed() {
   mainWindow = null
 }
 
+/**
+ * Triggered before the application starts closing its windows.
+ */
+function onBeforeQuit() {
+  isApplicationQuitting = true
+}
+
 // Hide the Dock icon.
 app.dock.hide()
 
 /**
- * Triggered when Electron has finished initializing.
+ * Handle application lifecycle.
  */
 app.on('ready', createMainWindow)
+app.on('before-quit', onBeforeQuit)
