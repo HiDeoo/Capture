@@ -22,7 +22,7 @@ export function createTray(window: BrowserWindow): Tray {
  * Triggered when the tray icon is clicked.
  * @param window The window associated to the tray.
  */
-function onClickTray(window: BrowserWindow) {
+function onClickTray(window: BrowserWindow): void {
   if (window.isVisible()) {
     window.hide()
   } else {

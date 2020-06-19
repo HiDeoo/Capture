@@ -5,7 +5,7 @@ import path from 'path'
  * Returns the main window renderer application URI.
  * @return The render application URI.
  */
-export function getMainWindowRendererUri() {
+export function getMainWindowRendererUri(): string {
   return isDev ? 'http://localhost:3000/index.html' : `file://${path.join(__dirname, '..', 'index.html')}`
 }
 
@@ -14,7 +14,7 @@ export function getMainWindowRendererUri() {
  * Note: this binary should only be used in dev mode.
  * @return The path.
  */
-export function getElectronPrebuiltPath() {
+export function getElectronPrebuiltPath(): string {
   return path.join(__dirname, '..', '..', 'node_modules', '.bin', 'electron')
 }
 
@@ -23,7 +23,7 @@ export function getElectronPrebuiltPath() {
  * @param  image The image filename.
  * @return The image path.
  */
-export function getMainProcessImagePath(image: string) {
+export function getMainProcessImagePath(image: string): string {
   const extraSegments = isDev ? ['..', 'public'] : []
 
   return path.join(__dirname, '..', ...extraSegments, 'images', image)

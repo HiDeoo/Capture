@@ -3,7 +3,7 @@ import React from 'react'
 /**
  * App Component.
  */
-function App() {
+function App(): JSX.Element {
   return <div>Hello</div>
 }
 

@@ -2,8 +2,7 @@
   "extends": "./tsconfig.base",
   "compilerOptions": {
     "module": "esnext",
-    "noEmit": true,
-    "jsx": "react"
+    "noEmit": true
   },
   "include": ["src"]
 }
