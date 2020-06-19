@@ -1,5 +1,6 @@
 import { BrowserWindow, Tray } from 'electron'
-import path from 'path'
+
+import { getMainProcessImagePath } from './paths'
 
 /**
  * Creates a tray icon associated to a window.
@@ -7,7 +8,7 @@ import path from 'path'
  * @return The tray.
  */
 export function createTray(window: BrowserWindow): Tray {
-  const tray = new Tray(path.join(__dirname, '..', '..', 'assets', 'IconTemplate.png'))
+  const tray = new Tray(getMainProcessImagePath('iconTemplate.png'))
   tray.setIgnoreDoubleClickEvents(true)
 
   tray.on('click', () => {

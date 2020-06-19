@@ -1,8 +1,8 @@
 import { app, BrowserWindow, Tray } from 'electron'
 import isDev from 'electron-is-dev'
-import path from 'path'
 
 import { createTray } from './tray'
+import { getElectronPrebuiltPath, getMainWindowRendererUri } from './paths'
 
 /**
  * Main browser window instance.
@@ -31,12 +31,12 @@ function createMainWindow() {
   })
 
   // Load the renderer application.
-  mainWindow.loadURL(isDev ? 'http://localhost:3000/index.html' : `file://${path.join(__dirname, '..', 'index.html')}`)
+  mainWindow.loadURL(getMainWindowRendererUri())
 
   if (isDev) {
     // Enable reloading of the main process in dev mode.
     require('electron-reload')(__dirname, {
-      electron: path.join(__dirname, '..', '..', 'node_modules', '.bin', 'electron'),
+      electron: getElectronPrebuiltPath(),
       forceHardReset: true,
       hardResetMethod: 'exit',
     })
