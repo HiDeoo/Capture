@@ -20,7 +20,7 @@ export function getElectronPrebuiltPath(): string {
 
 /**
  * Returns the path to an image using by the main process.
- * @param  image The image filename.
+ * @param  image - The image filename.
  * @return The image path.
  */
 export function getMainProcessImagePath(image: string): string {

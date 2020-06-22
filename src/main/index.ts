@@ -1,5 +1,5 @@
 import { spawn } from 'child_process'
-import { app, BrowserWindow, globalShortcut, Tray } from 'electron'
+import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import type { NSFW } from 'nsfw'
 import path from 'path'
@@ -12,9 +12,10 @@ import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
 const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
 
 /**
- * Main browser window instance.
+ * Application browser window instances.
  */
 let mainWindow: BrowserWindow | null = null
+let screenshotWindow: BrowserWindow | null = null
 
 /**
  * Application tray instance.
@@ -32,15 +33,27 @@ let watcher: Optional<NSFW>
 let isApplicationQuitting = false
 
 /**
+ * Application browser window default options.
+ */
+const windowDefaultOptions: BrowserWindowConstructorOptions = {
+  show: false,
+}
+
+/**
  * Creates the main window.
  */
 async function createMainWindow(): Promise<void> {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    ...windowDefaultOptions,
     height: 600,
-    show: false,
     width: 800,
   })
+
+  // Handle window lifecycle.
+  mainWindow.on('close', (event: Electron.Event) => onMainWindowClose(mainWindow, event))
+  mainWindow.on('closed', onWindowClosed)
+  mainWindow.webContents.on('did-finish-load', onMainWindowLoaded)
 
   // Load the renderer application.
   await mainWindow.loadURL(getMainWindowRendererUri())
@@ -60,22 +73,22 @@ async function createMainWindow(): Promise<void> {
 
   // Create the application tray.
   appTray = createTray(mainWindow)
+}
+
+/**
+ * Creates the new screenshot window.
+ */
+function createScreenshotWindow(): void {
+  // Create the browser window.
+  screenshotWindow = new BrowserWindow({
+    ...windowDefaultOptions,
+    height: 1600,
+    width: 1800,
+  })
 
   // Handle window lifecycle.
-  mainWindow.on('close', onMainWindowClose)
-  mainWindow.on('closed', onMainWindowClosed)
-
-  try {
-    watcher = await installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
-      // TODO Do something ^^
-      console.log('Created file: ', createdFilePath)
-    })
-  } catch (error) {
-    // TODO Handle errors
-    console.log('error ', error)
-  }
-
-  registerGlobalShortcuts()
+  screenshotWindow.on('close', (event: Electron.Event) => onMainWindowClose(screenshotWindow, event))
+  screenshotWindow.on('closed', onWindowClosed)
 }
 
 /**
@@ -83,6 +96,7 @@ async function createMainWindow(): Promise<void> {
  */
 function registerGlobalShortcuts(): void {
   try {
+    // TODO Make shortcut customizable
     const shortcut = globalShortcut.register('Cmd+B', onScreenshotShortcut)
 
     if (!shortcut) {
@@ -98,7 +112,7 @@ function registerGlobalShortcuts(): void {
  * Triggered when the global screenshot shortcut is pressed.
  */
 function onScreenshotShortcut(): void {
-  // TODO Refactor
+  // TODO Refactor & extract (maybe extract all shortcuts code)
   const child = spawn('screencapture', ['-i', '-o', path.join(TMP_WORKING_DIRECTORY, 'test.png')])
 
   child.stdout.setEncoding('utf8')
@@ -117,27 +131,52 @@ function onScreenshotShortcut(): void {
 }
 
 /**
- * Triggered when the main window is is going to be closed.
- * @param event The associated event
+ * Triggered when the main window webview has loaded its content.
  */
-function onMainWindowClose(event: Event): void {
+async function onMainWindowLoaded(): Promise<void> {
+  try {
+    // Add a file watcher to detect new screenshots.
+    watcher = await installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
+      // TODO Do something ^^
+      // TODO Extract fn
+      console.log('Created file: ', createdFilePath)
+    })
+  } catch (error) {
+    // TODO Handle errors
+    console.log('error ', error)
+  }
+
+  // Create the window used to handle new screenshots.
+  createScreenshotWindow()
+
+  // Register global shrotcuts.
+  registerGlobalShortcuts()
+}
+
+/**
+ * Triggered when a window is going to be closed.
+ * @param window - The associated window.
+ * @param event - The associated event
+ */
+function onMainWindowClose(window: BrowserWindow | null, event: Electron.Event): void {
   // Hide the window instead of closing it if we're not explicitely quitting.
   if (!isApplicationQuitting) {
     event.preventDefault()
 
-    if (mainWindow) {
-      mainWindow.hide()
+    if (window) {
+      window.hide()
     }
   }
 }
 
 /**
- * Triggered when the main window is closed.
+ * Triggered when a window is closed.
  */
-function onMainWindowClosed(): void {
+function onWindowClosed(): void {
   appTray?.destroy()
   appTray = null
 
+  screenshotWindow = null
   mainWindow = null
 }
 
