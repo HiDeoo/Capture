@@ -2,10 +2,10 @@ import isDev from 'electron-is-dev'
 import path from 'path'
 
 /**
- * Returns the main window renderer application URI.
- * @return The render application URI.
+ * Returns the renderer application URI.
+ * @return The URI.
  */
-export function getMainWindowRendererUri(): string {
+export function getRendererUri(): string {
   return isDev ? 'http://localhost:3000/index.html' : `file://${path.join(__dirname, '..', 'index.html')}`
 }
 
