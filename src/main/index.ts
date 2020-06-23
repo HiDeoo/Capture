@@ -1,5 +1,5 @@
 import { spawn } from 'child_process'
-import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, Tray } from 'electron'
+import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import type { NSFW } from 'nsfw'
 import path from 'path'
@@ -40,7 +40,12 @@ let isApplicationQuitting = false
 const windowDefaultOptions: BrowserWindowConstructorOptions = {
   show: false,
   webPreferences: {
+    allowRunningInsecureContent: false,
     preload: path.join(__dirname, 'preload'),
+    // We disable the `webSecurity` option in dev mode so we can load images from the filesystem while serving the
+    // renderer application from an HTTP server.
+    // This is not an issue in production as we are serving the renderer application from the filesystem in that case.
+    webSecurity: !isDev,
   },
 }
 
@@ -58,6 +63,11 @@ async function createMainWindow(): Promise<void> {
   // Handle window lifecycle.
   mainWindow.on('close', (event: Electron.Event) => onWindowClose(mainWindow, event))
   mainWindow.on('closed', onWindowClosed)
+
+  // Ensure loading images from the filesystem works as expected.
+  protocol.registerFileProtocol('file', (request, callback) => {
+    callback(request.url.replace('file:///', ''))
+  })
 
   // Load the application for the main window.
   await loadWindowApp(mainWindow, WindowType.Main)
@@ -120,6 +130,11 @@ async function createScreenshotWindow(): Promise<void> {
   // Handle window lifecycle.
   newScreenshotWindow.on('close', (event: Electron.Event) => onWindowClose(newScreenshotWindow, event))
   newScreenshotWindow.on('closed', onWindowClosed)
+
+  if (isDev) {
+    // Open the devtools in dev mode.
+    newScreenshotWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
+  }
 
   // Load the application for the new screenshot window.
   await loadWindowApp(newScreenshotWindow, WindowType.NewScreenshot)
@@ -224,6 +239,12 @@ async function onWillQuit(): Promise<void> {
     // Unregister all shortcuts.
     globalShortcut.unregisterAll()
   }
+}
+
+// Hide security warnings in dev as we are explicitely disabling the `webSecurity` option in dev mode to load images
+// from the filesystem while serving the renderer application from an HTTP server.
+if (isDev) {
+  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
 }
 
 // Hide the Dock icon.
