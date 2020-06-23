@@ -4,8 +4,9 @@ import isDev from 'electron-is-dev'
 import type { NSFW } from 'nsfw'
 import path from 'path'
 
-import { createTray } from './tray'
+import { sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
+import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
 import { getWindowRendererUri, WindowType } from './windows'
 
@@ -38,6 +39,9 @@ let isApplicationQuitting = false
  */
 const windowDefaultOptions: BrowserWindowConstructorOptions = {
   show: false,
+  webPreferences: {
+    preload: path.join(__dirname, 'preload'),
+  },
 }
 
 /**
@@ -77,9 +81,18 @@ async function createMainWindow(): Promise<void> {
   try {
     // Add a file watcher to detect new screenshots.
     watcher = await installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
-      // TODO Do something ^^
       // TODO Extract fn
       console.log('Created file: ', createdFilePath)
+
+      if (newScreenshotWindow) {
+        if (!newScreenshotWindow.isVisible()) {
+          newScreenshotWindow?.show()
+        }
+
+        newScreenshotWindow.focus()
+
+        sendToRenderer(newScreenshotWindow, 'newScreenshot', createdFilePath)
+      }
     })
   } catch (error) {
     // TODO Handle errors
