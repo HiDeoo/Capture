@@ -1,18 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import type { IpcRendererEvent } from 'electron'
 
 import { getIpcRenderer } from '../main/ipc'
 import { WindowType } from '../main/windows'
-
-// TODO Remove
-getIpcRenderer().on('newScreenshot', (_, path: string) => {
-  console.log('path', path)
-})
 
 /**
  * App Component.
  */
 const App: React.FC<Props> = (props) => {
-  return <div>Hello {props.windowType}</div>
+  const [screenshotPath, setScreenshotPath] = useState('')
+
+  useEffect(() => {
+    function onNewScreensot(_event: IpcRendererEvent, path: string): void {
+      setScreenshotPath(path)
+    }
+
+    // TODO Do something relevant
+    getIpcRenderer().on('newScreenshot', onNewScreensot)
+
+    return () => {
+      getIpcRenderer().removeListener('newScreenshot', onNewScreensot)
+    }
+  })
+
+  return (
+    <div>
+      Hello {props.windowType} - {screenshotPath}
+    </div>
+  )
 }
 
 export default App

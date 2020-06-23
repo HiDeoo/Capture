@@ -53,4 +53,8 @@ interface CaptureIpcRenderer<IpcEvents extends IpcMainToRenderEvents> extends Ip
     channel: Channel,
     listener: (event: IpcRendererEvent, ...args: Parameters<IpcEvents[Channel]>) => void
   ): this
+  removeListener<Channel extends keyof IpcEvents>(
+    channel: Channel,
+    listener: (event: IpcRendererEvent, ...args: Parameters<IpcEvents[Channel]>) => void
+  ): this
 }
