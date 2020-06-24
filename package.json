@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "chokidar": "3.4.0",
+    "date-fns": "2.14.0",
     "electron-is-dev": "1.2.0"
   },
   "devDependencies": {

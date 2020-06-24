@@ -1,5 +1,6 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
+import dateFormat from 'date-fns/format'
 import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
@@ -66,7 +67,7 @@ async function createMainWindow(): Promise<void> {
 
   // Ensure loading images from the filesystem works as expected.
   protocol.registerFileProtocol('file', (request, callback) => {
-    callback(request.url.replace('file:///', ''))
+    callback(decodeURIComponent(request.url.replace('file:///', '')))
   })
 
   // Load the application for the main window.
@@ -171,7 +172,10 @@ function registerGlobalShortcuts(): void {
  */
 function onScreenshotShortcut(): void {
   // TODO Refactor & extract (maybe extract all shortcuts code)
-  const child = spawn('screencapture', ['-i', '-o', path.join(TMP_WORKING_DIRECTORY, 'test.png')])
+  const now = new Date()
+  const filename = `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss')}.png`
+
+  const child = spawn('screencapture', ['-i', '-o', path.join(TMP_WORKING_DIRECTORY, filename)])
 
   child.stdout.setEncoding('utf8')
   child.stdout.on('data', (data) => {
