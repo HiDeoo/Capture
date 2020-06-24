@@ -9,7 +9,7 @@ const Editor: React.FC<{}> = () => {
   const [screenshotPath, setScreenshotPath] = useState<Optional<string>>()
 
   useEffect(() => {
-    function onNewScreenshot(_event: IpcRendererEvent, filePath: string): void {
+    function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
       setScreenshotPath(filePath)
     }
 

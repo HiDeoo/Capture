@@ -1,16 +1,7 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import {
-  app,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  globalShortcut,
-  ipcMain,
-  IpcMainInvokeEvent,
-  protocol,
-  Tray,
-} from 'electron'
+import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, ipcMain, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
@@ -191,7 +182,7 @@ function registerIpcHandlers(): void {
     }
   })
 
-  getIpcMain(ipcMain).handle('newScreenshotOk', (_event: IpcMainInvokeEvent, filePath: string) => {
+  getIpcMain(ipcMain).handle('newScreenshotOk', (_, filePath: string) => {
     // TODO Extract
     if (editorWindow?.isVisible()) {
       editorWindow.hide()
