@@ -1,7 +1,7 @@
 import { spawn } from 'child_process'
+import type { FSWatcher } from 'chokidar'
 import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
-import type { NSFW } from 'nsfw'
 import path from 'path'
 
 import { sendToRenderer } from './ipc'
@@ -27,7 +27,7 @@ let appTray: Tray | null = null
 /**
  * File watcher instance.
  */
-let watcher: Optional<NSFW>
+let watcher: Optional<FSWatcher>
 
 /**
  * Defines if the application is explicitely quitting (eg. Cmd+Q on macOS).
@@ -88,26 +88,21 @@ async function createMainWindow(): Promise<void> {
   // Create the application tray.
   appTray = createTray(mainWindow)
 
-  try {
-    // Add a file watcher to detect new screenshots.
-    watcher = await installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
-      // TODO Extract fn
-      console.log('Created file: ', createdFilePath)
+  // Add a file watcher to detect new screenshots.
+  watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
+    // TODO Extract fn
+    console.log('Created file: ', createdFilePath)
 
-      if (newScreenshotWindow) {
-        if (!newScreenshotWindow.isVisible()) {
-          newScreenshotWindow?.show()
-        }
-
-        newScreenshotWindow.focus()
-
-        sendToRenderer(newScreenshotWindow, 'newScreenshot', createdFilePath)
+    if (newScreenshotWindow) {
+      if (!newScreenshotWindow.isVisible()) {
+        newScreenshotWindow?.show()
       }
-    })
-  } catch (error) {
-    // TODO Handle errors
-    console.log('error ', error)
-  }
+
+      newScreenshotWindow.focus()
+
+      sendToRenderer(newScreenshotWindow, 'newScreenshot', createdFilePath)
+    }
+  })
 
   // Create the window used to handle new screenshots.
   await createScreenshotWindow()
