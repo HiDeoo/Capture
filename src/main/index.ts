@@ -1,7 +1,16 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, ipcMain, protocol, Tray } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  globalShortcut,
+  ipcMain,
+  IpcMainInvokeEvent,
+  protocol,
+  Tray,
+} from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
@@ -174,10 +183,29 @@ function registerGlobalShortcuts(): void {
  * Registers IPC handlers for messages from the renderer process.
  */
 function registerIpcHandlers(): void {
-  // TODO Clean & extract maybe
+  // TODO Clean, refactor & extract maybe
   getIpcMain(ipcMain).handle('newScreenshotCancel', () => {
+    // TODO Extract
     if (editorWindow?.isVisible()) {
       editorWindow.hide()
+    }
+  })
+
+  getIpcMain(ipcMain).handle('newScreenshotOk', (_event: IpcMainInvokeEvent, filePath: string) => {
+    // TODO Extract
+    if (editorWindow?.isVisible()) {
+      editorWindow.hide()
+    }
+
+    // TODO Extract
+    if (libraryWindow) {
+      if (!libraryWindow.isVisible()) {
+        libraryWindow.show()
+      }
+
+      libraryWindow.focus()
+
+      sendToRenderer(libraryWindow, 'sharedScreenshot', filePath)
     }
   })
 }
@@ -187,6 +215,7 @@ function registerIpcHandlers(): void {
  */
 function unregisterIpcHandlers(): void {
   getIpcMain(ipcMain).removeHandler('newScreenshotCancel')
+  getIpcMain(ipcMain).removeHandler('newScreenshotOk')
 }
 
 /**

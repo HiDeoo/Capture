@@ -10,8 +10,8 @@ const Editor: React.FC<{}> = () => {
   const [screenshotPath, setScreenshotPath] = useState<Optional<string>>()
 
   useEffect(() => {
-    function onNewScreenshot(_event: IpcRendererEvent, path: string): void {
-      setScreenshotPath(path)
+    function onNewScreenshot(_event: IpcRendererEvent, filePath: string): void {
+      setScreenshotPath(filePath)
     }
 
     // TODO Do something relevant
@@ -28,9 +28,20 @@ const Editor: React.FC<{}> = () => {
     setScreenshotPath(undefined)
   }
 
+  async function onClickOk(): Promise<void> {
+    if (screenshotPath) {
+      await getIpcRenderer().invoke('newScreenshotOk', screenshotPath)
+
+      setScreenshotPath(undefined)
+    }
+  }
+
   return (
     <div>
       <button onClick={onClickCancel}>Cancel</button>
+      <button onClick={onClickOk} disabled={!screenshotPath}>
+        Ok
+      </button>
       <div>{screenshotPath}</div>
       {screenshotPath && (
         <div>

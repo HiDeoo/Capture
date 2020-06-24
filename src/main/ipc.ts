@@ -4,7 +4,8 @@ import type { BrowserWindow, IpcMain, IpcMainInvokeEvent, IpcRenderer, IpcRender
  * Application main-to-renderer events.
  */
 type CaptureMainToRendererEvents = {
-  newScreenshot: (path: string) => void
+  newScreenshot: (filePath: string) => void
+  sharedScreenshot: (filePath: string) => void
 }
 
 /**
@@ -12,6 +13,7 @@ type CaptureMainToRendererEvents = {
  */
 type CaptureRendererToMainEvents = {
   newScreenshotCancel: () => void
+  newScreenshotOk: (filePath: string) => void
 }
 
 /**
