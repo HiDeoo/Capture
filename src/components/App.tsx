@@ -8,7 +8,7 @@ import { WindowType } from '../main/windows'
  * App Component.
  */
 const App: React.FC<Props> = (props) => {
-  const [screenshotPath, setScreenshotPath] = useState('')
+  const [screenshotPath, setScreenshotPath] = useState<Optional<string>>()
 
   useEffect(() => {
     function onNewScreenshot(_event: IpcRendererEvent, path: string): void {
@@ -23,11 +23,20 @@ const App: React.FC<Props> = (props) => {
     }
   })
 
+  async function onClickCancel(): Promise<void> {
+    await getIpcRenderer().invoke('newScreenshotCancel')
+
+    setScreenshotPath(undefined)
+  }
+
   return (
     <div>
+      <div>
+        <button onClick={onClickCancel}>Cancel</button>
+      </div>
       Hello {props.windowType} - {screenshotPath}
       <br />
-      {screenshotPath.length > 0 && <img src={`file://${screenshotPath}`} alt="" />}
+      {screenshotPath && <img src={`file://${screenshotPath}`} alt="" />}
     </div>
   )
 }

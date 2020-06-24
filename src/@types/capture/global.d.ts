@@ -7,6 +7,11 @@ declare global {
   export type Optional<T> = T | undefined
 
   /**
+   * Optional promise.
+   */
+  export type OptionalPromise<T> = T | Promise<T>
+
+  /**
    * IPC access from the renderer process.
    */
   interface Window {

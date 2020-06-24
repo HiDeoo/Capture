@@ -1,10 +1,17 @@
-import type { BrowserWindow, WebContents, IpcRenderer, IpcRendererEvent } from 'electron'
+import type { BrowserWindow, IpcMain, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from 'electron'
 
 /**
  * Application main-to-renderer events.
  */
 type CaptureMainToRendererEvents = {
   newScreenshot: (path: string) => void
+}
+
+/**
+ * Application renderer-to-main events.
+ */
+type CaptureRendererToMainEvents = {
+  newScreenshotCancel: () => void
 }
 
 /**
@@ -24,37 +31,64 @@ export function sendToRenderer<IpcEvent extends keyof CaptureMainToRendererEvent
 }
 
 /**
- * Returns the IPC renderer module.
- * Note: this should only be used from the renderer process.
- * @return The IPC renderer.
+ * Returns the typed IPC main module.
+ * Note: this should only be used from the main process.
+ * @return The typed IPC main.
  */
-export function getIpcRenderer(): CaptureIpcRenderer<CaptureMainToRendererEvents> {
-  return window.ipcRenderer as CaptureIpcRenderer<CaptureMainToRendererEvents>
+export function getIpcMain(unsafeIpcMain: IpcMain): CaptureIpcMain<CaptureRendererToMainEvents> {
+  return unsafeIpcMain as CaptureIpcMain<CaptureRendererToMainEvents>
 }
 
 /**
- * Structure describing events associated to messages sent from the main process to the renderer on a specific channel
- * and their associated handlers.
+ * Returns the typed IPC renderer module.
+ * Note: this should only be used from the renderer process.
+ * @return The typed IPC renderer.
  */
-type IpcMainToRenderEvents = Record<string, (...args: never) => void>
+export function getIpcRenderer(): CaptureIpcRenderer<CaptureMainToRendererEvents, CaptureRendererToMainEvents> {
+  return window.ipcRenderer as CaptureIpcRenderer<CaptureMainToRendererEvents, CaptureRendererToMainEvents>
+}
+
+/**
+ * Structure describing events associated to messages sent between the main and renderere processes on a specific
+ * channel and their associated handlers.
+ */
+type IPCEvents = Record<string, (...args: never) => void>
 
 /**
  * Extension to `Electron.WebContents` supporting typed IPC messages.
  */
-interface CaptureWebContents<IpcEvents extends IpcMainToRenderEvents> extends WebContents {
-  send<Channel extends keyof IpcEvents>(channel: Channel, ...args: Parameters<IpcEvents[Channel]>): void
+interface CaptureWebContents<MREvents extends IPCEvents> extends WebContents {
+  send<Channel extends keyof MREvents>(channel: Channel, ...args: Parameters<MREvents[Channel]>): void
+}
+
+/**
+ * Extension to `Electron.IpcMain` supporting typed IPC messages.
+ */
+interface CaptureIpcMain<RMEvents extends IPCEvents> extends IpcMain {
+  handle<Channel extends keyof RMEvents>(
+    channel: Channel,
+    listener: (
+      event: IpcMainInvokeEvent,
+      ...args: Parameters<RMEvents[Channel]>
+    ) => OptionalPromise<ReturnType<RMEvents[Channel]>>
+  ): void
+  removeHandler<Channel extends keyof RMEvents>(channel: Channel): void
 }
 
 /**
  * Extension to `Electron.IpcRenderer` supporting typed IPC messages.
  */
-interface CaptureIpcRenderer<IpcEvents extends IpcMainToRenderEvents> extends IpcRenderer {
-  on<Channel extends keyof IpcEvents>(
+interface CaptureIpcRenderer<MREvents extends IPCEvents, RMEvents extends IPCEvents> extends IpcRenderer {
+  on<Channel extends keyof MREvents>(
     channel: Channel,
-    listener: (event: IpcRendererEvent, ...args: Parameters<IpcEvents[Channel]>) => void
+    listener: (event: IpcRendererEvent, ...args: Parameters<MREvents[Channel]>) => void
   ): this
-  removeListener<Channel extends keyof IpcEvents>(
+  removeListener<Channel extends keyof MREvents>(
     channel: Channel,
-    listener: (event: IpcRendererEvent, ...args: Parameters<IpcEvents[Channel]>) => void
+    listener: (event: IpcRendererEvent, ...args: Parameters<MREvents[Channel]>) => void
   ): this
+  invoke<Channel extends keyof RMEvents>(
+    channel: Channel,
+    ...args: Parameters<RMEvents[Channel]>
+  ): Promise<ReturnType<RMEvents[Channel]>>
 }

@@ -1,11 +1,11 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, protocol, Tray } from 'electron'
+import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, ipcMain, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
-import { sendToRenderer } from './ipc'
+import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
@@ -110,6 +110,9 @@ async function createMainWindow(): Promise<void> {
 
   // Register global shrotcuts.
   registerGlobalShortcuts()
+
+  // Handle IPC messages from the renderer process.
+  registerIpcHandlers()
 }
 
 /**
@@ -165,6 +168,25 @@ function registerGlobalShortcuts(): void {
     // TODO Handle errors
     console.log('error ', error)
   }
+}
+
+/**
+ * Registers IPC handlers for messages from the renderer process.
+ */
+function registerIpcHandlers(): void {
+  // TODO Clean & extract maybe
+  getIpcMain(ipcMain).handle('newScreenshotCancel', () => {
+    if (newScreenshotWindow?.isVisible()) {
+      newScreenshotWindow.hide()
+    }
+  })
+}
+
+/**
+ * Unregisters IPC handlers for messages from the renderer process.
+ */
+function unregisterIpcHandlers(): void {
+  getIpcMain(ipcMain).removeHandler('newScreenshotCancel')
 }
 
 /**
@@ -235,6 +257,9 @@ async function onWillQuit(): Promise<void> {
       await uninstallFileWatcher(watcher)
     }
   } finally {
+    // Unregister IPC handlers.
+    unregisterIpcHandlers()
+
     // Unregister all shortcuts.
     globalShortcut.unregisterAll()
   }
