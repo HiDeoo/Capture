@@ -1,44 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import type { IpcRendererEvent } from 'electron'
+import React from 'react'
 
-import { getIpcRenderer } from '../main/ipc'
+import Editor from './Editor'
+import Library from './Library'
 import { WindowType } from '../main/windows'
 
 /**
  * App Component.
  */
 const App: React.FC<Props> = (props) => {
-  const [screenshotPath, setScreenshotPath] = useState<Optional<string>>()
-
-  useEffect(() => {
-    function onNewScreenshot(_event: IpcRendererEvent, path: string): void {
-      setScreenshotPath(path)
-    }
-
-    // TODO Do something relevant
-    getIpcRenderer().on('newScreenshot', onNewScreenshot)
-
-    return () => {
-      getIpcRenderer().removeListener('newScreenshot', onNewScreenshot)
-    }
-  })
-
-  async function onClickCancel(): Promise<void> {
-    await getIpcRenderer().invoke('newScreenshotCancel')
-
-    setScreenshotPath(undefined)
-  }
-
-  return (
-    <div>
-      <div>
-        <button onClick={onClickCancel}>Cancel</button>
-      </div>
-      Hello {props.windowType} - {screenshotPath}
-      <br />
-      {screenshotPath && <img src={`file://${screenshotPath}`} alt="" />}
-    </div>
-  )
+  return props.windowType === WindowType.Library ? <Library /> : <Editor />
 }
 
 export default App

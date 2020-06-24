@@ -17,8 +17,8 @@ const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
 /**
  * Application browser window instances.
  */
-let mainWindow: BrowserWindow | null = null
-let newScreenshotWindow: BrowserWindow | null = null
+let libraryWindow: BrowserWindow | null = null
+let editorWindow: BrowserWindow | null = null
 
 /**
  * Application tray instance.
@@ -51,27 +51,27 @@ const windowDefaultOptions: BrowserWindowConstructorOptions = {
 }
 
 /**
- * Creates the main window.
+ * Creates the library window.
  */
-async function createMainWindow(): Promise<void> {
+async function createLibraryWindow(): Promise<void> {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  libraryWindow = new BrowserWindow({
     ...windowDefaultOptions,
     height: 600,
     width: 800,
   })
 
   // Handle window lifecycle.
-  mainWindow.on('close', (event: Electron.Event) => onWindowClose(mainWindow, event))
-  mainWindow.on('closed', onWindowClosed)
+  libraryWindow.on('close', (event: Electron.Event) => onWindowClose(libraryWindow, event))
+  libraryWindow.on('closed', onWindowClosed)
 
   // Ensure loading images from the filesystem works as expected.
   protocol.registerFileProtocol('file', (request, callback) => {
     callback(decodeURIComponent(request.url.replace('file:///', '')))
   })
 
-  // Load the application for the main window.
-  await loadWindowApp(mainWindow, WindowType.Main)
+  // Load the application for the library window.
+  await loadWindowApp(libraryWindow, WindowType.Library)
 
   if (isDev) {
     // Enable reloading of the main process in dev mode.
@@ -83,30 +83,30 @@ async function createMainWindow(): Promise<void> {
     })
 
     // Open the devtools in dev mode.
-    mainWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
+    libraryWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
   }
 
   // Create the application tray.
-  appTray = createTray(mainWindow)
+  appTray = createTray(libraryWindow)
 
   // Add a file watcher to detect new screenshots.
   watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
     // TODO Extract fn
     console.log('Created file: ', createdFilePath)
 
-    if (newScreenshotWindow) {
-      if (!newScreenshotWindow.isVisible()) {
-        newScreenshotWindow?.show()
+    if (editorWindow) {
+      if (!editorWindow.isVisible()) {
+        editorWindow?.show()
       }
 
-      newScreenshotWindow.focus()
+      editorWindow.focus()
 
-      sendToRenderer(newScreenshotWindow, 'newScreenshot', createdFilePath)
+      sendToRenderer(editorWindow, 'newScreenshot', createdFilePath)
     }
   })
 
   // Create the window used to handle new screenshots.
-  await createScreenshotWindow()
+  await createEditorWindow()
 
   // Register global shrotcuts.
   registerGlobalShortcuts()
@@ -116,27 +116,27 @@ async function createMainWindow(): Promise<void> {
 }
 
 /**
- * Creates the new screenshot window.
+ * Creates the editor window.
  */
-async function createScreenshotWindow(): Promise<void> {
+async function createEditorWindow(): Promise<void> {
   // Create the browser window.
-  newScreenshotWindow = new BrowserWindow({
+  editorWindow = new BrowserWindow({
     ...windowDefaultOptions,
     height: 200,
     width: 200,
   })
 
   // Handle window lifecycle.
-  newScreenshotWindow.on('close', (event: Electron.Event) => onWindowClose(newScreenshotWindow, event))
-  newScreenshotWindow.on('closed', onWindowClosed)
+  editorWindow.on('close', (event: Electron.Event) => onWindowClose(editorWindow, event))
+  editorWindow.on('closed', onWindowClosed)
 
   if (isDev) {
     // Open the devtools in dev mode.
-    newScreenshotWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
+    editorWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
   }
 
-  // Load the application for the new screenshot window.
-  await loadWindowApp(newScreenshotWindow, WindowType.NewScreenshot)
+  // Load the application for the editor window.
+  await loadWindowApp(editorWindow, WindowType.Editor)
 }
 
 /**
@@ -176,8 +176,8 @@ function registerGlobalShortcuts(): void {
 function registerIpcHandlers(): void {
   // TODO Clean & extract maybe
   getIpcMain(ipcMain).handle('newScreenshotCancel', () => {
-    if (newScreenshotWindow?.isVisible()) {
-      newScreenshotWindow.hide()
+    if (editorWindow?.isVisible()) {
+      editorWindow.hide()
     }
   })
 }
@@ -237,8 +237,8 @@ function onWindowClosed(): void {
   appTray?.destroy()
   appTray = null
 
-  newScreenshotWindow = null
-  mainWindow = null
+  editorWindow = null
+  libraryWindow = null
 }
 
 /**
@@ -277,6 +277,6 @@ app.dock.hide()
 /**
  * Handle application lifecycle.
  */
-app.on('ready', createMainWindow)
+app.on('ready', createLibraryWindow)
 app.on('before-quit', onBeforeQuit)
 app.on('will-quit', onWillQuit)

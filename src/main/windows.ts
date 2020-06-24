@@ -2,8 +2,8 @@
  * The various type of windows supported by the application.
  */
 export enum WindowType {
-  Main,
-  NewScreenshot,
+  Library,
+  Editor,
 }
 
 /**
@@ -35,8 +35,8 @@ export function getWindowTypeFromUri(location: Location): WindowType {
   const typeStr = params.get(WINDOW_TYPE_PARAM) ?? '0'
 
   if (typeStr in WindowType) {
-    return WindowType[typeStr as keyof typeof WindowType]
+    return parseInt(typeStr, 10)
   }
 
-  return WindowType.Main
+  return WindowType.Library
 }
