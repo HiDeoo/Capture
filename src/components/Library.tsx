@@ -1,7 +1,6 @@
-import type { IpcRendererEvent } from 'electron'
 import React, { useEffect, useState } from 'react'
 
-import { getIpcRenderer } from '../main/ipc'
+import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 
 /**
  * Library Component.

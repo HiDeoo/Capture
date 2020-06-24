@@ -1,5 +1,7 @@
 import type { BrowserWindow, IpcMain, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from 'electron'
 
+export type { IpcRendererEvent } from 'electron'
+
 /**
  * Application main-to-renderer events.
  */
