@@ -14,7 +14,7 @@ module.exports = {
   rules: {
     'no-shadow': 'error',
     '@typescript-eslint/member-delimiter-style': 'off',
-    '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/no-floating-promises': ['error', { ignoreVoid: true }],
     '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
     '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
   },

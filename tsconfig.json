@@ -2,7 +2,8 @@
   "extends": "./tsconfig.base",
   "compilerOptions": {
     "module": "esnext",
-    "noEmit": true
+    "noEmit": true,
+    "experimentalDecorators": true
   },
   "include": ["src"]
 }
