@@ -1,7 +1,7 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, ipcMain, protocol, Tray } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
@@ -9,16 +9,14 @@ import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
-import { getWindowRendererUri, WindowType } from './windows'
 
 // TODO Remove
 const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
 
 /**
- * Application browser window instances.
+ * Application browser window instance.
  */
-let libraryWindow: BrowserWindow | null = null
-let editorWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow | null = null
 
 /**
  * Application tray instance.
@@ -36,42 +34,40 @@ let watcher: Optional<FSWatcher>
 let isApplicationQuitting = false
 
 /**
- * Application browser window default options.
+ * Creates the main window.
  */
-const windowDefaultOptions: BrowserWindowConstructorOptions = {
-  show: false,
-  webPreferences: {
-    allowRunningInsecureContent: false,
-    preload: path.join(__dirname, 'preload'),
-    // We disable the `webSecurity` option in dev mode so we can load images from the filesystem while serving the
-    // renderer application from an HTTP server.
-    // This is not an issue in production as we are serving the renderer application from the filesystem in that case.
-    webSecurity: !isDev,
-  },
-}
-
-/**
- * Creates the library window.
- */
-async function createLibraryWindow(): Promise<void> {
+async function createMainWindow(): Promise<void> {
   // Create the browser window.
-  libraryWindow = new BrowserWindow({
-    ...windowDefaultOptions,
+  mainWindow = new BrowserWindow({
     height: 600,
+    show: false,
+    webPreferences: {
+      allowRunningInsecureContent: false,
+      preload: path.join(__dirname, 'preload'),
+      // We disable the `webSecurity` option in dev mode so we can load images from the filesystem while serving the
+      // renderer application from an HTTP server.
+      // This is not an issue in production as we are serving the renderer application from the filesystem in that case.
+      webSecurity: !isDev,
+    },
     width: 800,
   })
 
   // Handle window lifecycle.
-  libraryWindow.on('close', (event: Electron.Event) => onWindowClose(libraryWindow, event))
-  libraryWindow.on('closed', onWindowClosed)
+  mainWindow.on('close', onMainWindowClose)
+  mainWindow.on('closed', onMainWindowClosed)
 
   // Ensure loading images from the filesystem works as expected.
   protocol.registerFileProtocol('file', (request, callback) => {
     callback(decodeURIComponent(request.url.replace('file:///', '')))
   })
 
-  // Load the application for the library window.
-  await loadWindowApp(libraryWindow, WindowType.Library)
+  // Load the renderer application for the main window.
+  try {
+    await mainWindow.loadURL(getRendererUri())
+  } catch (error) {
+    // TODO Handle errors
+    console.log('error ', error)
+  }
 
   if (isDev) {
     // Enable reloading of the main process in dev mode.
@@ -83,74 +79,30 @@ async function createLibraryWindow(): Promise<void> {
     })
 
     // Open the devtools in dev mode.
-    libraryWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
+    mainWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
   }
 
   // Create the application tray.
-  appTray = createTray(libraryWindow)
+  appTray = createTray(mainWindow)
 
   // Add a file watcher to detect new screenshots.
   watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
     // TODO Extract fn
     console.log('Created file: ', createdFilePath)
 
-    if (editorWindow) {
-      if (!editorWindow.isVisible()) {
-        editorWindow?.show()
-      }
+    if (mainWindow) {
+      sendToRenderer(mainWindow, 'newScreenshot', createdFilePath)
 
-      editorWindow.focus()
-
-      sendToRenderer(editorWindow, 'newScreenshot', createdFilePath)
+      mainWindow.show()
+      mainWindow.focus()
     }
   })
-
-  // Create the window used to handle new screenshots.
-  await createEditorWindow()
 
   // Register global shrotcuts.
   registerGlobalShortcuts()
 
   // Handle IPC messages from the renderer process.
   registerIpcHandlers()
-}
-
-/**
- * Creates the editor window.
- */
-async function createEditorWindow(): Promise<void> {
-  // Create the browser window.
-  editorWindow = new BrowserWindow({
-    ...windowDefaultOptions,
-    height: 200,
-    width: 200,
-  })
-
-  // Handle window lifecycle.
-  editorWindow.on('close', (event: Electron.Event) => onWindowClose(editorWindow, event))
-  editorWindow.on('closed', onWindowClosed)
-
-  if (isDev) {
-    // Open the devtools in dev mode.
-    editorWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
-  }
-
-  // Load the application for the editor window.
-  await loadWindowApp(editorWindow, WindowType.Editor)
-}
-
-/**
- * Loads a window renderer application.
- * @param window - The browser window to use to load the application.
- * @param type - The type of the window.
- */
-async function loadWindowApp(window: BrowserWindow, type: WindowType): Promise<void> {
-  try {
-    return window.loadURL(getWindowRendererUri(getRendererUri(), type))
-  } catch (error) {
-    // TODO Handle errors
-    console.log('error ', error)
-  }
 }
 
 /**
@@ -175,28 +127,10 @@ function registerGlobalShortcuts(): void {
  */
 function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
-  getIpcMain(ipcMain).handle('newScreenshotCancel', () => {
-    // TODO Extract
-    if (editorWindow?.isVisible()) {
-      editorWindow.hide()
-    }
-  })
-
-  getIpcMain(ipcMain).handle('newScreenshotOk', (_, filePath: string) => {
-    // TODO Extract
-    if (editorWindow?.isVisible()) {
-      editorWindow.hide()
-    }
-
-    // TODO Extract
-    if (libraryWindow) {
-      if (!libraryWindow.isVisible()) {
-        libraryWindow.show()
-      }
-
-      libraryWindow.focus()
-
-      sendToRenderer(libraryWindow, 'sharedScreenshot', filePath)
+  getIpcMain(ipcMain).handle('newScreenshotOk', () => {
+    // TODO Extract & do something relevant
+    if (mainWindow?.isVisible()) {
+      mainWindow.hide()
     }
   })
 }
@@ -205,7 +139,6 @@ function registerIpcHandlers(): void {
  * Unregisters IPC handlers for messages from the renderer process.
  */
 function unregisterIpcHandlers(): void {
-  getIpcMain(ipcMain).removeHandler('newScreenshotCancel')
   getIpcMain(ipcMain).removeHandler('newScreenshotOk')
 }
 
@@ -235,30 +168,27 @@ function onScreenshotShortcut(): void {
 }
 
 /**
- * Triggered when a window is going to be closed.
+ * Triggered when the main window is going to be closed.
  * @param window - The associated window.
  * @param event - The associated event
  */
-function onWindowClose(window: BrowserWindow | null, event: Electron.Event): void {
+function onMainWindowClose(event: Electron.Event): void {
   // Hide the window instead of closing it if we're not explicitely quitting.
   if (!isApplicationQuitting) {
     event.preventDefault()
 
-    if (window) {
-      window.hide()
-    }
+    mainWindow?.hide()
   }
 }
 
 /**
- * Triggered when a window is closed.
+ * Triggered when the main window is closed.
  */
-function onWindowClosed(): void {
+function onMainWindowClosed(): void {
   appTray?.destroy()
   appTray = null
 
-  editorWindow = null
-  libraryWindow = null
+  mainWindow = null
 }
 
 /**
@@ -297,6 +227,6 @@ app.dock.hide()
 /**
  * Handle application lifecycle.
  */
-app.on('ready', createLibraryWindow)
+app.on('ready', createMainWindow)
 app.on('before-quit', onBeforeQuit)
 app.on('will-quit', onWillQuit)

@@ -7,15 +7,13 @@ export type { IpcRendererEvent } from 'electron'
  */
 type CaptureMainToRendererEvents = {
   newScreenshot: (filePath: string) => void
-  sharedScreenshot: (filePath: string) => void
 }
 
 /**
  * Application renderer-to-main events.
  */
 type CaptureRendererToMainEvents = {
-  newScreenshotCancel: () => void
-  newScreenshotOk: (filePath: string) => void
+  newScreenshotOk: () => void
 }
 
 /**

@@ -1,3 +1,4 @@
+import AppStore from './app'
 import SettingsStore from './settings'
 
 /**
@@ -7,6 +8,7 @@ export default class RootStore {
   /**
    * The different stores of the application.
    */
+  appStore: AppStore
   settingsStore: SettingsStore
 
   /**
@@ -14,6 +16,7 @@ export default class RootStore {
    * @class
    */
   constructor() {
+    this.appStore = new AppStore()
     this.settingsStore = new SettingsStore()
   }
 }

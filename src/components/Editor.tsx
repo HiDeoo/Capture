@@ -1,54 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import React from 'react'
 
-import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
+import { getIpcRenderer } from '../main/ipc'
+import { useApp } from '../store'
 
 /**
  * Editor Component.
  */
 const Editor: React.FC<{}> = () => {
-  const [screenshotPath, setScreenshotPath] = useState<Optional<string>>()
+  const { pendingScreenshot, shiftFromQueue } = useApp()
 
-  useEffect(() => {
-    function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
-      setScreenshotPath(filePath)
-    }
-
-    // TODO Do something relevant
-    getIpcRenderer().on('newScreenshot', onNewScreenshot)
-
-    return () => {
-      getIpcRenderer().removeListener('newScreenshot', onNewScreenshot)
-    }
-  })
-
-  async function onClickCancel(): Promise<void> {
-    await getIpcRenderer().invoke('newScreenshotCancel')
-
-    setScreenshotPath(undefined)
+  function onClickCancel(): void {
+    shiftFromQueue()
   }
 
   async function onClickOk(): Promise<void> {
-    if (screenshotPath) {
-      await getIpcRenderer().invoke('newScreenshotOk', screenshotPath)
+    await getIpcRenderer().invoke('newScreenshotOk')
 
-      setScreenshotPath(undefined)
-    }
+    shiftFromQueue()
   }
 
   return (
     <div>
       <button onClick={onClickCancel}>Cancel</button>
-      <button onClick={onClickOk} disabled={!screenshotPath}>
-        Ok
-      </button>
-      <div>{screenshotPath}</div>
-      {screenshotPath && (
-        <div>
-          <img src={`file://${screenshotPath}`} alt="" />
-        </div>
-      )}
+      <button onClick={onClickOk}>Ok</button>
+      <div>{pendingScreenshot}</div>
+      <div>
+        <img src={`file://${pendingScreenshot}`} alt="" />
+      </div>
     </div>
   )
 }
 
-export default Editor
+export default observer(Editor)
