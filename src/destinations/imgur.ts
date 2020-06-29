@@ -1,4 +1,4 @@
-import Destination, { DestinationConfiguration } from '../libs/Destination'
+import Destination, { DestinationConfiguration, DestinationSettings } from '../libs/Destination'
 
 /**
  * Imgur destination.
@@ -13,6 +13,22 @@ class Imgur implements Destination {
       name: 'Imgur',
     }
   }
+
+  /**
+   * Returns the destination default settings.
+   */
+  getDefaultSettings(): ImgurSettings {
+    return {
+      test: 'test1',
+    }
+  }
 }
 
 export default new Imgur()
+
+/**
+ * Imgur destination settings.
+ */
+export interface ImgurSettings extends DestinationSettings {
+  test: string
+}

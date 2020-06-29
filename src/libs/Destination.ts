@@ -6,6 +6,11 @@ export default abstract class Destination {
    * Returns the destination configuration.
    */
   abstract getConfiguration(): DestinationConfiguration
+
+  /**
+   * Returns the destination default settings.
+   */
+  abstract getDefaultSettings(): DestinationSettings
 }
 
 /**
@@ -20,3 +25,9 @@ export interface DestinationConfiguration {
   id: DestinationId
   name: string
 }
+
+/**
+ * The default settings of a destination.
+ */
+export type DestinationSettingValue = string | number | boolean
+export type DestinationSettings = Record<string, DestinationSettingValue>

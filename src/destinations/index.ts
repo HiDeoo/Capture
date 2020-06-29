@@ -1,6 +1,6 @@
 import importAll from 'import-all.macro'
 
-import Destination, { DestinationId } from '../libs/Destination'
+import Destination, { DestinationId, DestinationSettings } from '../libs/Destination'
 
 /**
  * Imported destinations.
@@ -27,6 +27,17 @@ export function getDestinations(): DestinationsList {
 }
 
 /**
+ * Returns all destinations default settings.
+ */
+export function getDestinationsDefaultSettings(): DestinationsSettings {
+  return Object.entries(getDestinations()).reduce((acc, [id, destination]) => {
+    acc[id] = destination.getDefaultSettings()
+
+    return acc
+  }, {} as DestinationsSettings)
+}
+
+/**
  * Loads and sanitizes imported destinations.
  */
 function loadDestinations(): void {
@@ -42,6 +53,11 @@ function loadDestinations(): void {
 }
 
 /**
- * List of available destinations/
+ * List of available destinations.
  */
 type DestinationsList = Record<DestinationId, Destination>
+
+/**
+ * List of all destinations default settings.
+ */
+export type DestinationsSettings = Record<DestinationId, DestinationSettings>
