@@ -1,8 +1,19 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
+import styled from 'styled-components/macro'
+import tw from 'tailwind.macro'
 
 import { useSettings } from '../store'
 import type { ImgurSettings } from '../destinations/imgur'
+
+/**
+ * Test component.
+ */
+const Test = styled.div`
+  background-color: red;
+
+  ${tw`bg-purple-600`}
+`
 
 /**
  * Library Component.
@@ -23,6 +34,7 @@ const Library: React.FC<{}> = () => {
       Library
       <button onClick={updateSetting}>Update destination setting</button>
       <div>{JSON.stringify(t)}</div>
+      <Test>test</Test>
     </div>
   )
 }
