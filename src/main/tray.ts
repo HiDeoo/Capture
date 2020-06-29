@@ -23,10 +23,10 @@ export function createTray(window: BrowserWindow): Tray {
  * @param window - The window associated to the tray.
  */
 function onClickTray(window: BrowserWindow): void {
-  if (window.isVisible()) {
-    window.hide()
-  } else {
+  if (!window.isVisible() || !window.isFocused()) {
     window.show()
     window.focus()
+  } else {
+    window.hide()
   }
 }
