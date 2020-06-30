@@ -13,7 +13,7 @@ type CaptureMainToRendererEvents = {
  * Application renderer-to-main events.
  */
 type CaptureRendererToMainEvents = {
-  newScreenshotOk: () => void
+  newScreenshotOk: (filePath: string) => void
 }
 
 /**

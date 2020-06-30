@@ -1,7 +1,7 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import { app, BrowserWindow, globalShortcut, ipcMain, protocol, Tray } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, IpcMainInvokeEvent, protocol, Tray } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
@@ -128,15 +128,15 @@ function registerGlobalShortcuts(): void {
  */
 function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
-  getIpcMain(ipcMain).handle('newScreenshotOk', () => {
+  getIpcMain(ipcMain).handle('newScreenshotOk', async (event: IpcMainInvokeEvent, filePath: string) => {
     // TODO Extract & do something relevant
+    const destination = getDestination('transfer.sh')
 
-    const destination = getDestination('imgur')
-    console.log('destination ', destination.getConfiguration())
+    await destination.share(filePath)
 
-    // if (mainWindow?.isVisible()) {
-    //   mainWindow.hide()
-    // }
+    if (mainWindow?.isVisible()) {
+      mainWindow.hide()
+    }
   })
 }
 

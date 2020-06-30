@@ -22,6 +22,18 @@ class Imgur implements Destination {
       test: 'test1',
     }
   }
+
+  /**
+   * Share a file to Imgur.
+   * @param filePath - The path of the file to share.
+   */
+  async share(filePath: string): Promise<void> {
+    console.log('filePath ', filePath)
+
+    // TODO Add implementation
+
+    return Promise.resolve()
+  }
 }
 
 export default new Imgur()

@@ -1,11 +1,12 @@
 import Destination, { DestinationId, DestinationSettings } from '../libs/Destination'
 
 import Imgur from './imgur'
+import TransferSh from './transfer.sh'
 
 /**
  * Imported destinations.
  */
-const rawDestinations = [Imgur]
+const rawDestinations = [Imgur, TransferSh]
 
 /**
  * A lazy-loaded list of sanitized destinations.
@@ -41,7 +42,11 @@ export function getDestination(id: DestinationId): Destination {
  */
 export function getDestinationsDefaultSettings(): DestinationsSettings {
   return Object.entries(getDestinations()).reduce((acc, [id, destination]) => {
-    acc[id] = destination.getDefaultSettings()
+    const defaultSettings = destination.getDefaultSettings()
+
+    if (Object.keys(defaultSettings).length > 0) {
+      acc[id] = defaultSettings
+    }
 
     return acc
   }, {} as DestinationsSettings)

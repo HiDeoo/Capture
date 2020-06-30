@@ -15,9 +15,15 @@ const Editor: React.FC<{}> = () => {
   }
 
   async function onClickOk(): Promise<void> {
-    await getIpcRenderer().invoke('newScreenshotOk')
+    try {
+      await getIpcRenderer().invoke('newScreenshotOk', pendingScreenshot)
 
-    shiftFromQueue()
+      // TODO
+      shiftFromQueue()
+    } catch (error) {
+      // TODO Handle errors
+      console.log('error ', error)
+    }
   }
 
   return (

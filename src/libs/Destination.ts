@@ -11,6 +11,12 @@ export default abstract class Destination {
    * Returns the destination default settings.
    */
   abstract getDefaultSettings(): DestinationSettings
+
+  /**
+   * Share a file to the destination.
+   * @param filePath - The path of the file to share.
+   */
+  abstract share(filePath: string): Promise<void>
 }
 
 /**

@@ -40,9 +40,11 @@
   "dependencies": {
     "chokidar": "3.4.0",
     "date-fns": "2.14.0",
-    "electron-is-dev": "1.2.0"
+    "electron-is-dev": "1.2.0",
+    "isomorphic-fetch": "2.2.1"
   },
   "devDependencies": {
+    "@types/isomorphic-fetch": "0.0.35",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "esnext",
     "noEmit": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["node"]
   },
   "include": ["src"]
 }
