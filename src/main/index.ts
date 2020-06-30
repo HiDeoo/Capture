@@ -5,6 +5,7 @@ import { app, BrowserWindow, globalShortcut, ipcMain, protocol, Tray } from 'ele
 import isDev from 'electron-is-dev'
 import path from 'path'
 
+import { getDestination } from '../destinations'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
@@ -129,9 +130,13 @@ function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
   getIpcMain(ipcMain).handle('newScreenshotOk', () => {
     // TODO Extract & do something relevant
-    if (mainWindow?.isVisible()) {
-      mainWindow.hide()
-    }
+
+    const destination = getDestination('imgur')
+    console.log('destination ', destination.getConfiguration())
+
+    // if (mainWindow?.isVisible()) {
+    //   mainWindow.hide()
+    // }
   })
 }
 

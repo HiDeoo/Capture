@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "module": "commonjs",
-    "outDir": "../../build/main"
+    "outDir": "../../build"
   },
   "include": ["../../src/main", "../../src/@types"]
 }
