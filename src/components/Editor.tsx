@@ -29,7 +29,7 @@ const Editor: React.FC<{}> = () => {
 
   async function onClickOk(): Promise<void> {
     try {
-      await getIpcRenderer().invoke('newScreenshotOk', destination, pendingScreenshot)
+      await getIpcRenderer().invoke('shareScreenshot', destination, pendingScreenshot)
 
       // TODO
       shiftFromQueue()

@@ -11,6 +11,11 @@ export default class AppStore {
   @ignore @observable private queue: string[] = []
 
   /**
+   * Defines if the application is focused or not.
+   */
+  @ignore @observable isFocused = false
+
+  /**
    * Defines if the application should show the editor which means there are pending screenshots.
    */
   @computed
@@ -46,5 +51,14 @@ export default class AppStore {
   @action
   shiftFromQueue = (): void => {
     this.queue.shift()
+  }
+
+  /**
+   * Sets if the application window is focused or not.
+   * @param isFocused - Defines if the window is focused or not.
+   */
+  @action
+  setWindowFocus = (isFocused: boolean): void => {
+    this.isFocused = isFocused
   }
 }

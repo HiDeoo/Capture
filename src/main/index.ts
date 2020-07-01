@@ -18,7 +18,7 @@ const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
 /**
  * Application browser window instance.
  */
-let mainWindow: BrowserWindow | null = null
+let window: BrowserWindow | null = null
 
 /**
  * Application tray instance.
@@ -36,14 +36,14 @@ let watcher: Optional<FSWatcher>
 let isApplicationQuitting = false
 
 /**
- * Creates the main window.
+ * Creates the application window.
  */
-async function createMainWindow(): Promise<void> {
+async function createWindow(): Promise<void> {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  window = new BrowserWindow({
     frame: false,
     height: 600,
-    show: true,
+    show: false,
     webPreferences: {
       allowRunningInsecureContent: false,
       preload: path.join(__dirname, 'preload'),
@@ -56,17 +56,19 @@ async function createMainWindow(): Promise<void> {
   })
 
   // Handle window lifecycle.
-  mainWindow.on('close', onMainWindowClose)
-  mainWindow.on('closed', onMainWindowClosed)
+  window.on('close', onWindowClose)
+  window.on('closed', onWindowClosed)
+  window.on('blur', onWindowBlur)
+  window.on('focus', onWindowFocus)
 
   // Ensure loading images from the filesystem works as expected.
   protocol.registerFileProtocol('file', (request, callback) => {
     callback(decodeURIComponent(request.url.replace('file:///', '')))
   })
 
-  // Load the renderer application for the main window.
+  // Load the renderer application for the application window.
   try {
-    await mainWindow.loadURL(getRendererUri())
+    await window.loadURL(getRendererUri())
   } catch (error) {
     // TODO Handle errors
     console.log('error ', error)
@@ -82,22 +84,22 @@ async function createMainWindow(): Promise<void> {
     })
 
     // Open the devtools in dev mode.
-    mainWindow.webContents.openDevTools({ mode: 'undocked', activate: false })
+    window.webContents.openDevTools({ mode: 'undocked', activate: false })
   }
 
   // Create the application tray.
-  appTray = createTray(mainWindow)
+  appTray = createTray(window)
 
   // Add a file watcher to detect new screenshots.
   watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
     // TODO Extract fn
     console.log('Created file: ', createdFilePath)
 
-    if (mainWindow) {
-      sendToRenderer(mainWindow, 'newScreenshot', createdFilePath)
+    if (window) {
+      sendToRenderer(window, 'newScreenshot', createdFilePath)
 
-      mainWindow.show()
-      mainWindow.focus()
+      window.show()
+      window.focus()
     }
   })
 
@@ -130,16 +132,19 @@ function registerGlobalShortcuts(): void {
  */
 function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
+
+  getIpcMain(ipcMain).handle('closeWindow', onWindowClose)
+
   getIpcMain(ipcMain).handle(
-    'newScreenshotOk',
+    'shareScreenshot',
     async (event: IpcMainInvokeEvent, destinationId: DestinationId, filePath: string) => {
       // TODO Extract & do something relevant
       const destination = getDestination(destinationId)
 
       await destination.share(filePath)
 
-      if (mainWindow?.isVisible()) {
-        mainWindow.hide()
+      if (window?.isVisible()) {
+        window.hide()
       }
     }
   )
@@ -149,7 +154,8 @@ function registerIpcHandlers(): void {
  * Unregisters IPC handlers for messages from the renderer process.
  */
 function unregisterIpcHandlers(): void {
-  getIpcMain(ipcMain).removeHandler('newScreenshotOk')
+  getIpcMain(ipcMain).removeHandler('shareScreenshot')
+  getIpcMain(ipcMain).removeHandler('closeWindow')
 }
 
 /**
@@ -178,27 +184,45 @@ function onScreenshotShortcut(): void {
 }
 
 /**
- * Triggered when the main window is going to be closed.
+ * Triggered when the application window is going to be closed.
  * @param window - The associated window.
  * @param event - The associated event
  */
-function onMainWindowClose(event: Electron.Event): void {
+function onWindowClose(event: Electron.Event): void {
   // Hide the window instead of closing it if we're not explicitely quitting.
   if (!isApplicationQuitting) {
     event.preventDefault()
 
-    mainWindow?.hide()
+    window?.hide()
   }
 }
 
 /**
- * Triggered when the main window is closed.
+ * Triggered when the application window is closed.
  */
-function onMainWindowClosed(): void {
+function onWindowClosed(): void {
   appTray?.destroy()
   appTray = null
 
-  mainWindow = null
+  window = null
+}
+
+/**
+ * Triggered when the application window loses focus.
+ */
+function onWindowBlur(): void {
+  if (window) {
+    sendToRenderer(window, 'windowBlur')
+  }
+}
+
+/**
+ * Triggered when the application window gains focus.
+ */
+function onWindowFocus(): void {
+  if (window) {
+    sendToRenderer(window, 'windowFocus')
+  }
 }
 
 /**
@@ -237,6 +261,6 @@ app.dock.hide()
 /**
  * Handle application lifecycle.
  */
-app.on('ready', createMainWindow)
+app.on('ready', createWindow)
 app.on('before-quit', onBeforeQuit)
 app.on('will-quit', onWillQuit)

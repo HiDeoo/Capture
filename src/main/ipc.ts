@@ -9,13 +9,16 @@ export type { IpcRendererEvent } from 'electron'
  */
 type CaptureMainToRendererEvents = {
   newScreenshot: (filePath: string) => void
+  windowBlur: () => void
+  windowFocus: () => void
 }
 
 /**
  * Application renderer-to-main events.
  */
 type CaptureRendererToMainEvents = {
-  newScreenshotOk: (destinationId: DestinationId, filePath: string) => void
+  shareScreenshot: (destinationId: DestinationId, filePath: string) => void
+  closeWindow: () => void
 }
 
 /**

@@ -1,10 +1,17 @@
 import React from 'react'
+import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
 /**
  * StyledButton component.
  */
-const StyledButton = tw.button`bg-red-900`
+const StyledButton = styled.button`
+  ${tw`bg-red-900`}
+
+  &:focus {
+    ${tw`outline-none`}
+  }
+`
 
 /**
  * Button Component.

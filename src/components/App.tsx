@@ -15,24 +15,36 @@ import TitleBar from './TitleBar'
 const Wrapper = styled.div`
   ${tw`h-screen w-screen text-white`}
 
-  background-color: #1d1a1e;
+  background-color: #1b1a1e;
 `
 
 /**
  * App Component.
  */
 const App: React.FC<{}> = (props) => {
-  const { pushToQueue, shouldShowEditor } = useApp()
+  const { pushToQueue, setWindowFocus, shouldShowEditor } = useApp()
 
   useEffect(() => {
     function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
       pushToQueue(filePath)
     }
 
+    function onWindowBlur(): void {
+      setWindowFocus(false)
+    }
+
+    function onWindowFocus(): void {
+      setWindowFocus(true)
+    }
+
     getIpcRenderer().on('newScreenshot', onNewScreenshot)
+    getIpcRenderer().on('windowBlur', onWindowBlur)
+    getIpcRenderer().on('windowFocus', onWindowFocus)
 
     return () => {
       getIpcRenderer().removeListener('newScreenshot', onNewScreenshot)
+      getIpcRenderer().removeListener('windowBlur', onWindowBlur)
+      getIpcRenderer().removeListener('windowFocus', onWindowFocus)
     }
   })
 
