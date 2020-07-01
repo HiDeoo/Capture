@@ -41,8 +41,9 @@ let isApplicationQuitting = false
 async function createMainWindow(): Promise<void> {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    frame: false,
     height: 600,
-    show: false,
+    show: true,
     webPreferences: {
       allowRunningInsecureContent: false,
       preload: path.join(__dirname, 'preload'),

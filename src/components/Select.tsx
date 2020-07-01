@@ -18,7 +18,7 @@ export default Select
 /**
  * React Props.
  */
-interface Props {
+interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   onChange: React.ChangeEventHandler<HTMLSelectElement>
   options: (string | SelectOption)[]
 }
