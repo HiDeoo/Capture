@@ -10,6 +10,7 @@ import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
+import { DestinationId } from '../libs/Destination'
 
 // TODO Remove
 const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
@@ -128,16 +129,19 @@ function registerGlobalShortcuts(): void {
  */
 function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
-  getIpcMain(ipcMain).handle('newScreenshotOk', async (event: IpcMainInvokeEvent, filePath: string) => {
-    // TODO Extract & do something relevant
-    const destination = getDestination('transfer.sh')
+  getIpcMain(ipcMain).handle(
+    'newScreenshotOk',
+    async (event: IpcMainInvokeEvent, destinationId: DestinationId, filePath: string) => {
+      // TODO Extract & do something relevant
+      const destination = getDestination(destinationId)
 
-    await destination.share(filePath)
+      await destination.share(filePath)
 
-    if (mainWindow?.isVisible()) {
-      mainWindow.hide()
+      if (mainWindow?.isVisible()) {
+        mainWindow.hide()
+      }
     }
-  })
+  )
 }
 
 /**

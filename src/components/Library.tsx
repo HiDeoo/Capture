@@ -3,8 +3,8 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
-import { useSettings } from '../store'
 import type { ImgurSettings } from '../destinations/imgur'
+import { useSettings } from '../store'
 
 /**
  * Test component.

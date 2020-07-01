@@ -1,5 +1,7 @@
 import type { BrowserWindow, IpcMain, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from 'electron'
 
+import type { DestinationId } from '../libs/Destination'
+
 export type { IpcRendererEvent } from 'electron'
 
 /**
@@ -13,7 +15,7 @@ type CaptureMainToRendererEvents = {
  * Application renderer-to-main events.
  */
 type CaptureRendererToMainEvents = {
-  newScreenshotOk: (filePath: string) => void
+  newScreenshotOk: (destinationId: DestinationId, filePath: string) => void
 }
 
 /**

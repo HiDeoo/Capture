@@ -1,14 +1,27 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState } from 'react'
 
+import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
+import Select from './Select'
 import { useApp } from '../store'
+
+/**
+ * List of destinations options to use in a <Select />
+ */
+const destinationOptions = Object.entries(getDestinations()).map(([id, destination]) => {
+  return {
+    label: destination.getConfiguration().name,
+    value: id,
+  }
+})
 
 /**
  * Editor Component.
  */
 const Editor: React.FC<{}> = () => {
   const { pendingScreenshot, shiftFromQueue } = useApp()
+  const [destination, setDestination] = useState(destinationOptions[0].value)
 
   function onClickCancel(): void {
     shiftFromQueue()
@@ -16,7 +29,7 @@ const Editor: React.FC<{}> = () => {
 
   async function onClickOk(): Promise<void> {
     try {
-      await getIpcRenderer().invoke('newScreenshotOk', pendingScreenshot)
+      await getIpcRenderer().invoke('newScreenshotOk', destination, pendingScreenshot)
 
       // TODO
       shiftFromQueue()
@@ -26,10 +39,17 @@ const Editor: React.FC<{}> = () => {
     }
   }
 
+  function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>): void {
+    setDestination(event.target.value)
+  }
+
   return (
     <div>
       <button onClick={onClickCancel}>Cancel</button>
       <button onClick={onClickOk}>Ok</button>
+      <div>
+        <Select options={destinationOptions} onChange={onChangeSelect} />
+      </div>
       <div>{pendingScreenshot}</div>
       <div>
         <img src={`file://${pendingScreenshot}`} alt="" />
