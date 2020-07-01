@@ -24,7 +24,11 @@ export default class AppStore {
    */
   @computed
   get pendingScreenshot(): string {
-    return this.queue[0]
+    if (this.queue.length > 0) {
+      return this.queue[0]
+    }
+
+    throw new Error('Error while trying to access a pending screenshot in an empty queue.')
   }
 
   /**
