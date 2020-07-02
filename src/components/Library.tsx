@@ -20,11 +20,11 @@ const Library: React.FC<{}> = () => {
   }
 
   return (
-    <div>
+    <>
       Library
       <Button onClick={updateSetting}>Update destination setting</Button>
       <div>{JSON.stringify(t)}</div>
-    </div>
+    </>
   )
 }
 

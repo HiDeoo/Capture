@@ -44,7 +44,7 @@ const Editor: React.FC<{}> = () => {
   }
 
   return (
-    <div>
+    <>
       <button onClick={onClickCancel}>Cancel</button>
       <button onClick={onClickOk}>Ok</button>
       <div>
@@ -54,7 +54,7 @@ const Editor: React.FC<{}> = () => {
       <div>
         <img src={`file://${pendingScreenshot}`} alt="" />
       </div>
-    </div>
+    </>
   )
 }
 

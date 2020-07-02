@@ -1,7 +1,15 @@
+import { createGlobalStyle } from 'styled-components/macro'
+
 /**
  * Application theme.
  */
 export default {
+  sideBar: {
+    background: '#25242D',
+    border: '#1F1E26',
+    color: '#2C8CE0',
+    width: '52px',
+  },
   titleBar: {
     background: '#141314',
     border: '#000000',
@@ -23,3 +31,15 @@ export default {
     background: '#1b1a1e',
   },
 }
+
+/**
+ * CSS global style.
+ */
+export const GlobalStyle = createGlobalStyle`
+  html,
+  body,
+  body > div {
+    background-color: yellow;
+    height: 100vh;
+  }
+`
