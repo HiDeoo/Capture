@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 
-import Destination, { DestinationConfiguration, DestinationSettings } from '../libs/Destination'
 import { getUploadStreamData } from '../main/files'
+import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
 
 /**
  * Transfer.sh destination.

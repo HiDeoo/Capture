@@ -1,6 +1,6 @@
 import type { BrowserWindow, IpcMain, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from 'electron'
 
-import type { DestinationId } from '../libs/Destination'
+import type { DestinationId } from '../utils/Destination'
 
 export type { IpcRendererEvent } from 'electron'
 

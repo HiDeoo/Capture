@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx'
 
 import type { DestinationsSettings } from '../destinations'
-import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../libs/Destination'
+import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../utils/Destination'
 
 /**
  * The settings store.

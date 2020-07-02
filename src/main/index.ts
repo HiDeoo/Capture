@@ -10,7 +10,7 @@ import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
-import { DestinationId } from '../libs/Destination'
+import { DestinationId } from '../utils/Destination'
 
 // TODO Remove
 const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'

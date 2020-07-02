@@ -1,4 +1,4 @@
-import Destination, { DestinationConfiguration, DestinationSettings } from '../libs/Destination'
+import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
 
 /**
  * Imgur destination.
