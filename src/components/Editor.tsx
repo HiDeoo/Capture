@@ -1,10 +1,11 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
 import Select from './Select'
 import { useApp } from '../store'
+import { useTitleBar } from './TitleBar'
 
 /**
  * List of destinations options to use in a <Select />
@@ -20,8 +21,17 @@ const destinationOptions = Object.entries(getDestinations()).map(([id, destinati
  * Editor Component.
  */
 const Editor: React.FC<{}> = () => {
+  const { setTitleBarContent } = useTitleBar()
   const { pendingScreenshot, shiftFromQueue } = useApp()
   const [destination, setDestination] = useState(destinationOptions[0].value)
+
+  useEffect(() => {
+    setTitleBarContent(<div>In Editor</div>)
+
+    return () => {
+      setTitleBarContent(null)
+    }
+  }, [setTitleBarContent])
 
   function onClickCancel(): void {
     shiftFromQueue()

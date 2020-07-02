@@ -13,6 +13,7 @@ module.exports = {
   ],
   rules: {
     'no-shadow': 'error',
+    '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-floating-promises': ['error', { ignoreVoid: true }],
     '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],

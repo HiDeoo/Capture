@@ -17,14 +17,14 @@ const rootStore = new RootStore()
 /**
  * Various React contexts containing the individual stores.
  */
-const appContext = React.createContext(rootStore.appStore)
-const settingsContext = React.createContext(rootStore.settingsStore)
+const AppContext = React.createContext(rootStore.appStore)
+const SettingsContext = React.createContext(rootStore.settingsStore)
 
 /**
  * Various hooks to access the stores using React context.
  */
-export const useApp = (): QueueStore => React.useContext(appContext)
-export const useSettings = (): SettingsStore => React.useContext(settingsContext)
+export const useApp = (): QueueStore => React.useContext(AppContext)
+export const useSettings = (): SettingsStore => React.useContext(SettingsContext)
 
 /**
  * The asynchronous trunk used to auto load/persist parts of the store to local storage.

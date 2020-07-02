@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
@@ -7,6 +7,25 @@ import tw from 'tailwind.macro'
 import Button from './Button'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
+
+/**
+ * The context use to access & update the title bar content from a nested component.
+ */
+const TitleBarContext = React.createContext<TitleBarContext>({ titleBarContent: null, setTitleBarContent: () => {} })
+
+/**
+ * A hook to access the title bar context.
+ */
+export const useTitleBar = (): TitleBarContext => React.useContext(TitleBarContext)
+
+/**
+ * TitleBar context provider component.
+ */
+export const TitleBarProvider: React.FC<{}> = ({ children }) => {
+  const [titleBarContent, setTitleBarContent] = useState<React.ReactNode>(null)
+
+  return <TitleBarContext.Provider value={{ titleBarContent, setTitleBarContent }}>{children}</TitleBarContext.Provider>
+}
 
 /**
  * Wrapper component.
@@ -73,6 +92,7 @@ const Content = tw.div`pl-4`
  */
 const TitleBar: React.FC<{}> = () => {
   const { isFocused } = useApp()
+  const { titleBarContent } = useTitleBar()
 
   function onClickCloseButton(): Promise<void> {
     return getIpcRenderer().invoke('closeWindow')
@@ -87,7 +107,7 @@ const TitleBar: React.FC<{}> = () => {
           </svg>
         </CloseButton>
       </SideBar>
-      <Content>Capture</Content>
+      <Content>Capture - {titleBarContent}</Content>
     </Wrapper>
   )
 }
@@ -99,4 +119,12 @@ export default observer(TitleBar)
  */
 interface IsFocusedProps {
   isFocused: boolean
+}
+
+/**
+ * Interface describing the shape of the title bar context.
+ */
+interface TitleBarContext {
+  titleBarContent: React.ReactNode
+  setTitleBarContent: (newContent: React.ReactNode) => void
 }

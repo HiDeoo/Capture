@@ -11,7 +11,7 @@ import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import SideBar from './SideBar'
 import { useApp } from '../store'
 import Theme from '../utils/theme'
-import TitleBar from './TitleBar'
+import TitleBar, { TitleBarProvider } from './TitleBar'
 
 /**
  * Wrapper component.
@@ -73,11 +73,13 @@ const App: React.FC<{}> = (props) => {
       <GlobalStyle />
       <ThemeProvider theme={Theme}>
         <Wrapper>
-          <TitleBar />
-          <Main>
-            <SideBar />
-            <Content isFocused={isFocused}>{shouldShowEditor ? <Editor /> : <Library />}</Content>
-          </Main>
+          <TitleBarProvider>
+            <TitleBar />
+            <Main>
+              <SideBar />
+              <Content isFocused={isFocused}>{shouldShowEditor ? <Editor /> : <Library />}</Content>
+            </Main>
+          </TitleBarProvider>
         </Wrapper>
       </ThemeProvider>
     </>
