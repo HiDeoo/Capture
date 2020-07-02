@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components/macro'
-import { ifProp } from 'styled-tools'
+import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Button from './Button'
@@ -14,10 +14,10 @@ import { useApp } from '../store'
 const Wrapper = styled.div<IsFocusedProps>`
   ${tw`border-solid border-b flex flex-row items-center font-semibold`}
 
-  background-color: ${ifProp('isFocused', '#141314', '#161516')};
-  border-color: ${ifProp('isFocused', '#000000', '#080808')};
+  background-color: ${ifProp('isFocused', theme('titleBar.background'), theme('titleBar.blurred.background'))};
+  border-color: ${ifProp('isFocused', theme('titleBar.border'), theme('titleBar.blurred.border'))};
   height: 52px;
-  color: ${ifProp('isFocused', '#ffffff', '#e3e3e3')};
+  color: ${ifProp('isFocused', theme('titleBar.color'), theme('titleBar.blurred.color'))};
   -webkit-app-region: drag;
   -webkit-user-select: none;
 `
@@ -28,7 +28,11 @@ const Wrapper = styled.div<IsFocusedProps>`
 const CloseButton = styled(Button)<IsFocusedProps>`
   ${tw`rounded-full cursor-default`}
 
-  background-color: ${ifProp('isFocused', '#ef4f47', '#3d3b3f')};
+  background-color: ${ifProp(
+    'isFocused',
+    theme('titleBar.control.background'),
+    theme('titleBar.blurred.control.background')
+  )};
   height: 13px;
   margin-left: 19px;
   margin-right: 19px;
@@ -42,7 +46,7 @@ const CloseButton = styled(Button)<IsFocusedProps>`
 
   svg {
     display: none;
-    fill: #990001;
+    fill: ${theme('titleBar.control.color')};
     height: 11px;
     margin-left: 1px;
     width: 11px;

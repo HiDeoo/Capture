@@ -1,12 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import styled from 'styled-components/macro'
+import styled, { ThemeProvider } from 'styled-components/macro'
+import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Editor from './Editor'
 import Library from './Library'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import { useApp } from '../store'
+import Theme from '../utils/theme'
 import TitleBar from './TitleBar'
 
 /**
@@ -15,7 +17,7 @@ import TitleBar from './TitleBar'
 const Wrapper = styled.div`
   ${tw`h-screen w-screen text-white`}
 
-  background-color: #1b1a1e;
+  background-color: ${theme('window.background')};
 `
 
 /**
@@ -49,10 +51,12 @@ const App: React.FC<{}> = (props) => {
   })
 
   return (
-    <Wrapper>
-      <TitleBar />
-      {shouldShowEditor ? <Editor /> : <Library />}
-    </Wrapper>
+    <ThemeProvider theme={Theme}>
+      <Wrapper>
+        <TitleBar />
+        {shouldShowEditor ? <Editor /> : <Library />}
+      </Wrapper>
+    </ThemeProvider>
   )
 }
 
