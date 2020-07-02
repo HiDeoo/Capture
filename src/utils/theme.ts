@@ -15,6 +15,7 @@ export default {
     control: {
       background: '#ef4f47',
       color: '#990001',
+      size: '13px',
     },
     blurred: {
       background: '#161516',

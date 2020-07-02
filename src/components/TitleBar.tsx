@@ -5,8 +5,10 @@ import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Button from './Button'
+import Icon, { IconSymbol } from './Icon'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
+import TitleBarButton from './TitleBarButton'
 
 /**
  * The context use to access & update the title bar content from a nested component.
@@ -52,40 +54,44 @@ const SideBar = styled.div`
 `
 
 /**
+ * CloseButtonIcon component.
+ */
+const CloseButtonIcon = styled(Icon)`
+  ${tw`hidden font-extrabold`}
+
+  color: ${theme('titleBar.control.color')};
+  font-size: 9px;
+  height: ${theme('titleBar.control.size')};
+  width: ${theme('titleBar.control.size')};
+`
+
+/**
  * CloseButton component.
  */
 const CloseButton = styled(Button)<IsFocusedProps>`
-  ${tw`rounded-full cursor-default`}
+  ${tw`flex justify-center items-center cursor-default rounded-full`}
 
   background-color: ${ifProp(
     'isFocused',
     theme('titleBar.control.background'),
     theme('titleBar.blurred.control.background')
   )};
-  height: 13px;
+  height: ${theme('titleBar.control.size')};
   margin-left: 19px;
   margin-right: 19px;
-  width: 13px;
+  width: ${theme('titleBar.control.size')};
 
   &:hover {
-    svg {
-      display: block;
+    ${CloseButtonIcon} {
+      ${tw`block`}
     }
-  }
-
-  svg {
-    display: none;
-    fill: ${theme('titleBar.control.color')};
-    height: 11px;
-    margin-left: 1px;
-    width: 11px;
   }
 `
 
 /**
  * Content component.
  */
-const Content = tw.div`pl-4`
+const Content = tw.div`flex px-4`
 
 /**
  * TitleBar Component.
@@ -102,12 +108,16 @@ const TitleBar: React.FC<{}> = () => {
     <Wrapper isFocused={isFocused}>
       <SideBar>
         <CloseButton onClick={onClickCloseButton} isFocused={isFocused}>
-          <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
-            <path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
-          </svg>
+          <CloseButtonIcon symbol={IconSymbol.XMark} />
         </CloseButton>
       </SideBar>
-      <Content>Capture - {titleBarContent}</Content>
+      <Content>
+        <div>Capture</div>
+        <div>{titleBarContent}</div>
+        <div>
+          <TitleBarButton symbol={IconSymbol.XMark} />
+        </div>
+      </Content>
     </Wrapper>
   )
 }

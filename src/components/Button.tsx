@@ -6,8 +6,6 @@ import tw from 'tailwind.macro'
  * StyledButton component.
  */
 const StyledButton = styled.button`
-  ${tw`bg-red-900`}
-
   &:focus {
     ${tw`outline-none`}
   }
@@ -16,8 +14,13 @@ const StyledButton = styled.button`
 /**
  * Button Component.
  */
-const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (htmlProps) => {
-  return <StyledButton {...htmlProps} type="button" />
+const Button: React.FC<ButtonProps> = (restProps) => {
+  return <StyledButton {...restProps} type="button" />
 }
 
 export default Button
+
+/**
+ * React Props.
+ */
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
