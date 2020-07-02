@@ -66,6 +66,7 @@
     "react-dom": "16.13.1",
     "react-scripts": "3.4.1",
     "styled-components": "5.1.1",
+    "styled-tools": "1.7.2",
     "tailwind.macro": "1.0.0-alpha.10",
     "tailwindcss": "1.4.6",
     "typescript": "3.9.5",

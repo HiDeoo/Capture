@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components/macro'
+import { ifProp } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Button from './Button'
@@ -10,13 +11,13 @@ import { useApp } from '../store'
 /**
  * Wrapper component.
  */
-const Wrapper = styled.div<AppIsFocusedProps>`
+const Wrapper = styled.div<IsFocusedProps>`
   ${tw`border-solid border-b flex flex-row items-center font-semibold`}
 
-  background-color: ${(props) => (props.appIsFocused ? '#141314' : '#161516')};
-  border-color: ${(props) => (props.appIsFocused ? '#000000' : '#080808')};
+  background-color: ${ifProp('isFocused', '#141314', '#161516')};
+  border-color: ${ifProp('isFocused', '#000000', '#080808')};
   height: 52px;
-  color: ${(props) => (props.appIsFocused ? '#ffffff' : '#e3e3e3')};
+  color: ${ifProp('isFocused', '#ffffff', '#e3e3e3')};
   -webkit-app-region: drag;
   -webkit-user-select: none;
 `
@@ -24,10 +25,10 @@ const Wrapper = styled.div<AppIsFocusedProps>`
 /**
  * CloseButton component.
  */
-const CloseButton = styled(Button)<AppIsFocusedProps>`
+const CloseButton = styled(Button)<IsFocusedProps>`
   ${tw`rounded-full cursor-default`}
 
-  background-color: ${(props) => (props.appIsFocused ? '#ef4f47' : '#3d3b3f')};
+  background-color: ${ifProp('isFocused', '#ef4f47', '#3d3b3f')};
   height: 13px;
   margin-left: 19px;
   margin-right: 19px;
@@ -59,8 +60,8 @@ const TitleBar: React.FC<{}> = () => {
   }
 
   return (
-    <Wrapper appIsFocused={isFocused}>
-      <CloseButton onClick={onClickCloseButton} appIsFocused={isFocused}>
+    <Wrapper isFocused={isFocused}>
+      <CloseButton onClick={onClickCloseButton} isFocused={isFocused}>
         <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
           <path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
         </svg>
@@ -75,6 +76,6 @@ export default observer(TitleBar)
 /**
  * React Props.
  */
-interface AppIsFocusedProps {
-  appIsFocused: boolean
+interface IsFocusedProps {
+  isFocused: boolean
 }
