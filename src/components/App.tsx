@@ -5,11 +5,12 @@ import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Editor from './Editor'
+import GlobalStyle from './GlobalStyle'
 import Library from './Library'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import SideBar from './SideBar'
 import { useApp } from '../store'
-import Theme, { GlobalStyle } from '../utils/theme'
+import Theme from '../utils/theme'
 import TitleBar from './TitleBar'
 
 /**

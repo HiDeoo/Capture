@@ -1,5 +1,3 @@
-import { createGlobalStyle } from 'styled-components/macro'
-
 /**
  * Application theme.
  */
@@ -31,15 +29,3 @@ export default {
     background: '#1b1a1e',
   },
 }
-
-/**
- * CSS global style.
- */
-export const GlobalStyle = createGlobalStyle`
-  html,
-  body,
-  body > div {
-    background-color: yellow;
-    height: 100vh;
-  }
-`

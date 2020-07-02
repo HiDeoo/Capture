@@ -11,6 +11,7 @@ import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
 import { DestinationId } from '../utils/Destination'
+import Theme from '../utils/theme'
 
 // TODO Remove
 const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
@@ -41,6 +42,7 @@ let isApplicationQuitting = false
 async function createWindow(): Promise<void> {
   // Create the browser window.
   window = new BrowserWindow({
+    backgroundColor: Theme.window.background,
     frame: false,
     height: 600,
     show: false,
