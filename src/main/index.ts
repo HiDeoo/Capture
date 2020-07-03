@@ -1,7 +1,15 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import { app, BrowserWindow, globalShortcut, ipcMain, IpcMainInvokeEvent, protocol, Tray } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain as unsafeIpcMain,
+  IpcMainInvokeEvent,
+  protocol,
+  Tray,
+} from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
@@ -12,6 +20,11 @@ import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
 import { DestinationId } from '../utils/Destination'
 import Theme from '../utils/theme'
+
+/**
+ * The typed IPC main module.
+ */
+const ipcMain = getIpcMain(unsafeIpcMain)
 
 // TODO Remove
 const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
@@ -135,9 +148,9 @@ function registerGlobalShortcuts(): void {
 function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
 
-  getIpcMain(ipcMain).handle('closeWindow', onWindowClose)
+  ipcMain.handle('closeWindow', onWindowClose)
 
-  getIpcMain(ipcMain).handle(
+  ipcMain.handle(
     'shareScreenshot',
     async (event: IpcMainInvokeEvent, destinationId: DestinationId, filePath: string) => {
       // TODO Extract & do something relevant
@@ -156,8 +169,8 @@ function registerIpcHandlers(): void {
  * Unregisters IPC handlers for messages from the renderer process.
  */
 function unregisterIpcHandlers(): void {
-  getIpcMain(ipcMain).removeHandler('shareScreenshot')
-  getIpcMain(ipcMain).removeHandler('closeWindow')
+  ipcMain.removeHandler('shareScreenshot')
+  ipcMain.removeHandler('closeWindow')
 }
 
 /**

@@ -42,6 +42,7 @@ const Content = styled.div<ContentProps>`
  * App Component.
  */
 const App: React.FC<{}> = (props) => {
+  const ipcRenderer = getIpcRenderer()
   const { isFocused, pushToQueue, setWindowFocus, shouldShowEditor } = useApp()
 
   useEffect(() => {
@@ -57,14 +58,14 @@ const App: React.FC<{}> = (props) => {
       setWindowFocus(true)
     }
 
-    getIpcRenderer().on('newScreenshot', onNewScreenshot)
-    getIpcRenderer().on('windowBlur', onWindowBlur)
-    getIpcRenderer().on('windowFocus', onWindowFocus)
+    ipcRenderer.on('newScreenshot', onNewScreenshot)
+    ipcRenderer.on('windowBlur', onWindowBlur)
+    ipcRenderer.on('windowFocus', onWindowFocus)
 
     return () => {
-      getIpcRenderer().removeListener('newScreenshot', onNewScreenshot)
-      getIpcRenderer().removeListener('windowBlur', onWindowBlur)
-      getIpcRenderer().removeListener('windowFocus', onWindowFocus)
+      ipcRenderer.removeListener('newScreenshot', onNewScreenshot)
+      ipcRenderer.removeListener('windowBlur', onWindowBlur)
+      ipcRenderer.removeListener('windowFocus', onWindowFocus)
     }
   })
 
