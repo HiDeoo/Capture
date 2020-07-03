@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Button, { ButtonProps } from './Button'
@@ -9,7 +10,23 @@ import Icon, { IconSymbol } from './Icon'
  * StyledButton component.
  */
 const StyledButton = styled(Button)`
-  ${tw`font-semibold`}
+  ${tw`font-semibold rounded-md`}
+
+  margin: 0 1px;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+
+  &:hover {
+    background-color: ${theme('titleBar.button.background')};
+    color: ${theme('titleBar.button.color')};
+  }
+`
+
+/**
+ * StyledIcon component.
+ */
+const StyledIcon = styled(Icon)`
+  font-size: 20px;
 `
 
 /**
@@ -18,7 +35,7 @@ const StyledButton = styled(Button)`
 const TitleBarButton: React.FC<Props> = ({ symbol, ...restProps }) => {
   return (
     <StyledButton {...restProps}>
-      <Icon symbol={symbol} />
+      <StyledIcon symbol={symbol} />
     </StyledButton>
   )
 }

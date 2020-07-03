@@ -63,6 +63,7 @@ const CloseButtonIcon = styled(Icon)`
   font-size: 9px;
   height: ${theme('titleBar.control.size')};
   width: ${theme('titleBar.control.size')};
+  -webkit-app-region: no-drag;
 `
 
 /**
@@ -89,11 +90,6 @@ const CloseButton = styled(Button)<IsFocusedProps>`
 `
 
 /**
- * Content component.
- */
-const Content = tw.div`flex px-4`
-
-/**
  * TitleBar Component.
  */
 const TitleBar: React.FC<{}> = () => {
@@ -111,13 +107,15 @@ const TitleBar: React.FC<{}> = () => {
           <CloseButtonIcon symbol={IconSymbol.XMark} />
         </CloseButton>
       </SideBar>
-      <Content>
-        <div>Capture</div>
-        <div>{titleBarContent}</div>
-        <div>
-          <TitleBarButton symbol={IconSymbol.XMark} />
-        </div>
-      </Content>
+      <div css={tw`flex px-4 w-full h-full items-center`}>
+        Capture
+        <div css={tw`flex-1`} />
+        {titleBarContent}
+        <TitleBarButton symbol={IconSymbol.XMark} />
+        <TitleBarButton symbol={IconSymbol.XMark} />
+        <TitleBarButton symbol={IconSymbol.XMark} />
+        <TitleBarButton symbol={IconSymbol.XMark} />
+      </div>
     </Wrapper>
   )
 }

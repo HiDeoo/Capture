@@ -11,6 +11,10 @@ export default {
   titleBar: {
     background: '#141314',
     border: '#000000',
+    button: {
+      background: '#333033',
+      color: '#2e91e8',
+    },
     color: '#ffffff',
     control: {
       background: '#ef4f47',
