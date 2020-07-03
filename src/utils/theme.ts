@@ -12,7 +12,7 @@ export default {
     background: '#141314',
     border: '#000000',
     button: {
-      background: '#333033',
+      background: '#2b282b',
       color: '#2e91e8',
     },
     color: '#ffffff',

@@ -8,7 +8,6 @@ import Button from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
-import TitleBarButton from './TitleBarButton'
 
 /**
  * The context use to access & update the title bar content from a nested component.
@@ -111,10 +110,6 @@ const TitleBar: React.FC<{}> = () => {
         Capture
         <div css={tw`flex-1`} />
         {titleBarContent}
-        <TitleBarButton symbol={IconSymbol.XMark} />
-        <TitleBarButton symbol={IconSymbol.XMark} />
-        <TitleBarButton symbol={IconSymbol.XMark} />
-        <TitleBarButton symbol={IconSymbol.XMark} />
       </div>
     </Wrapper>
   )

@@ -1,11 +1,12 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
 import Select from './Select'
 import { useApp } from '../store'
 import { useTitleBar } from './TitleBar'
+import TitleBarButton, { IconSymbol } from './TitleBarButton'
 
 /**
  * List of destinations options to use in a <Select />
@@ -25,19 +26,11 @@ const Editor: React.FC<{}> = () => {
   const { pendingScreenshot, shiftFromQueue } = useApp()
   const [destination, setDestination] = useState(destinationOptions[0].value)
 
-  useEffect(() => {
-    setTitleBarContent(<div>In Editor</div>)
-
-    return () => {
-      setTitleBarContent(null)
-    }
-  }, [setTitleBarContent])
-
-  function onClickCancel(): void {
+  const onClickCancel = useCallback(() => {
     shiftFromQueue()
-  }
+  }, [shiftFromQueue])
 
-  async function onClickOk(): Promise<void> {
+  const onClickShare = useCallback(async () => {
     try {
       await getIpcRenderer().invoke('shareScreenshot', destination, pendingScreenshot)
 
@@ -47,7 +40,20 @@ const Editor: React.FC<{}> = () => {
       // TODO Handle errors
       console.log('error ', error)
     }
-  }
+  }, [shiftFromQueue, destination, pendingScreenshot])
+
+  useEffect(() => {
+    setTitleBarContent(
+      <>
+        <TitleBarButton symbol={IconSymbol.XMark} onClick={onClickCancel} />
+        <TitleBarButton symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
+      </>
+    )
+
+    return () => {
+      setTitleBarContent(null)
+    }
+  }, [setTitleBarContent, onClickCancel, onClickShare])
 
   function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>): void {
     setDestination(event.target.value)
@@ -55,8 +61,6 @@ const Editor: React.FC<{}> = () => {
 
   return (
     <>
-      <button onClick={onClickCancel}>Cancel</button>
-      <button onClick={onClickOk}>Ok</button>
       <div>
         <Select options={destinationOptions} onChange={onChangeSelect} />
       </div>

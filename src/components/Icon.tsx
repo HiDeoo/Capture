@@ -12,6 +12,7 @@ const Wrapper = styled.span`
  * Available icon symbols from the SF Symbols 1.1 font.
  */
 export enum IconSymbol {
+  PaperPlane = '􀈟',
   XMark = '􀆄',
 }
 

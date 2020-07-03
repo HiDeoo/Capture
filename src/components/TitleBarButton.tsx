@@ -6,14 +6,15 @@ import tw from 'tailwind.macro'
 import Button, { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 
+export { IconSymbol }
+
 /**
  * StyledButton component.
  */
 const StyledButton = styled(Button)`
   ${tw`font-semibold rounded-md`}
 
-  margin: 0 1px;
-  padding: 0 8px;
+  padding: 1px 8px;
   -webkit-app-region: no-drag;
 
   &:hover {

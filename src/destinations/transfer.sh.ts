@@ -39,6 +39,11 @@ class TransferSh implements Destination {
       body: stream,
     })
 
+    if (!response.ok) {
+      // TODO Refactor & handle errors
+      throw new Error(`Could not share screenshot to ${this.getConfiguration().name}.`)
+    }
+
     const text = await response.text()
 
     console.log('Shared URL ', text)
