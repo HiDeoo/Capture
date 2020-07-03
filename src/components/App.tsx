@@ -33,7 +33,7 @@ const Main = styled.div`
  * Content component.
  */
 const Content = styled.div<ContentProps>`
-  ${tw`h-full flex-1 border-solid border-t overflow-y-auto p-4`}
+  ${tw`h-full flex-1 border-solid border-t overflow-y-auto flex flex-col`}
 
   border-color: ${ifProp('isFocused', theme('titleBar.border'), theme('titleBar.blurred.border'))};
 `

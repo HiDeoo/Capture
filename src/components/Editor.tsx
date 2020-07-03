@@ -1,5 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React, { useState, useEffect, useCallback } from 'react'
+import 'styled-components/macro'
+import tw from 'tailwind.macro'
 
 import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
@@ -61,12 +63,74 @@ const Editor: React.FC<{}> = () => {
 
   return (
     <>
-      <div>
-        <Select options={destinationOptions} onChange={onChangeSelect} />
-      </div>
-      <div>{pendingScreenshot}</div>
-      <div>
-        <img src={`file://${pendingScreenshot}`} alt="" />
+      <div>bar</div>
+      <div css={tw`px-3 py-2 bg-red-900 overflow-y-auto`}>
+        <div>
+          <Select options={destinationOptions} onChange={onChangeSelect} />
+        </div>
+        <div>{pendingScreenshot}</div>
+        <div>
+          <img src={`file://${pendingScreenshot}`} alt="" />
+        </div>
+        <div>
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          test
+          <br />
+          end
+        </div>
       </div>
     </>
   )

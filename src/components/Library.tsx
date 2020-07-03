@@ -1,5 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
+import 'styled-components/macro'
+import tw from 'tailwind.macro'
 
 import Button from './Button'
 import type { ImgurSettings } from '../destinations/imgur'
@@ -20,11 +22,70 @@ const Library: React.FC<{}> = () => {
   }
 
   return (
-    <>
+    <div css={tw`px-3 py-2`}>
       Library
       <Button onClick={updateSetting}>Update destination setting</Button>
       <div>{JSON.stringify(t)}</div>
-    </>
+      <div>
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        test
+        <br />
+        end
+      </div>
+    </div>
   )
 }
 
