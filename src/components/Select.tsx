@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import { ifProp } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Icon, { IconSymbol } from './Icon'
@@ -14,6 +15,10 @@ const StyledSelect = styled.select`
     ${tw`cursor-pointer`}
   }
 
+  &:disabled {
+    ${tw`cursor-not-allowed`}
+  }
+
   &:focus {
     ${tw`outline-none`}
   }
@@ -22,17 +27,18 @@ const StyledSelect = styled.select`
 /**
  * StyledIcon component.
  */
-const StyledIcon = styled(Icon)`
+const StyledIcon = styled(Icon)<StyledIconProps>`
   ${tw`absolute top-0 right-0 px-3 pointer-events-none`}
 
   font-size: 14px;
+  opacity: ${ifProp('disabled', 0.6, 1)};
   padding-top: 6px;
 `
 
 /**
  * Select Component.
  */
-const Select: React.FC<Props> = ({ options, ...restProps }) => {
+const Select: React.FC<Props> = ({ disabled, options, ...restProps }) => {
   const children = options.map((option) => {
     const optionProps: SelectOption = typeof option === 'object' ? option : { value: option }
 
@@ -41,8 +47,10 @@ const Select: React.FC<Props> = ({ options, ...restProps }) => {
 
   return (
     <div css={tw`relative`}>
-      <StyledSelect {...restProps}>{children}</StyledSelect>
-      <StyledIcon symbol={IconSymbol.ChevronDown} />
+      <StyledSelect {...restProps} disabled={disabled}>
+        {children}
+      </StyledSelect>
+      <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled ?? false} />
     </div>
   )
 }
@@ -52,7 +60,7 @@ export default Select
 /**
  * React Props.
  */
-interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   onChange: React.ChangeEventHandler<HTMLSelectElement>
   options: (string | SelectOption)[]
 }
@@ -63,4 +71,11 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
 export interface SelectOption {
   label?: string
   value: string
+}
+
+/**
+ * React Props.
+ */
+interface StyledIconProps {
+  disabled: boolean
 }

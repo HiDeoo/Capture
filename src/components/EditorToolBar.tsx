@@ -4,7 +4,7 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import DestinationSelect from './DestinationSelect'
-import ToolBar from './ToolBar'
+import ToolBar, { ToolbarLockedProps } from './ToolBar'
 import { DestinationId } from '../utils/Destination'
 
 /**
@@ -16,7 +16,7 @@ const Select = styled(DestinationSelect)`
   background-color: ${theme('toolbar.button.background')};
   border-color: ${theme('toolbar.button.border')};
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: ${theme('toolbar.button.hover.background')};
     border-color: ${theme('toolbar.button.hover.border')};
     color: ${theme('toolbar.button.hover.color')};
@@ -25,16 +25,20 @@ const Select = styled(DestinationSelect)`
       color: ${theme('toolbar.button.hover.color')};
     }
   }
+
+  &:disabled {
+    opacity: 0.6;
+  }
 `
 
 /**
  * EditorToolBar Component.
  */
-const EditorToolBar: React.FC<Props> = ({ onChangeDestination }) => {
+const EditorToolBar: React.FC<Props> = ({ onChangeDestination, locked }) => {
   return (
     <ToolBar top>
       <div css={tw`flex-1`} />
-      <Select onChangeDestination={onChangeDestination} />
+      <Select onChangeDestination={onChangeDestination} disabled={locked} />
     </ToolBar>
   )
 }
@@ -44,6 +48,6 @@ export default EditorToolBar
 /**
  * React Props.
  */
-interface Props {
+interface Props extends ToolbarLockedProps {
   onChangeDestination: (destinationId: DestinationId) => void
 }

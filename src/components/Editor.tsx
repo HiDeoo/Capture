@@ -27,7 +27,7 @@ const Image = styled.img`
  */
 const Editor: React.FC<{}> = () => {
   const { setTitleBarContent } = useTitleBar()
-  const { pendingScreenshot, shiftFromQueue } = useApp()
+  const { isUiLocked, pendingScreenshot, shiftFromQueue } = useApp()
   const [destination, setDestination] = useState(defaultDestination)
 
   const onClickCancel = useCallback(() => {
@@ -65,11 +65,11 @@ const Editor: React.FC<{}> = () => {
 
   return (
     <>
-      <EditorToolBar onChangeDestination={onChangeDestination} />
+      <EditorToolBar locked={isUiLocked} onChangeDestination={onChangeDestination} />
       <div css={tw`p-3 h-full overflow-auto`}>
         <Image src={`file://${pendingScreenshot}`} alt="" />
       </div>
-      <EditorInfoBar filePath={pendingScreenshot} />
+      <EditorInfoBar locked={isUiLocked} filePath={pendingScreenshot} />
     </>
   )
 }

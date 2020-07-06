@@ -35,3 +35,10 @@ interface Props {
   bottom?: boolean
   top?: boolean
 }
+
+/**
+ * React Props.
+ */
+export interface ToolbarLockedProps {
+  locked: boolean
+}

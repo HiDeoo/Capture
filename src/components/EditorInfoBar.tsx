@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
-import ToolBar from './ToolBar'
+import ToolBar, { ToolbarLockedProps } from './ToolBar'
 
 /**
  * StyledToolbar component.
@@ -28,6 +28,6 @@ export default EditorInfoBar
 /**
  * React Props.
  */
-interface Props {
+interface Props extends ToolbarLockedProps {
   filePath: string
 }

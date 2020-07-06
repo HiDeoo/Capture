@@ -36,6 +36,6 @@ export default DestinationSelect
 /**
  * React Props.
  */
-interface Props {
+interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   onChangeDestination: (destinationId: DestinationId) => void
 }
