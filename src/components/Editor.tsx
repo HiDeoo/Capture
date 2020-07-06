@@ -7,11 +7,22 @@ import tw from 'tailwind.macro'
 import { defaultDestination } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
+import LoadingBar from './LoadingBar'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
 import { DestinationId } from '../utils/Destination'
+
+/**
+ * Content component.
+ */
+const Content = styled.div`
+  ${tw`h-full overflow-auto`}
+
+  padding: 14px;
+  padding-top: 11px;
+`
 
 /**
  * Image component.
@@ -66,12 +77,20 @@ const Editor: React.FC<{}> = () => {
   return (
     <>
       <EditorToolBar locked={isUiLocked} onChangeDestination={onChangeDestination} />
-      <div css={tw`p-3 h-full overflow-auto`}>
+      <LoadingBar enabled={isUiLocked} />
+      <Content>
         <Image src={`file://${pendingScreenshot}`} alt="" />
-      </div>
+      </Content>
       <EditorInfoBar locked={isUiLocked} filePath={pendingScreenshot} />
     </>
   )
 }
 
 export default observer(Editor)
+
+/**
+ * React Props.
+ */
+interface LoadingBarProps {
+  enabled: boolean
+}

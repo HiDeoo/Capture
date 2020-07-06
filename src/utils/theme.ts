@@ -1,7 +1,12 @@
+const tintColor = '#2e91e8'
+
 /**
  * Application theme.
  */
 export default {
+  colors: {
+    tint: tintColor,
+  },
   editor: {
     border: '#000000',
   },
@@ -16,7 +21,7 @@ export default {
     border: '#000000',
     button: {
       background: '#2b282b',
-      color: '#2e91e8',
+      color: tintColor,
     },
     color: '#ffffff',
     control: {
@@ -42,7 +47,7 @@ export default {
       hover: {
         background: '#2a282a',
         border: '#000000',
-        color: '#2e91e8',
+        color: tintColor,
       },
     },
   },
