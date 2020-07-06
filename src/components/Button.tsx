@@ -9,6 +9,10 @@ const StyledButton = styled.button`
   &:focus {
     ${tw`outline-none`}
   }
+
+  &:disabled {
+    ${tw`cursor-not-allowed`}
+  }
 `
 
 /**

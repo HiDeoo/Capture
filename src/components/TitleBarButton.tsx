@@ -17,9 +17,13 @@ const StyledButton = styled(Button)`
   padding: 1px 8px;
   -webkit-app-region: no-drag;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: ${theme('titleBar.button.background')};
     color: ${theme('titleBar.button.color')};
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 `
 

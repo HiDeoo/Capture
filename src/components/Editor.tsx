@@ -49,15 +49,15 @@ const Editor: React.FC<{}> = () => {
   useEffect(() => {
     setTitleBarContent(
       <>
-        <TitleBarButton symbol={IconSymbol.XMark} onClick={onClickCancel} />
-        <TitleBarButton symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
+        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={onClickCancel} />
+        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
       </>
     )
 
     return () => {
       setTitleBarContent(null)
     }
-  }, [setTitleBarContent, onClickCancel, onClickShare])
+  }, [isUiLocked, onClickCancel, onClickShare, setTitleBarContent])
 
   function onChangeDestination(destinationId: DestinationId): void {
     setDestination(destinationId)
