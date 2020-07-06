@@ -7,7 +7,7 @@ import tw from 'tailwind.macro'
  * Wrapper component.
  */
 const Wrapper = styled.div<Props>`
-  ${tw`flex px-4 py-2 border-solid`}
+  ${tw`flex px-4 py-2 border-solid text-sm select-none`}
 
   background-color: ${theme('toolbar.background')};
   border-color: ${theme('toolbar.border')};
@@ -18,9 +18,9 @@ const Wrapper = styled.div<Props>`
 /**
  * ToolBar Component.
  */
-const ToolBar: React.FC<Props> = ({ bottom = false, children, top = false }) => {
+const ToolBar: React.FC<Props> = ({ bottom = false, children, top = false, ...restProps }) => {
   return (
-    <Wrapper bottom={bottom} top={top}>
+    <Wrapper {...restProps} bottom={bottom} top={top}>
       {children}
     </Wrapper>
   )

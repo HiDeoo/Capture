@@ -4,6 +4,7 @@ import 'styled-components/macro'
 import tw from 'tailwind.macro'
 
 import { defaultDestination } from './DestinationSelect'
+import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
@@ -120,6 +121,7 @@ const Editor: React.FC<{}> = () => {
           end
         </div>
       </div>
+      <EditorInfoBar filePath={pendingScreenshot} />
     </>
   )
 }

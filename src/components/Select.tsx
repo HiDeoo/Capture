@@ -8,7 +8,7 @@ import Icon, { IconSymbol } from './Icon'
  * StyledSelect component.
  */
 const StyledSelect = styled.select`
-  ${tw`rounded pl-3 py-2 appearance-none pr-10`}
+  ${tw`rounded pl-3 py-1 appearance-none pr-10`}
 
   &:hover {
     ${tw`cursor-pointer`}
@@ -26,7 +26,7 @@ const StyledIcon = styled(Icon)`
   ${tw`absolute top-0 right-0 px-3 pointer-events-none`}
 
   font-size: 14px;
-  padding-top: 10px;
+  padding-top: 6px;
 `
 
 /**

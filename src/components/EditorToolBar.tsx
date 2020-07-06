@@ -11,7 +11,7 @@ import { DestinationId } from '../utils/Destination'
  * Select component.
  */
 const Select = styled(DestinationSelect)`
-  ${tw`border border-solid text-sm font-semibold`}
+  ${tw`border border-solid font-semibold`}
 
   background-color: ${theme('toolbar.button.background')};
   border-color: ${theme('toolbar.button.border')};
