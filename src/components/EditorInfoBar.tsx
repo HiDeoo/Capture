@@ -17,7 +17,7 @@ const StyledToolbar = styled(ToolBar)`
 const EditorInfoBar: React.FC<Props> = ({ filePath }) => {
   return (
     <StyledToolbar bottom>
-      <div>{filePath} qsdsd d s dqsdq sdqsdq</div>
+      <div>{filePath}</div>
       <div css={tw`flex-1`} />
     </StyledToolbar>
   )
