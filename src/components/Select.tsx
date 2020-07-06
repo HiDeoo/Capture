@@ -1,4 +1,33 @@
 import React from 'react'
+import styled from 'styled-components/macro'
+import tw from 'tailwind.macro'
+
+import Icon, { IconSymbol } from './Icon'
+
+/**
+ * StyledSelect component.
+ */
+const StyledSelect = styled.select`
+  ${tw`rounded pl-3 py-2 appearance-none pr-10`}
+
+  &:hover {
+    ${tw`cursor-pointer`}
+  }
+
+  &:focus {
+    ${tw`outline-none`}
+  }
+`
+
+/**
+ * StyledIcon component.
+ */
+const StyledIcon = styled(Icon)`
+  ${tw`absolute top-0 right-0 px-3 pointer-events-none`}
+
+  font-size: 14px;
+  padding-top: 10px;
+`
 
 /**
  * Select Component.
@@ -10,7 +39,12 @@ const Select: React.FC<Props> = ({ options, ...restProps }) => {
     return <option {...optionProps} key={optionProps.value} children={optionProps.label || optionProps.value} />
   })
 
-  return <select {...restProps}>{children}</select>
+  return (
+    <div css={tw`relative`}>
+      <StyledSelect {...restProps}>{children}</StyledSelect>
+      <StyledIcon symbol={IconSymbol.ChevronDown} />
+    </div>
+  )
 }
 
 export default Select

@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 /**
  * Wrapper component.
  */
-const Wrapper = styled.span`
+const Wrapper = styled.span.attrs({ className: 'icon' })`
   font-family: 'SF Pro Display';
 `
 
@@ -12,6 +12,7 @@ const Wrapper = styled.span`
  * Available icon symbols from the SF Symbols 1.1 font.
  */
 export enum IconSymbol {
+  ChevronDown = '􀆈',
   PaperPlane = '􀈟',
   XMark = '􀆄',
 }

@@ -3,22 +3,13 @@ import React, { useState, useEffect, useCallback } from 'react'
 import 'styled-components/macro'
 import tw from 'tailwind.macro'
 
-import { getDestinations } from '../destinations'
+import { defaultDestination } from './DestinationSelect'
+import EditorToolBar from './EditorToolBar'
 import { getIpcRenderer } from '../main/ipc'
-import Select from './Select'
 import { useApp } from '../store'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
-
-/**
- * List of destinations options to use in a <Select />
- */
-const destinationOptions = Object.entries(getDestinations()).map(([id, destination]) => {
-  return {
-    label: destination.getConfiguration().name,
-    value: id,
-  }
-})
+import { DestinationId } from '../utils/Destination'
 
 /**
  * Editor Component.
@@ -26,7 +17,7 @@ const destinationOptions = Object.entries(getDestinations()).map(([id, destinati
 const Editor: React.FC<{}> = () => {
   const { setTitleBarContent } = useTitleBar()
   const { pendingScreenshot, shiftFromQueue } = useApp()
-  const [destination, setDestination] = useState(destinationOptions[0].value)
+  const [destination, setDestination] = useState(defaultDestination)
 
   const onClickCancel = useCallback(() => {
     shiftFromQueue()
@@ -57,17 +48,14 @@ const Editor: React.FC<{}> = () => {
     }
   }, [setTitleBarContent, onClickCancel, onClickShare])
 
-  function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>): void {
-    setDestination(event.target.value)
+  function onChangeDestination(destinationId: DestinationId): void {
+    setDestination(destinationId)
   }
 
   return (
     <>
-      <div>bar</div>
-      <div css={tw`px-3 py-2 bg-red-900 overflow-y-auto`}>
-        <div>
-          <Select options={destinationOptions} onChange={onChangeSelect} />
-        </div>
+      <EditorToolBar onChangeDestination={onChangeDestination} />
+      <div css={tw`px-3 py-2 overflow-y-auto`}>
         <div>{pendingScreenshot}</div>
         <div>
           <img src={`file://${pendingScreenshot}`} alt="" />

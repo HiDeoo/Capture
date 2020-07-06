@@ -3,9 +3,9 @@
  */
 export default {
   sideBar: {
-    background: '#25242D',
-    border: '#1F1E26',
-    color: '#2C8CE0',
+    background: '#25242d',
+    border: '#1f1e26',
+    color: '#2c8ce0',
     width: '52px',
   },
   titleBar: {
@@ -27,6 +27,19 @@ export default {
       color: '#e3e3e3',
       control: {
         background: '#3d3b3f',
+      },
+    },
+  },
+  toolbar: {
+    background: '#181718',
+    border: '#0e0e0e',
+    button: {
+      background: '#252325',
+      border: '#0e0e0e',
+      hover: {
+        background: '#2a282a',
+        border: '#000000',
+        color: '#2e91e8',
       },
     },
   },
