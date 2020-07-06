@@ -2,6 +2,9 @@
  * Application theme.
  */
 export default {
+  editor: {
+    border: '#000000',
+  },
   sideBar: {
     background: '#25242d',
     border: '#1f1e26',

@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React, { useState, useEffect, useCallback } from 'react'
-import 'styled-components/macro'
+import styled from 'styled-components/macro'
+import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { defaultDestination } from './DestinationSelect'
@@ -11,6 +12,15 @@ import { useApp } from '../store'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
 import { DestinationId } from '../utils/Destination'
+
+/**
+ * Image component.
+ */
+const Image = styled.img`
+  ${tw`border border-solid`}
+
+  border-color: ${theme('editor.border')};
+`
 
 /**
  * Editor Component.
@@ -56,70 +66,8 @@ const Editor: React.FC<{}> = () => {
   return (
     <>
       <EditorToolBar onChangeDestination={onChangeDestination} />
-      <div css={tw`px-3 py-2 overflow-y-auto`}>
-        <div>{pendingScreenshot}</div>
-        <div>
-          <img src={`file://${pendingScreenshot}`} alt="" />
-        </div>
-        <div>
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          test
-          <br />
-          end
-        </div>
+      <div css={tw`p-3 h-full overflow-auto`}>
+        <Image src={`file://${pendingScreenshot}`} alt="" />
       </div>
       <EditorInfoBar filePath={pendingScreenshot} />
     </>
