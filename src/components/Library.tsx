@@ -5,13 +5,14 @@ import tw from 'tailwind.macro'
 
 import Button from './Button'
 import type { ImgurSettings } from '../destinations/imgur'
-import { useSettings } from '../store'
+import { useSettings, useHistory } from '../store'
 
 /**
  * Library Component.
  */
 const Library: React.FC<{}> = () => {
   const { getDestinationSettings, setDestinationSetting } = useSettings()
+  const { clearHistory, entries } = useHistory()
 
   // TODO Remove
   const t = getDestinationSettings<ImgurSettings>('imgur')
@@ -23,67 +24,15 @@ const Library: React.FC<{}> = () => {
 
   return (
     <div css={tw`px-3 py-2`}>
-      Library
-      <Button onClick={updateSetting}>Update destination setting</Button>
-      <div>{JSON.stringify(t)}</div>
       <div>
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        test
-        <br />
-        end
+        <Button onClick={updateSetting}>Update destination setting</Button> -{' '}
+        <Button onClick={clearHistory}>Clear history</Button>
+        <div>{JSON.stringify(t)}</div>
+      </div>
+      <div>
+        {entries.map((entry) => (
+          <div>{entry.path}</div>
+        ))}
       </div>
     </div>
   )

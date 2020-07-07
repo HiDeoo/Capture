@@ -9,7 +9,7 @@ import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
 import LoadingBar from './LoadingBar'
 import { getIpcRenderer } from '../main/ipc'
-import { useApp } from '../store'
+import { useApp, useHistory } from '../store'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
 import { DestinationId } from '../utils/Destination'
@@ -37,6 +37,7 @@ const Image = styled.img`
  * Editor Component.
  */
 const Editor: React.FC<{}> = () => {
+  const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const [destination, setDestination] = useState(defaultDestination)
@@ -51,7 +52,8 @@ const Editor: React.FC<{}> = () => {
 
       await getIpcRenderer().invoke('shareScreenshot', destination, pendingScreenshot)
 
-      // TODO
+      addToHistory({ path: pendingScreenshot })
+
       shiftFromQueue()
     } catch (error) {
       // TODO Handle errors
@@ -59,7 +61,7 @@ const Editor: React.FC<{}> = () => {
     } finally {
       lockUi(false)
     }
-  }, [destination, lockUi, pendingScreenshot, shiftFromQueue])
+  }, [addToHistory, destination, lockUi, pendingScreenshot, shiftFromQueue])
 
   useEffect(() => {
     setTitleBarContent(
