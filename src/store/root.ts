@@ -1,4 +1,5 @@
 import AppStore from './app'
+import HistoryStore from './history'
 import SettingsStore from './settings'
 
 import { getDestinationsDefaultSettings } from '../destinations'
@@ -11,6 +12,7 @@ export default class RootStore {
    * The different stores of the application.
    */
   appStore: AppStore
+  historyStore: HistoryStore
   settingsStore: SettingsStore
 
   /**
@@ -19,6 +21,7 @@ export default class RootStore {
    */
   constructor() {
     this.appStore = new AppStore()
+    this.historyStore = new HistoryStore()
     this.settingsStore = new SettingsStore(getDestinationsDefaultSettings())
   }
 }
