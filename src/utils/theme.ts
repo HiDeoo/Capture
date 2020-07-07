@@ -11,12 +11,11 @@ export default {
     border: '#000000',
   },
   history: {
-    // Grid entry sizes in pixels.
     border: '#848385',
-    gap: 10,
-    height: 120,
+    gap: '10px',
+    height: '120px',
     shadow: '#0f0f11',
-    width: 120,
+    width: '120px',
   },
   sideBar: {
     background: '#25242d',

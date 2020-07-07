@@ -6,7 +6,15 @@ import tw from 'tailwind.macro'
 
 import Img from './Img'
 import { HistoryEntry } from '../store/history'
+import { stripUnit } from '../utils/css'
 import Theme from '../utils/theme'
+
+/**
+ * Various sizes defining the grid layout.
+ */
+const GridGap = stripUnit(Theme.history.gap)
+const GridEntryHeight = stripUnit(Theme.history.height)
+const GridEntryWidth = stripUnit(Theme.history.width)
 
 /**
  * Entry component.
@@ -14,7 +22,7 @@ import Theme from '../utils/theme'
 const Entry = styled.div`
   ${tw`flex justify-center items-center w-full`}
 
-  height: ${Theme.history.height}px;
+  height: ${Theme.history.height};
 `
 
 /**
@@ -32,7 +40,7 @@ const StyledImg = styled(Img)`
  * @return The history grid gap.
  */
 function getHistoryGridGap(): number {
-  return Theme.history.gap
+  return GridGap
 }
 
 /**
@@ -41,7 +49,7 @@ function getHistoryGridGap(): number {
  * @return The column count.
  */
 function getHistoryGridColumnCount(gridWidth: number): number {
-  return Math.floor(gridWidth / Theme.history.width)
+  return Math.floor(gridWidth / GridEntryWidth)
 }
 
 /**
@@ -52,7 +60,7 @@ function getHistoryGridColumnCount(gridWidth: number): number {
 function getHistoryEntryRenderingData(entry: HistoryEntry): ReturnType<GridListProps<HistoryEntry>['getItemData']> {
   return {
     key: entry.path,
-    height: Theme.history.height,
+    height: GridEntryHeight,
   }
 }
 
