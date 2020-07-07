@@ -38,7 +38,7 @@ const Image = styled.img`
  */
 const Editor: React.FC<{}> = () => {
   const { setTitleBarContent } = useTitleBar()
-  const { isUiLocked, pendingScreenshot, shiftFromQueue } = useApp()
+  const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const [destination, setDestination] = useState(defaultDestination)
 
   const onClickCancel = useCallback(() => {
@@ -47,6 +47,8 @@ const Editor: React.FC<{}> = () => {
 
   const onClickShare = useCallback(async () => {
     try {
+      lockUi()
+
       await getIpcRenderer().invoke('shareScreenshot', destination, pendingScreenshot)
 
       // TODO
@@ -54,8 +56,10 @@ const Editor: React.FC<{}> = () => {
     } catch (error) {
       // TODO Handle errors
       console.log('error ', error)
+    } finally {
+      lockUi(false)
     }
-  }, [shiftFromQueue, destination, pendingScreenshot])
+  }, [destination, lockUi, pendingScreenshot, shiftFromQueue])
 
   useEffect(() => {
     setTitleBarContent(

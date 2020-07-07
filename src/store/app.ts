@@ -18,7 +18,7 @@ export default class AppStore {
   /**
    * Defines if the UI should be locked or not (eg. during a network request while sending a screenshot).
    */
-  @ignore @observable isUiLocked = true
+  @ignore @observable isUiLocked = false
 
   /**
    * Defines if the application should show the editor which means there are pending screenshots.
