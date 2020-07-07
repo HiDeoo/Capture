@@ -30,6 +30,6 @@ export default class HistoryStore {
 /**
  * Interface describing an history entry.
  */
-interface HistoryEntry {
+export interface HistoryEntry {
   path: string
 }

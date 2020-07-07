@@ -7,6 +7,7 @@ import tw from 'tailwind.macro'
 import { defaultDestination } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
+import Img from './Img'
 import LoadingBar from './LoadingBar'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory } from '../store'
@@ -25,9 +26,9 @@ const Content = styled.div`
 `
 
 /**
- * Image component.
+ * StyledImg component.
  */
-const Image = styled.img`
+const StyledImg = styled(Img)`
   ${tw`border border-solid`}
 
   border-color: ${theme('editor.border')};
@@ -85,7 +86,7 @@ const Editor: React.FC<{}> = () => {
       <EditorToolBar locked={isUiLocked} onChangeDestination={onChangeDestination} />
       <LoadingBar enabled={isUiLocked} />
       <Content>
-        <Image src={`file://${pendingScreenshot}`} alt="" />
+        <StyledImg src={`file://${pendingScreenshot}`} alt="" />
       </Content>
       <EditorInfoBar locked={isUiLocked} filePath={pendingScreenshot} />
     </>

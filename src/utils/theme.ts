@@ -10,6 +10,14 @@ export default {
   editor: {
     border: '#000000',
   },
+  history: {
+    // Grid entry sizes in pixels.
+    border: '#848385',
+    gap: 10,
+    height: 120,
+    shadow: '#0f0f11',
+    width: 120,
+  },
   sideBar: {
     background: '#25242d',
     border: '#1f1e26',
