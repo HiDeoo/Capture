@@ -15,7 +15,7 @@ export default class HistoryStore {
    */
   @action
   addToHistory = (entry: HistoryEntry): void => {
-    this.entries.push(entry)
+    this.entries.unshift(entry)
   }
 
   /**
