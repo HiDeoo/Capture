@@ -7,7 +7,7 @@ import tw from 'tailwind.macro'
  * Wrapper component.
  */
 const Wrapper = styled.div<Props>`
-  ${tw`flex px-4 py-2 border-solid text-sm select-none`}
+  ${tw`flex px-4 py-2 border-solid text-sm`}
 
   background-color: ${theme('toolbar.background')};
   border-color: ${theme('toolbar.border')};

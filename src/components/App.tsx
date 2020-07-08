@@ -18,7 +18,7 @@ import TitleBar, { TitleBarProvider } from './TitleBar'
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  ${tw`flex flex-col h-full text-white overflow-y-hidden`}
+  ${tw`flex flex-col h-full text-white overflow-y-hidden select-none`}
 
   background-color: ${theme('window.background')};
 `

@@ -27,7 +27,7 @@ const SideBarElements: (SideBarEntry | React.ReactNode)[] = [
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  ${tw`h-full flex flex-col items-center overflow-y-hidden border-solid border-r pt-1 select-none`}
+  ${tw`h-full flex flex-col items-center overflow-y-hidden border-solid border-r pt-1`}
 
   background-color: ${theme('sideBar.background')};
   border-color: ${theme('sideBar.border')};
