@@ -10,6 +10,7 @@ import Library from './Library'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import SideBar from './SideBar'
 import { useApp } from '../store'
+import { Panel } from '../store/app'
 import Theme from '../utils/theme'
 import TitleBar, { TitleBarProvider } from './TitleBar'
 
@@ -43,7 +44,7 @@ const Content = styled.div<ContentProps>`
  */
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
-  const { isFocused, pushToQueue, setWindowFocus, shouldShowEditor } = useApp()
+  const { isFocused, panel, pushToQueue, setWindowFocus } = useApp()
 
   useEffect(() => {
     function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
@@ -69,6 +70,23 @@ const App: React.FC<{}> = (props) => {
     }
   })
 
+  function renderCurrentPanel(): React.ReactNode {
+    switch (panel) {
+      case Panel.Library: {
+        return <Library />
+      }
+      case Panel.Editor: {
+        return <Editor />
+      }
+      case Panel.Settings: {
+        return <div>SETTINGS</div>
+      }
+      default: {
+        throw new Error('Invalid panel.')
+      }
+    }
+  }
+
   return (
     <>
       <GlobalStyle />
@@ -78,7 +96,7 @@ const App: React.FC<{}> = (props) => {
             <TitleBar />
             <Main>
               <SideBar />
-              <Content isFocused={isFocused}>{shouldShowEditor ? <Editor /> : <Library />}</Content>
+              <Content isFocused={isFocused}>{renderCurrentPanel()}</Content>
             </Main>
           </TitleBarProvider>
         </Wrapper>

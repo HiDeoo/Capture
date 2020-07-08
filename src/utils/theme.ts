@@ -20,7 +20,11 @@ export default {
   sideBar: {
     background: '#25242d',
     border: '#1f1e26',
-    color: '#2c8ce0',
+    color: '#8d8a93',
+    selected: {
+      background: '#3d3b4b',
+      color: tintColor,
+    },
     width: '52px',
   },
   titleBar: {

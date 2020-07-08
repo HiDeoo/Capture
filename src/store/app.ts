@@ -2,19 +2,41 @@ import { action, computed, observable } from 'mobx'
 import { ignore } from 'mobx-sync'
 
 /**
+ * The various panels available in the application.
+ */
+export enum Panel {
+  Library,
+  Editor,
+  Settings,
+}
+
+/**
  * The app store.
  */
 export default class AppStore {
+  /**
+   * The current panel to display.
+   */
+  @ignore @observable panel: Panel = Panel.Library
+
+  /**
+   * Changes the current panel.
+   */
+  @action
+  setCurrentPanel = (newPanel: Panel): void => {
+    this.panel = newPanel
+  }
+
   /**
    * The pending screenshot queue.
    */
   @ignore @observable private queue: string[] = []
 
   /**
-   * Defines if the application should show the editor which means there are pending screenshots.
+   * Defines if there are pending screenshots in the queue.
    */
   @computed
-  get shouldShowEditor(): boolean {
+  get hasPendingScreenshots(): boolean {
     return this.queue.length > 0
   }
 
@@ -38,6 +60,8 @@ export default class AppStore {
   @action
   pushToQueue = (filePath: string): void => {
     this.queue.push(filePath)
+
+    this.setCurrentPanel(Panel.Editor)
   }
 
   /**
@@ -46,6 +70,10 @@ export default class AppStore {
   @action
   shiftFromQueue = (): void => {
     this.queue.shift()
+
+    if (!this.hasPendingScreenshots) {
+      this.setCurrentPanel(Panel.Library)
+    }
   }
 
   /**

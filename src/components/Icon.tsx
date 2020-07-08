@@ -12,8 +12,12 @@ const Wrapper = styled.span.attrs({ className: 'icon' })`
  * Available icon symbols from the SF Symbols 1.1 font.
  */
 export enum IconSymbol {
+  CameraViewFinder = '􀎼',
   ChevronDown = '􀆈',
+  Gear = '􀍟',
+  ListDash = '􀋱',
   PaperPlane = '􀈟',
+  Pencil = '􀈊',
   XMark = '􀆄',
 }
 
