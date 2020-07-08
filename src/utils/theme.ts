@@ -20,7 +20,7 @@ export default {
   sideBar: {
     background: '#25242d',
     border: '#1f1e26',
-    color: '#8d8a93',
+    color: '#ffffff',
     selected: {
       background: '#3d3b4b',
       color: tintColor,
