@@ -19,7 +19,7 @@ const SideBarSeparator = tw.div`flex-1`
 const SideBarElements: (SideBarEntry | React.ReactNode)[] = [
   { symbol: IconSymbol.ListDash, name: 'Library', panel: Panel.Library },
   { symbol: IconSymbol.Pencil, name: 'Editor', panel: Panel.Editor },
-  <SideBarSeparator />,
+  <SideBarSeparator key="sidebar_separator" />,
   { symbol: IconSymbol.Gear, name: 'Settings', panel: Panel.Settings },
 ]
 
