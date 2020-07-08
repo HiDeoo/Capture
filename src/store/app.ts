@@ -11,16 +11,6 @@ export default class AppStore {
   @ignore @observable private queue: string[] = []
 
   /**
-   * Defines if the application is focused or not.
-   */
-  @ignore @observable isFocused = false
-
-  /**
-   * Defines if the UI should be locked or not (eg. during a network request while sending a screenshot).
-   */
-  @ignore @observable isUiLocked = false
-
-  /**
    * Defines if the application should show the editor which means there are pending screenshots.
    */
   @computed
@@ -59,6 +49,11 @@ export default class AppStore {
   }
 
   /**
+   * Defines if the application is focused or not.
+   */
+  @ignore @observable isFocused = false
+
+  /**
    * Sets if the application window is focused or not.
    * @param isFocused - Defines if the window is focused or not.
    */
@@ -66,6 +61,11 @@ export default class AppStore {
   setWindowFocus = (isFocused: boolean): void => {
     this.isFocused = isFocused
   }
+
+  /**
+   * Defines if the UI should be locked or not (eg. during a network request while sending a screenshot).
+   */
+  @ignore @observable isUiLocked = false
 
   /**
    * Locks or unlocks the UI.

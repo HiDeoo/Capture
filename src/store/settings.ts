@@ -8,17 +8,17 @@ import type { DestinationId, DestinationSettings, DestinationSettingValue } from
  */
 export default class SettingsStore {
   /**
-   * Destinations individual settings keyed by destination ID.
-   */
-  @observable private destinations: DestinationsSettings
-
-  /**
    * Creates a new instance of the sources store.
    * @class
    */
   constructor(destinationsSettings: DestinationsSettings) {
     this.destinations = destinationsSettings
   }
+
+  /**
+   * Destinations individual settings keyed by destination ID.
+   */
+  @observable private destinations: DestinationsSettings
 
   /**
    * Returns the settings of a specific destination.
