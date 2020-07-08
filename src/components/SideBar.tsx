@@ -9,11 +9,17 @@ import { useApp } from '../store'
 import { Panel } from '../store/app'
 
 /**
- * The ordered sidebar entries.
+ * SideBarSeparator component.
  */
-const SideBarEntries: SideBarEntry[] = [
+const SideBarSeparator = tw.div`flex-1`
+
+/**
+ * The ordered sidebar elements.
+ */
+const SideBarElements: (SideBarEntry | React.ReactNode)[] = [
   { symbol: IconSymbol.ListDash, name: 'Library', panel: Panel.Library },
   { symbol: IconSymbol.Pencil, name: 'Editor', panel: Panel.Editor },
+  <SideBarSeparator />,
   { symbol: IconSymbol.Gear, name: 'Settings', panel: Panel.Settings },
 ]
 
@@ -52,15 +58,21 @@ const SideBar: React.FC<{}> = () => {
 
   return (
     <Wrapper>
-      {SideBarEntries.map((entry) => (
-        <SideBarButton
-          entry={entry}
-          key={entry.name}
-          onClick={onClickEntry}
-          selected={entry.panel === panel}
-          disabled={isEntryDisabled(entry)}
-        />
-      ))}
+      {SideBarElements.map((element) => {
+        if (isSideBarEntry(element)) {
+          return (
+            <SideBarButton
+              entry={element}
+              key={element.name}
+              onClick={onClickEntry}
+              selected={element.panel === panel}
+              disabled={isEntryDisabled(element)}
+            />
+          )
+        }
+
+        return element
+      })}
     </Wrapper>
   )
 }
@@ -100,6 +112,15 @@ const SideBarButton: React.FC<SideBarButtonProps> = ({ entry, onClick, ...restPr
       <Icon symbol={entry.symbol} />
     </StyledButton>
   )
+}
+
+/**
+ * Checks if a sidebar element is an entry or not.
+ * @param  maybeEntry - The element to check.
+ * @return `true` when the element is an entry.
+ */
+function isSideBarEntry(maybeEntry: SideBarEntry | React.ReactNode): maybeEntry is SideBarEntry {
+  return (maybeEntry as SideBarEntry).panel !== undefined
 }
 
 export default SideBar
