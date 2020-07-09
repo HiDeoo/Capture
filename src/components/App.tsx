@@ -4,15 +4,25 @@ import styled, { ThemeProvider } from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import AppSideBar from './AppSideBar'
 import Editor from './Editor'
 import GlobalStyle from './GlobalStyle'
 import Library from './Library'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
-import SideBar from './SideBar'
+import Settings from './Settings'
 import { useApp } from '../store'
 import { Panel } from '../store/app'
 import Theme from '../utils/theme'
 import TitleBar, { TitleBarProvider } from './TitleBar'
+
+/**
+ * Application panel-to-component mapping.
+ */
+const AppPanelMap = {
+  [Panel.Library]: <Library />,
+  [Panel.Editor]: <Editor />,
+  [Panel.Settings]: <Settings />,
+} as const
 
 /**
  * Wrapper component.
@@ -70,23 +80,6 @@ const App: React.FC<{}> = (props) => {
     }
   })
 
-  function renderCurrentPanel(): React.ReactNode {
-    switch (panel) {
-      case Panel.Library: {
-        return <Library />
-      }
-      case Panel.Editor: {
-        return <Editor />
-      }
-      case Panel.Settings: {
-        return <div>SETTINGS</div>
-      }
-      default: {
-        throw new Error('Invalid panel.')
-      }
-    }
-  }
-
   return (
     <>
       <GlobalStyle />
@@ -95,8 +88,8 @@ const App: React.FC<{}> = (props) => {
           <TitleBarProvider>
             <TitleBar />
             <Main>
-              <SideBar />
-              <Content isFocused={isFocused}>{renderCurrentPanel()}</Content>
+              <AppSideBar />
+              <Content isFocused={isFocused}>{AppPanelMap[panel]}</Content>
             </Main>
           </TitleBarProvider>
         </Wrapper>

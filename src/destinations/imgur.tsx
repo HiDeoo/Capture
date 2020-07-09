@@ -1,3 +1,5 @@
+import React from 'react'
+
 import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
 
 /**
@@ -6,6 +8,7 @@ import Destination, { DestinationConfiguration, DestinationSettings } from '../u
 class Imgur implements Destination {
   /**
    * Returns the destination configuration.
+   * @return The configuration.
    */
   getConfiguration(): DestinationConfiguration {
     return {
@@ -16,6 +19,7 @@ class Imgur implements Destination {
 
   /**
    * Returns the destination default settings.
+   * @return The default settings.
    */
   getDefaultSettings(): ImgurSettings {
     return {
@@ -33,6 +37,14 @@ class Imgur implements Destination {
     // TODO Add implementation
 
     return Promise.resolve()
+  }
+
+  /**
+   * Returns the destination settings panel.
+   * @return The settings panel.
+   */
+  getSettingsPanel(): React.ReactNode {
+    return <div>Imgur settings</div>
   }
 }
 

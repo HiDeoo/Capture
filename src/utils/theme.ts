@@ -17,6 +17,16 @@ export default {
     shadow: '#0f0f11',
     width: '120px',
   },
+  settings: {
+    sideBar: {
+      background: '#181718',
+      border: '#0e0e0e',
+      selected: {
+        background: '#2a282a',
+        color: tintColor,
+      },
+    },
+  },
   sideBar: {
     background: '#25242d',
     border: '#1f1e26',

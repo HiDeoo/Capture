@@ -1,6 +1,8 @@
 import { action, computed, observable } from 'mobx'
 import { ignore } from 'mobx-sync'
 
+import { GeneralSettingConfiguration } from '../components/GeneralSettings'
+
 /**
  * The various panels available in the application.
  */
@@ -17,7 +19,7 @@ export default class AppStore {
   /**
    * The current panel to display.
    */
-  @ignore @observable panel: Panel = Panel.Library
+  @ignore @observable panel: Panel = Panel.Settings
 
   /**
    * Changes the current panel.
@@ -25,6 +27,19 @@ export default class AppStore {
   @action
   setCurrentPanel = (newPanel: Panel): void => {
     this.panel = newPanel
+  }
+
+  /**
+   * The ID of the current settings panel to display.
+   */
+  @ignore @observable settingsPanel: SettingsPanelId = GeneralSettingConfiguration.id
+
+  /**
+   * Changes the ID of the current settings panel.
+   */
+  @action
+  setCurrentSettingsPanel = (newPanelId: SettingsPanelId): void => {
+    this.settingsPanel = newPanelId
   }
 
   /**
@@ -104,3 +119,8 @@ export default class AppStore {
     this.isUiLocked = locked
   }
 }
+
+/**
+ * The type representing a settings panel ID.
+ */
+export type SettingsPanelId = string

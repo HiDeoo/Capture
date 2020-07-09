@@ -4,11 +4,13 @@
 export default abstract class Destination {
   /**
    * Returns the destination configuration.
+   * @return The configuration.
    */
   abstract getConfiguration(): DestinationConfiguration
 
   /**
    * Returns the destination default settings.
+   * @return The default settings.
    */
   abstract getDefaultSettings(): DestinationSettings
 
@@ -17,6 +19,12 @@ export default abstract class Destination {
    * @param filePath - The path of the file to share.
    */
   abstract share(filePath: string): Promise<void>
+
+  /**
+   * Returns the destination settings panel if any.
+   * @return The settings panel.
+   */
+  abstract getSettingsPanel?(): React.ReactNode
 }
 
 /**
