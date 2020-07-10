@@ -45,6 +45,18 @@ const App: React.FC<{}> = (props) => {
   const { currentPanel, isFocused, pushToQueue, setWindowFocus } = useApp()
 
   useEffect(() => {
+    function onOAuthRequest(
+      event: IpcRendererEvent,
+      destination: string,
+      queryString: ParsedQueryString,
+      hash: Optional<ParsedQueryString>
+    ): void {
+      // TODO Do something relevant.
+      console.log('destination ', destination)
+      console.log('queryString ', queryString)
+      console.log('hash ', hash)
+    }
+
     function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
       pushToQueue(filePath)
     }
@@ -57,11 +69,13 @@ const App: React.FC<{}> = (props) => {
       setWindowFocus(true)
     }
 
+    ipcRenderer.on('newOAuthRequest', onOAuthRequest)
     ipcRenderer.on('newScreenshot', onNewScreenshot)
     ipcRenderer.on('windowBlur', onWindowBlur)
     ipcRenderer.on('windowFocus', onWindowFocus)
 
     return () => {
+      ipcRenderer.removeListener('newOAuthRequest', onOAuthRequest)
       ipcRenderer.removeListener('newScreenshot', onNewScreenshot)
       ipcRenderer.removeListener('windowBlur', onWindowBlur)
       ipcRenderer.removeListener('windowFocus', onWindowFocus)

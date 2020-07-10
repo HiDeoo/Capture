@@ -27,6 +27,11 @@ declare global {
   interface Window {
     ipcRenderer: IpcRenderer
   }
+
+  /**
+   * Common type between the main & renderer processes describing a parsed query string.
+   */
+  export type ParsedQueryString = Record<string, Optional<string | string[]>>
 }
 
 export {}

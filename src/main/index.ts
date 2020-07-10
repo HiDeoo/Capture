@@ -12,6 +12,7 @@ import {
 } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
+import querystring from 'querystring'
 
 import { getDestination } from '../destinations'
 import { DestinationId } from '../utils/Destination'
@@ -69,6 +70,9 @@ async function createWindow(): Promise<void> {
     },
     width: 800,
   })
+
+  // Sets the application as default handler for the `capture://` URI scheme.
+  app.setAsDefaultProtocolClient('capture')
 
   // Handle window lifecycle.
   window.on('close', onWindowClose)
@@ -199,9 +203,42 @@ function onScreenshotShortcut(): void {
 }
 
 /**
+ * Triggered when the user wants to open an URL with the application.
+ * Note: this only works when the application is bundled.
+ * @param event - The associated event.
+ * @param url - The URL that was used.
+ */
+function onOpenUrl(event: Electron.Event, url: string): void {
+  const parsedUrl = new URL(url)
+
+  // Ignore URLs not matching the proper scheme.
+  if (parsedUrl.protocol !== 'capture:' || !window) {
+    return
+  }
+
+  // Signal that the application is handling the event.
+  event.preventDefault()
+
+  // Handle OAuth calls.
+  if (parsedUrl.hostname === 'oauth' && parsedUrl.pathname.length > 2) {
+    const destination = parsedUrl.pathname.substr(1)
+    const queryString = querystring.parse(parsedUrl.search)
+
+    let parsedHash: Optional<ReturnType<typeof querystring.parse>> = undefined
+
+    if (parsedUrl.hash.length > 2) {
+      const sanitizedHash = parsedUrl.hash.startsWith('#') ? parsedUrl.hash.substr(1) : parsedUrl.hash
+      parsedHash = querystring.parse(sanitizedHash)
+    }
+
+    sendToRenderer(window, 'newOAuthRequest', destination, queryString, parsedHash)
+  }
+}
+
+/**
  * Triggered when the application window is going to be closed.
  * @param window - The associated window.
- * @param event - The associated event
+ * @param event - The associated event.
  */
 function onWindowClose(event: Electron.Event): void {
   // Hide the window instead of closing it if we're not explicitely quitting.
@@ -277,5 +314,6 @@ app.dock.hide()
  * Handle application lifecycle.
  */
 app.on('ready', createWindow)
+app.on('open-url', onOpenUrl)
 app.on('before-quit', onBeforeQuit)
 app.on('will-quit', onWillQuit)
