@@ -1,13 +1,14 @@
+import 'styled-components/macro'
+
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import 'styled-components/macro'
 import tw from 'tailwind.macro'
 
 import { getDestinations } from '../destinations'
-import GeneralSetting, { GeneralSettingConfiguration } from './GeneralSettings'
-import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
 import { useApp } from '../store'
 import { SettingsPanelId } from '../store/app'
+import GeneralSetting, { GeneralSettingConfiguration } from './GeneralSettings'
+import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
 
 /**
  * The ordered settings sidebar entries.

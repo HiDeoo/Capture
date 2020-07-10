@@ -4,10 +4,10 @@ import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import Button from './Button'
-import Icon, { IconSymbol } from './Icon'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
+import Button from './Button'
+import Icon, { IconSymbol } from './Icon'
 
 /**
  * The context use to access & update the title bar content from a nested component.

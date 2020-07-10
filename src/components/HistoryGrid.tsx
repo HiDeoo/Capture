@@ -4,10 +4,10 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import Img from './Img'
 import { HistoryEntry } from '../store/history'
 import { stripUnit } from '../utils/css'
 import Theme from '../utils/theme'
+import Img from './Img'
 
 /**
  * Various sizes defining the grid layout.

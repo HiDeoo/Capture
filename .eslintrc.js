@@ -11,7 +11,9 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
   ],
+  plugins: ['simple-import-sort'],
   rules: {
+    'simple-import-sort/sort': 'error',
     'no-shadow': 'error',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',

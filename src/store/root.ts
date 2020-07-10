@@ -1,8 +1,7 @@
+import { getDestinationsDefaultSettings } from '../destinations'
 import AppStore from './app'
 import HistoryStore from './history'
 import SettingsStore from './settings'
-
-import { getDestinationsDefaultSettings } from '../destinations'
 
 /**
  * The root store of the application.

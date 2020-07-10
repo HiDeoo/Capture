@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { getDestinations } from '../destinations'
-import Select from './Select'
 import { DestinationId } from '../utils/Destination'
+import Select from './Select'
 
 /**
  * List of destinations options to use in a <Select />

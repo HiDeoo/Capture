@@ -14,12 +14,12 @@ import isDev from 'electron-is-dev'
 import path from 'path'
 
 import { getDestination } from '../destinations'
+import { DestinationId } from '../utils/Destination'
+import Theme from '../utils/theme'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
-import { DestinationId } from '../utils/Destination'
-import Theme from '../utils/theme'
 
 /**
  * The typed IPC main module.

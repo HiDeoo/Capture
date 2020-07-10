@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { action, observable } from 'mobx'
 
 import type { DestinationsSettings } from '../destinations'
 import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../utils/Destination'

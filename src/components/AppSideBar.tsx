@@ -3,10 +3,10 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import Icon, { IconSymbol } from './Icon'
-import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryProps } from './SideBar'
 import { useApp } from '../store'
 import { Panel } from '../store/app'
+import Icon, { IconSymbol } from './Icon'
+import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryProps } from './SideBar'
 
 /**
  * The ordered application sidebar entries.

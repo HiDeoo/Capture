@@ -1,19 +1,19 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { getIpcRenderer } from '../main/ipc'
+import { useApp, useHistory } from '../store'
+import { DestinationId } from '../utils/Destination'
 import { defaultDestination } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
 import Img from './Img'
 import LoadingBar from './LoadingBar'
-import { getIpcRenderer } from '../main/ipc'
-import { useApp, useHistory } from '../store'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
-import { DestinationId } from '../utils/Destination'
 
 const Content = styled.div`
   ${tw`h-full overflow-auto`}

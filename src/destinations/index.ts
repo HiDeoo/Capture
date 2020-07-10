@@ -1,5 +1,4 @@
 import Destination, { DestinationId, DestinationSettings } from '../utils/Destination'
-
 import Imgur from './imgur'
 import TransferSh from './transfer.sh'
 

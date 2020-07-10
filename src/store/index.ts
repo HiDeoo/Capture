@@ -1,3 +1,5 @@
+import 'mobx-react-lite/batchingForReactDom'
+
 import localforage from 'localforage'
 import { configure } from 'mobx'
 import { AsyncStorage, AsyncTrunk } from 'mobx-sync'
@@ -7,8 +9,6 @@ import AppStore from './app'
 import HistoryStore from './history'
 import RootStore from './root'
 import type SettingsStore from './settings'
-
-import 'mobx-react-lite/batchingForReactDom'
 
 /**
  * The root store instance.

@@ -3,9 +3,9 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { DestinationId } from '../utils/Destination'
 import DestinationSelect from './DestinationSelect'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
-import { DestinationId } from '../utils/Destination'
 
 const Select = styled(DestinationSelect)`
   ${tw`border border-solid font-semibold`}

@@ -4,9 +4,9 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryProps } from './SideBar'
 import { useApp } from '../store'
 import { SettingsPanelId } from '../store/app'
+import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryProps } from './SideBar'
 
 const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
   ${tw`p-3 border-solid border-r items-start`}
