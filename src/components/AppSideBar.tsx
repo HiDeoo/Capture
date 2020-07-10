@@ -51,7 +51,7 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)`
 `
 
 const AppSideBar: React.FC<{}> = () => {
-  const { hasPendingScreenshots, panel, setCurrentPanel } = useApp()
+  const { currentPanel, hasPendingScreenshots, setCurrentPanel } = useApp()
 
   function getEntryProps(entry: AppSideBarEntry): SideBarEntryProps {
     return {
@@ -59,7 +59,7 @@ const AppSideBar: React.FC<{}> = () => {
       disabled:
         (entry.panel === Panel.Editor && !hasPendingScreenshots) ||
         (entry.panel !== Panel.Editor && hasPendingScreenshots),
-      selected: entry.panel === panel,
+      selected: entry.panel === currentPanel,
     }
   }
 

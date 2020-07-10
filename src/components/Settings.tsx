@@ -39,12 +39,12 @@ const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.Rea
 }, {})
 
 const Settings: React.FC<{}> = () => {
-  const { settingsPanel } = useApp()
+  const { currentSettingsPanel } = useApp()
 
   return (
     <div css={tw`h-full w-full flex`}>
       <SettingsSideBar entries={SidebarEntries} />
-      <div css={tw`flex-1 overflow-y-auto p-3`}>{SettingsPanelMap[settingsPanel]}</div>
+      <div css={tw`flex-1 overflow-y-auto p-3`}>{SettingsPanelMap[currentSettingsPanel]}</div>
     </div>
   )
 }

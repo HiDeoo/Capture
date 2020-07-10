@@ -42,7 +42,7 @@ const Content = styled.div<ContentProps>`
 
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
-  const { isFocused, panel, pushToQueue, setWindowFocus } = useApp()
+  const { currentPanel, isFocused, pushToQueue, setWindowFocus } = useApp()
 
   useEffect(() => {
     function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
@@ -77,7 +77,7 @@ const App: React.FC<{}> = (props) => {
             <TitleBar />
             <Main>
               <AppSideBar />
-              <Content isFocused={isFocused}>{AppPanelMap[panel]}</Content>
+              <Content isFocused={isFocused}>{AppPanelMap[currentPanel]}</Content>
             </Main>
           </TitleBarProvider>
         </Wrapper>

@@ -17,29 +17,29 @@ export enum Panel {
  */
 export default class AppStore {
   /**
-   * The current panel to display.
+   * The current application panel to display.
    */
-  @ignore @observable panel: Panel = Panel.Settings
+  @ignore @observable currentPanel: Panel = Panel.Settings
 
   /**
    * Changes the current panel.
    */
   @action
   setCurrentPanel = (newPanel: Panel): void => {
-    this.panel = newPanel
+    this.currentPanel = newPanel
   }
 
   /**
    * The ID of the current settings panel to display.
    */
-  @ignore @observable settingsPanel: SettingsPanelId = GeneralSettingConfiguration.id
+  @ignore @observable currentSettingsPanel: SettingsPanelId = GeneralSettingConfiguration.id
 
   /**
    * Changes the ID of the current settings panel.
    */
   @action
   setCurrentSettingsPanel = (newPanelId: SettingsPanelId): void => {
-    this.settingsPanel = newPanelId
+    this.currentSettingsPanel = newPanelId
   }
 
   /**

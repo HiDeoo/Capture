@@ -33,12 +33,12 @@ const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
 `
 
 const SettingsSideBar: React.FC<Props> = ({ entries }) => {
-  const { setCurrentSettingsPanel, settingsPanel } = useApp()
+  const { currentSettingsPanel, setCurrentSettingsPanel } = useApp()
 
   function getEntryProps(entry: SettingsSideBarEntry): SideBarEntryProps {
     return {
       content: entry.name,
-      selected: entry.id === settingsPanel,
+      selected: entry.id === currentSettingsPanel,
     }
   }
 
