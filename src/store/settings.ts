@@ -15,6 +15,15 @@ export default class SettingsStore {
     this.destinations = destinationsSettings
   }
 
+  // TODO Remove
+  @observable debugGeneralOption = ''
+
+  // TODO Remove
+  @action
+  setDebugGeneralOption = (newValue: string): void => {
+    this.debugGeneralOption = newValue
+  }
+
   /**
    * Destinations individual settings keyed by destination ID.
    */
