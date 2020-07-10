@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Button from '../components/Button'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
 
@@ -46,19 +45,19 @@ class Imgur implements Destination {
    * @return The settings panel.
    */
   getSettingsPanel(): React.FC<SettingsPanelProps> {
-    return ({ getSettings, setSettings }) => {
+    return ({ getSettings, setSettings, Ui }) => {
       const settings = getSettings<ImgurSettings>()
 
       function updateSetting(): void {
         setSettings<ImgurSettings>('test', `imgur - ${new Date().toString()}`)
       }
 
+      // TODO Clean UI so only passed down UI is used.
       return (
         <div>
           Imgur settings - {JSON.stringify(settings)}
           <div>{settings.test}</div>
-          {/* // TODO Pass down UI element */}
-          <Button onClick={updateSetting}>Update destination setting</Button>
+          <Ui.Button onClick={updateSetting}>Update destination setting</Ui.Button>
         </div>
       )
     }

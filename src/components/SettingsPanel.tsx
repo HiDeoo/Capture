@@ -4,6 +4,7 @@ import React from 'react'
 import tw from 'tailwind.macro'
 
 import type { DestinationSettings, DestinationSettingValue } from '../utils/Destination'
+import type Button from './Button'
 
 const Wrapper = tw.div`flex-1 overflow-y-auto p-3`
 
@@ -22,4 +23,7 @@ export interface SettingsPanelProps {
     settingId: KnownKeys<Settings>,
     value: DestinationSettingValue
   ) => void
+  Ui: {
+    Button: typeof Button
+  }
 }

@@ -8,6 +8,7 @@ import { getDestinations } from '../destinations'
 import { useApp, useSettings } from '../store'
 import { SettingsPanelId } from '../store/app'
 import { DestinationSettings, DestinationSettingValue } from '../utils/Destination'
+import Button from './Button'
 import GeneralSetting, { GeneralSettingConfiguration } from './GeneralSettings'
 import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
 import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
@@ -68,7 +69,7 @@ const Settings: React.FC<{}> = () => {
     <div css={tw`h-full w-full flex`}>
       <SettingsSideBar entries={SidebarEntries} />
       <SettingsPanel>
-        <CurrentPanel getSettings={getSettings} setSettings={setSettings} />
+        <CurrentPanel getSettings={getSettings} setSettings={setSettings} Ui={{ Button }} />
       </SettingsPanel>
     </div>
   )
