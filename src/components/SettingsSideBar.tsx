@@ -11,8 +11,8 @@ import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryPro
 const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
   ${tw`p-3 border-solid border-r items-start`}
 
-  background-color: ${theme('settings.sideBar.background')};
-  border-color: ${theme('settings.sideBar.border')};
+  background-color: ${theme('bar.background')};
+  border-color: ${theme('bar.border')};
   min-width: 150px;
 
   & ${SideBarButton} {
@@ -22,8 +22,8 @@ const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
 
     &.selected,
     &:hover:not(:disabled) {
-      background-color: ${theme('settings.sideBar.selected.background')};
-      color: ${theme('settings.sideBar.selected.color')};
+      background-color: ${theme('bar.button.hover.background')};
+      color: ${theme('bar.button.hover.color')};
     }
 
     &:last-of-type {

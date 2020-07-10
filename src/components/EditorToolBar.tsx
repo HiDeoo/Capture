@@ -10,16 +10,16 @@ import ToolBar, { ToolbarLockedProps } from './ToolBar'
 const Select = styled(DestinationSelect)`
   ${tw`border border-solid font-semibold`}
 
-  background-color: ${theme('toolbar.button.background')};
-  border-color: ${theme('toolbar.button.border')};
+  background-color: ${theme('bar.button.background')};
+  border-color: ${theme('bar.button.border')};
 
   &:hover:not(:disabled) {
-    background-color: ${theme('toolbar.button.hover.background')};
-    border-color: ${theme('toolbar.button.hover.border')};
-    color: ${theme('toolbar.button.hover.color')};
+    background-color: ${theme('bar.button.hover.background')};
+    border-color: ${theme('bar.button.hover.border')};
+    color: ${theme('bar.button.hover.color')};
 
     & + .icon {
-      color: ${theme('toolbar.button.hover.color')};
+      color: ${theme('bar.button.hover.color')};
     }
   }
 

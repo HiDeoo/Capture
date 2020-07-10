@@ -13,13 +13,13 @@ import Img from './Img'
  * Various sizes defining the grid layout.
  */
 const GridGap = stripUnit(Theme.history.gap)
-const GridEntryHeight = stripUnit(Theme.history.height)
-const GridEntryWidth = stripUnit(Theme.history.width)
+const GridEntryHeight = stripUnit(Theme.history.size)
+const GridEntryWidth = stripUnit(Theme.history.size)
 
 const Entry = styled.div`
   ${tw`flex justify-center items-center w-full`}
 
-  height: ${Theme.history.height};
+  height: ${Theme.history.size};
 `
 
 const StyledImg = styled(Img)`

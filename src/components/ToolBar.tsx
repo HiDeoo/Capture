@@ -6,8 +6,8 @@ import tw from 'tailwind.macro'
 const Wrapper = styled.div<Props>`
   ${tw`flex px-4 py-2 border-solid text-sm`}
 
-  background-color: ${theme('toolbar.background')};
-  border-color: ${theme('toolbar.border')};
+  background-color: ${theme('bar.background')};
+  border-color: ${theme('bar.border')};
   border-bottom-width: ${ifProp('top', '1px', '0')};
   border-top-width: ${ifProp('bottom', '1px', '0')};
 `
