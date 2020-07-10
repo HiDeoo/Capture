@@ -22,7 +22,7 @@ const LoadingBar = styled.div<Props>`
   animation-name: ${ifProp('enabled', LoadingBarAnimation, 'none')};
   animation-timing-function: linear;
   animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  background-color: ${ifProp('enabled', theme('colors.tint'), 'transparent')};
+  background-color: ${ifProp('enabled', theme('color.tint'), 'transparent')};
   height: 3px;
   will-change: margin-left, width;
 `
