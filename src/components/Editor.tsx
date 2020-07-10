@@ -15,9 +15,6 @@ import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
 import { DestinationId } from '../utils/Destination'
 
-/**
- * Content component.
- */
 const Content = styled.div`
   ${tw`h-full overflow-auto`}
 
@@ -25,18 +22,12 @@ const Content = styled.div`
   padding-top: 11px;
 `
 
-/**
- * StyledImg component.
- */
 const StyledImg = styled(Img)`
   ${tw`border border-solid`}
 
   border-color: ${theme('editor.border')};
 `
 
-/**
- * Editor Component.
- */
 const Editor: React.FC<{}> = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
@@ -95,9 +86,6 @@ const Editor: React.FC<{}> = () => {
 
 export default observer(Editor)
 
-/**
- * React Props.
- */
 interface LoadingBarProps {
   enabled: boolean
 }

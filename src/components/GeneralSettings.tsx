@@ -8,9 +8,6 @@ export const GeneralSettingConfiguration = {
   name: 'General',
 } as const
 
-/**
- * GeneralSettings Component.
- */
 const GeneralSettings: React.FC<{}> = () => {
   return <div>General settings</div>
 }

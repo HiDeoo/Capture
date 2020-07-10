@@ -28,9 +28,6 @@ export const TitleBarProvider: React.FC<{}> = ({ children }) => {
   return <TitleBarContext.Provider value={{ titleBarContent, setTitleBarContent }}>{children}</TitleBarContext.Provider>
 }
 
-/**
- * Wrapper component.
- */
 const Wrapper = styled.div<IsFocusedProps>`
   ${tw`flex flex-row items-center font-semibold`}
 
@@ -41,9 +38,6 @@ const Wrapper = styled.div<IsFocusedProps>`
   -webkit-user-select: none;
 `
 
-/**
- * SideBar component.
- */
 const SideBar = styled.div`
   ${tw`h-full flex items-center border-solid border-r`}
 
@@ -52,9 +46,6 @@ const SideBar = styled.div`
   width: ${theme('sideBar.width')};
 `
 
-/**
- * CloseButtonIcon component.
- */
 const CloseButtonIcon = styled(Icon)`
   ${tw`hidden font-extrabold`}
 
@@ -65,9 +56,6 @@ const CloseButtonIcon = styled(Icon)`
   -webkit-app-region: no-drag;
 `
 
-/**
- * CloseButton component.
- */
 const CloseButton = styled(Button)<IsFocusedProps>`
   ${tw`flex justify-center items-center cursor-default rounded-full`}
 
@@ -88,9 +76,6 @@ const CloseButton = styled(Button)<IsFocusedProps>`
   }
 `
 
-/**
- * TitleBar Component.
- */
 const TitleBar: React.FC<{}> = () => {
   const { isFocused } = useApp()
   const { titleBarContent } = useTitleBar()
@@ -117,16 +102,10 @@ const TitleBar: React.FC<{}> = () => {
 
 export default observer(TitleBar)
 
-/**
- * React Props.
- */
 interface IsFocusedProps {
   isFocused: boolean
 }
 
-/**
- * Interface describing the shape of the title bar context.
- */
 interface TitleBarContext {
   titleBarContent: React.ReactNode
   setTitleBarContent: (newContent: React.ReactNode) => void

@@ -38,9 +38,6 @@ const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.Rea
   return acc
 }, {})
 
-/**
- * Settings Component.
- */
 const Settings: React.FC<{}> = () => {
   const { settingsPanel } = useApp()
 

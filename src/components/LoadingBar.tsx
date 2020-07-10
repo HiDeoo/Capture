@@ -1,9 +1,6 @@
 import styled, { keyframes } from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 
-/**
- * Loading bar animation.
- */
 const LoadingBarAnimation = keyframes`
   0% {
     margin-left: -15%;
@@ -19,9 +16,6 @@ const LoadingBarAnimation = keyframes`
   }
 `
 
-/**
- * LoadingBar component.
- */
 const LoadingBar = styled.div<Props>`
   animation-duration: 2s;
   animation-iteration-count: infinite;
@@ -35,9 +29,6 @@ const LoadingBar = styled.div<Props>`
 
 export default LoadingBar
 
-/**
- * React Props.
- */
 interface Props {
   enabled: boolean
 }

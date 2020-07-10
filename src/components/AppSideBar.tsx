@@ -18,9 +18,6 @@ const Entries: (AppSideBarEntry | React.ReactNode)[] = [
   { id: 'settings', panel: Panel.Settings, symbol: IconSymbol.Gear },
 ]
 
-/**
- * StyledSideBar component.
- */
 const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)`
   ${tw`border-solid border-r pt-1`}
 
@@ -53,9 +50,6 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)`
   }
 `
 
-/**
- * AppSideBar Component.
- */
 const AppSideBar: React.FC<{}> = () => {
   const { hasPendingScreenshots, panel, setCurrentPanel } = useApp()
 
@@ -78,9 +72,6 @@ const AppSideBar: React.FC<{}> = () => {
 
 export default AppSideBar
 
-/**
- * Interface describing an entry for the application sidebar.
- */
 interface AppSideBarEntry extends SideBarEntry {
   symbol: IconSymbol
   panel: Panel

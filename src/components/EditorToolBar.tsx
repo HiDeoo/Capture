@@ -7,9 +7,6 @@ import DestinationSelect from './DestinationSelect'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
 import { DestinationId } from '../utils/Destination'
 
-/**
- * Select component.
- */
 const Select = styled(DestinationSelect)`
   ${tw`border border-solid font-semibold`}
 
@@ -31,9 +28,6 @@ const Select = styled(DestinationSelect)`
   }
 `
 
-/**
- * EditorToolBar Component.
- */
 const EditorToolBar: React.FC<Props> = ({ onChangeDestination, locked }) => {
   return (
     <ToolBar top>
@@ -45,9 +39,6 @@ const EditorToolBar: React.FC<Props> = ({ onChangeDestination, locked }) => {
 
 export default EditorToolBar
 
-/**
- * React Props.
- */
 interface Props extends ToolbarLockedProps {
   onChangeDestination: (destinationId: DestinationId) => void
 }

@@ -2,9 +2,6 @@ import { createGlobalStyle } from 'styled-components/macro'
 
 import Theme from '../utils/theme'
 
-/**
- * CSS global style.
- */
 export default createGlobalStyle`
   html,
   body,

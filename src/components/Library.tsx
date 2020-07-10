@@ -6,9 +6,6 @@ import tw from 'tailwind.macro'
 import HistoryGrid from './HistoryGrid'
 import { useHistory } from '../store'
 
-/**
- * Library Component.
- */
 const Library: React.FC<{}> = () => {
   const { entries } = useHistory()
 

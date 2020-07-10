@@ -50,9 +50,6 @@ class Imgur implements Destination {
 
 export default new Imgur()
 
-/**
- * Imgur destination settings.
- */
 export interface ImgurSettings extends DestinationSettings {
   test: string
 }

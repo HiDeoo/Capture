@@ -8,9 +8,6 @@ import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryPro
 import { useApp } from '../store'
 import { SettingsPanelId } from '../store/app'
 
-/**
- * StyledSideBar component.
- */
 const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
   ${tw`p-3 border-solid border-r items-start`}
 
@@ -35,9 +32,6 @@ const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
   }
 `
 
-/**
- * SettingsSideBar Component.
- */
 const SettingsSideBar: React.FC<Props> = ({ entries }) => {
   const { setCurrentSettingsPanel, settingsPanel } = useApp()
 
@@ -57,16 +51,10 @@ const SettingsSideBar: React.FC<Props> = ({ entries }) => {
 
 export default observer(SettingsSideBar)
 
-/**
- * React Props.
- */
 interface Props {
   entries: (SettingsSideBarEntry | React.ReactNode)[]
 }
 
-/**
- * Interface describing an entry for the settings sidebar.
- */
 export interface SettingsSideBarEntry extends SideBarEntry {
   name: SettingsPanelId
   panel: React.ReactNode

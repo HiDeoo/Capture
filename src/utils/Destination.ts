@@ -27,14 +27,8 @@ export default abstract class Destination {
   abstract getSettingsPanel?(): React.ReactNode
 }
 
-/**
- * A type representing a destination ID.
- */
 export type DestinationId = string
 
-/**
- * The configuration of a destination.
- */
 export interface DestinationConfiguration {
   id: DestinationId
   name: string

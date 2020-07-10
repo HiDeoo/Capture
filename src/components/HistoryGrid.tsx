@@ -16,18 +16,12 @@ const GridGap = stripUnit(Theme.history.gap)
 const GridEntryHeight = stripUnit(Theme.history.height)
 const GridEntryWidth = stripUnit(Theme.history.width)
 
-/**
- * Entry component.
- */
 const Entry = styled.div`
   ${tw`flex justify-center items-center w-full`}
 
   height: ${Theme.history.height};
 `
 
-/**
- * StyledImg component.
- */
 const StyledImg = styled(Img)`
   ${tw`max-h-full max-w-full border-2 border-solid`}
 
@@ -37,7 +31,7 @@ const StyledImg = styled(Img)`
 
 /**
  * Returns the history grid gap between entries.
- * @return The history grid gap.
+ * @return The gap.
  */
 function getHistoryGridGap(): number {
   return GridGap
@@ -53,7 +47,7 @@ function getHistoryGridColumnCount(gridWidth: number): number {
 }
 
 /**
- * Returns history grid entry data used to render each entries.
+ * Returns the history grid entry data used to render each entries.
  * @param  entry - The history entry being rendered.
  * @return The data associated to each history grid entries.
  */
@@ -77,9 +71,6 @@ function renderHistoryGridEntry(entry: HistoryEntry): React.ReactNode {
   )
 }
 
-/**
- * HistoryGridList Component.
- */
 const HistoryGridList: React.FC<Props> = ({ entries }) => {
   return (
     <GridList
@@ -94,9 +85,6 @@ const HistoryGridList: React.FC<Props> = ({ entries }) => {
 
 export default HistoryGridList
 
-/**
- * React Props.
- */
 interface Props {
   entries: HistoryEntry[]
 }

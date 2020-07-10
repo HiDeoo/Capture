@@ -7,7 +7,7 @@ import { DestinationId } from '../utils/Destination'
 /**
  * List of destinations options to use in a <Select />
  */
-const destinationOptions = Object.entries(getDestinations()).map(([id, destination]) => {
+const DestinationOptions = Object.entries(getDestinations()).map(([id, destination]) => {
   return {
     label: destination.getConfiguration().name,
     value: id,
@@ -18,24 +18,18 @@ const destinationOptions = Object.entries(getDestinations()).map(([id, destinati
  * Default destination to select.
  */
 // TODO This should be a setting
-export const defaultDestination = destinationOptions[0].value
+export const defaultDestination = DestinationOptions[0].value
 
-/**
- * DestinationSelect Component.
- */
 const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps }) => {
   function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>): void {
     onChangeDestination(event.target.value)
   }
 
-  return <Select {...restProps} options={destinationOptions} onChange={onChangeSelect} />
+  return <Select {...restProps} options={DestinationOptions} onChange={onChangeSelect} />
 }
 
 export default DestinationSelect
 
-/**
- * React Props.
- */
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   onChangeDestination: (destinationId: DestinationId) => void
 }

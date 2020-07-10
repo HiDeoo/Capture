@@ -24,34 +24,22 @@ const AppPanelMap = {
   [Panel.Settings]: <Settings />,
 } as const
 
-/**
- * Wrapper component.
- */
 const Wrapper = styled.div`
   ${tw`flex flex-col h-full text-white overflow-y-hidden select-none`}
 
   background-color: ${theme('window.background')};
 `
 
-/**
- * Main component.
- */
 const Main = styled.div`
   ${tw`flex-1 flex h-full overflow-y-hidden`}
 `
 
-/**
- * Content component.
- */
 const Content = styled.div<ContentProps>`
   ${tw`h-full flex-1 border-solid border-t overflow-y-auto flex flex-col`}
 
   border-color: ${ifProp('isFocused', theme('titleBar.border'), theme('titleBar.blurred.border'))};
 `
 
-/**
- * App Component.
- */
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
   const { isFocused, panel, pushToQueue, setWindowFocus } = useApp()
@@ -100,9 +88,6 @@ const App: React.FC<{}> = (props) => {
 
 export default observer(App)
 
-/**
- * React Props.
- */
 interface ContentProps {
   isFocused: boolean
 }

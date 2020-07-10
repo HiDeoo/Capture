@@ -7,9 +7,9 @@ declare global {
   export type Optional<T> = T | undefined
 
   /**
-   * Optional promise.
+   * A value that may be wrapped in a promise or not.
    */
-  export type OptionalPromise<T> = T | Promise<T>
+  export type MaybePromise<T> = T | Promise<T>
 
   /**
    * A type matching the known keys of an interface and excluding potential index signatures.

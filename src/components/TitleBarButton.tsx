@@ -8,9 +8,6 @@ import Icon, { IconSymbol } from './Icon'
 
 export { IconSymbol }
 
-/**
- * StyledButton component.
- */
 const StyledButton = styled(Button)`
   ${tw`font-semibold rounded-md`}
 
@@ -27,16 +24,10 @@ const StyledButton = styled(Button)`
   }
 `
 
-/**
- * StyledIcon component.
- */
 const StyledIcon = styled(Icon)`
   font-size: 20px;
 `
 
-/**
- * TitleBarButton Component.
- */
 const TitleBarButton: React.FC<Props> = ({ symbol, ...restProps }) => {
   return (
     <StyledButton {...restProps}>
@@ -47,9 +38,6 @@ const TitleBarButton: React.FC<Props> = ({ symbol, ...restProps }) => {
 
 export default TitleBarButton
 
-/**
- * React Props.
- */
 interface Props extends Omit<ButtonProps, 'children'> {
   symbol: IconSymbol
 }

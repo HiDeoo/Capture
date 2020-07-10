@@ -5,9 +5,6 @@ import tw from 'tailwind.macro'
 
 import Icon, { IconSymbol } from './Icon'
 
-/**
- * StyledSelect component.
- */
 const StyledSelect = styled.select`
   ${tw`rounded pl-3 py-1 appearance-none pr-10`}
 
@@ -24,9 +21,6 @@ const StyledSelect = styled.select`
   }
 `
 
-/**
- * StyledIcon component.
- */
 const StyledIcon = styled(Icon)<StyledIconProps>`
   ${tw`absolute top-0 right-0 px-3 pointer-events-none`}
 
@@ -35,9 +29,6 @@ const StyledIcon = styled(Icon)<StyledIconProps>`
   padding-top: 6px;
 `
 
-/**
- * Select Component.
- */
 const Select: React.FC<Props> = ({ disabled, options, ...restProps }) => {
   const children = options.map((option) => {
     const optionProps: SelectOption = typeof option === 'object' ? option : { value: option }
@@ -57,25 +48,16 @@ const Select: React.FC<Props> = ({ disabled, options, ...restProps }) => {
 
 export default Select
 
-/**
- * React Props.
- */
 export interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   onChange: React.ChangeEventHandler<HTMLSelectElement>
   options: (string | SelectOption)[]
 }
 
-/**
- * An interface describing a Select option containing a label and a value.
- */
 export interface SelectOption {
   label?: string
   value: string
 }
 
-/**
- * React Props.
- */
 interface StyledIconProps {
   disabled: boolean
 }

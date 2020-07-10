@@ -77,7 +77,7 @@ interface CaptureIpcMain<RMEvents extends IPCEvents> extends IpcMain {
     listener: (
       event: IpcMainInvokeEvent,
       ...args: Parameters<RMEvents[Channel]>
-    ) => OptionalPromise<ReturnType<RMEvents[Channel]>>
+    ) => MaybePromise<ReturnType<RMEvents[Channel]>>
   ): void
   removeHandler<Channel extends keyof RMEvents>(channel: Channel): void
 }

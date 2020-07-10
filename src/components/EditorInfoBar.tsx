@@ -4,16 +4,10 @@ import tw from 'tailwind.macro'
 
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
 
-/**
- * StyledToolbar component.
- */
 const StyledToolbar = styled(ToolBar)`
   ${tw`text-xs`}
 `
 
-/**
- * EditorInfoBar Component.
- */
 const EditorInfoBar: React.FC<Props> = ({ filePath }) => {
   return (
     <StyledToolbar bottom>
@@ -25,9 +19,6 @@ const EditorInfoBar: React.FC<Props> = ({ filePath }) => {
 
 export default EditorInfoBar
 
-/**
- * React Props.
- */
 interface Props extends ToolbarLockedProps {
   filePath: string
 }

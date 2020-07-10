@@ -1,5 +1,5 @@
 /**
- * A regular expression represeting a CSS value and its unit.
+ * A regular expression representing a CSS value and its unit.
  */
 const cssValueWithUnit = /^-?(\d+|\d*\.\d+)[a-z]+$/
 
