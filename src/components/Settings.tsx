@@ -5,16 +5,18 @@ import React from 'react'
 import tw from 'tailwind.macro'
 
 import { getDestinations } from '../destinations'
-import { useApp } from '../store'
+import { useApp, useSettings } from '../store'
 import { SettingsPanelId } from '../store/app'
+import { DestinationSettings, DestinationSettingValue } from '../utils/Destination'
 import GeneralSetting, { GeneralSettingConfiguration } from './GeneralSettings'
+import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
 import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
 
 /**
  * The ordered settings sidebar entries.
  */
 const SidebarEntries: (SettingsSideBarEntry | React.ReactNode)[] = [
-  { ...GeneralSettingConfiguration, panel: <GeneralSetting /> },
+  { ...GeneralSettingConfiguration, panel: GeneralSetting },
   <div css={tw`h-6`} />,
   // Add dynamic destinations settings panels.
   ...Object.entries(getDestinations()).reduce<SettingsSideBarEntry[]>((acc, [id, destination]) => {
@@ -29,7 +31,7 @@ const SidebarEntries: (SettingsSideBarEntry | React.ReactNode)[] = [
 /**
  * Settings panel-to-component mapping.
  */
-const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.ReactNode>>((acc, entry) => {
+const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.FC<SettingsPanelProps>>>((acc, entry) => {
   if (!React.isValidElement(entry)) {
     const currentEntry = entry as SettingsSideBarEntry
 
@@ -41,11 +43,33 @@ const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.Rea
 
 const Settings: React.FC<{}> = () => {
   const { currentSettingsPanel } = useApp()
+  const { getDestinationSettings, setDestinationSetting } = useSettings()
+
+  const CurrentPanel = observer(SettingsPanelMap[currentSettingsPanel])
+
+  /**
+   * Destination-scoped settings getter.
+   */
+  function getSettings<Settings extends DestinationSettings>(): Settings {
+    return getDestinationSettings<Settings>(currentSettingsPanel)
+  }
+
+  /**
+   * Destination-scoped settings setter.
+   */
+  function setSettings<Settings extends DestinationSettings>(
+    settingId: KnownKeys<Settings>,
+    value: DestinationSettingValue
+  ): void {
+    return setDestinationSetting<Settings>(currentSettingsPanel, settingId, value)
+  }
 
   return (
     <div css={tw`h-full w-full flex`}>
       <SettingsSideBar entries={SidebarEntries} />
-      <div css={tw`flex-1 overflow-y-auto p-3`}>{SettingsPanelMap[currentSettingsPanel]}</div>
+      <SettingsPanel>
+        <CurrentPanel getSettings={getSettings} setSettings={setSettings} />
+      </SettingsPanel>
     </div>
   )
 }

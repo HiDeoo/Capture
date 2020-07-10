@@ -1,3 +1,5 @@
+import type { SettingsPanelProps } from '../components/SettingsPanel'
+
 /**
  * Abstract definition of a destination.
  */
@@ -24,7 +26,7 @@ export default abstract class Destination {
    * Returns the destination settings panel if any.
    * @return The settings panel.
    */
-  abstract getSettingsPanel?(): React.ReactNode
+  abstract getSettingsPanel?(): React.FC<SettingsPanelProps>
 }
 
 export type DestinationId = string

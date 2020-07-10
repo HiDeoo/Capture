@@ -6,6 +6,7 @@ import tw from 'tailwind.macro'
 
 import { useApp } from '../store'
 import { SettingsPanelId } from '../store/app'
+import type { SettingsPanelProps } from './SettingsPanel'
 import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryProps } from './SideBar'
 
 const StyledSideBar = styled(SideBar as SideBarComponent<SettingsSideBarEntry>)`
@@ -57,5 +58,5 @@ interface Props {
 
 export interface SettingsSideBarEntry extends SideBarEntry {
   name: SettingsPanelId
-  panel: React.ReactNode
+  panel: React.FC<SettingsPanelProps>
 }

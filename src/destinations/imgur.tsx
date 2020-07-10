@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Button from '../components/Button'
+import type { SettingsPanelProps } from '../components/SettingsPanel'
 import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
 
 /**
@@ -43,8 +45,23 @@ class Imgur implements Destination {
    * Returns the destination settings panel.
    * @return The settings panel.
    */
-  getSettingsPanel(): React.ReactNode {
-    return <div>Imgur settings</div>
+  getSettingsPanel(): React.FC<SettingsPanelProps> {
+    return ({ getSettings, setSettings }) => {
+      const settings = getSettings<ImgurSettings>()
+
+      function updateSetting(): void {
+        setSettings<ImgurSettings>('test', `imgur - ${new Date().toString()}`)
+      }
+
+      return (
+        <div>
+          Imgur settings - {JSON.stringify(settings)}
+          <div>{settings.test}</div>
+          {/* // TODO Pass down UI element */}
+          <Button onClick={updateSetting}>Update destination setting</Button>
+        </div>
+      )
+    }
   }
 }
 
