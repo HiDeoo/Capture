@@ -8,7 +8,7 @@ export type { IpcRendererEvent } from 'electron'
  * Application main-to-renderer events.
  */
 type CaptureMainToRendererEvents = {
-  newOAuthRequest: (destination: string, queryString: ParsedQueryString, hash: Optional<ParsedQueryString>) => void
+  newOAuthRequest: (destinationId: string, queryString: ParsedQueryString, hash: Optional<ParsedQueryString>) => void
   newScreenshot: (filePath: string) => void
   windowBlur: () => void
   windowFocus: () => void
@@ -18,8 +18,9 @@ type CaptureMainToRendererEvents = {
  * Application renderer-to-main events.
  */
 type CaptureRendererToMainEvents = {
-  shareScreenshot: (destinationId: DestinationId, filePath: string) => void
   closeWindow: () => void
+  openUrl: (url: string) => void
+  shareScreenshot: (destinationId: DestinationId, filePath: string) => void
 }
 
 /**

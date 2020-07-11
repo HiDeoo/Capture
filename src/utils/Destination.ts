@@ -27,6 +27,15 @@ export default abstract class Destination {
    * @return The settings panel.
    */
   abstract getSettingsPanel?(): React.FC<SettingsPanelProps>
+
+  /**
+   * Triggered when an associated OAuth request is received for the destination.
+   */
+  abstract onOAuthRequest?(
+    setSettings: SettingsPanelProps['setSettings'],
+    queryString: ParsedQueryString,
+    hash: Optional<ParsedQueryString>
+  ): void
 }
 
 export type DestinationId = string
@@ -39,5 +48,5 @@ export interface DestinationConfiguration {
 /**
  * The default settings of a destination.
  */
-export type DestinationSettingValue = string | number | boolean
+export type DestinationSettingValue = Optional<string | number | boolean>
 export type DestinationSettings = Record<string, DestinationSettingValue>

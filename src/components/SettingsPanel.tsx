@@ -19,6 +19,7 @@ export default SettingsPanel
  */
 export interface SettingsPanelProps {
   getSettings: <Settings extends DestinationSettings>() => Settings
+  openUrl(url: string): Promise<void>
   setSettings: <Settings extends DestinationSettings>(
     settingId: KnownKeys<Settings>,
     value: DestinationSettingValue

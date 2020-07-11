@@ -8,6 +8,7 @@ import {
   ipcMain as unsafeIpcMain,
   IpcMainInvokeEvent,
   protocol,
+  shell,
   Tray,
 } from 'electron'
 import isDev from 'electron-is-dev'
@@ -154,6 +155,10 @@ function registerIpcHandlers(): void {
 
   ipcMain.handle('closeWindow', onWindowClose)
 
+  ipcMain.handle('openUrl', (event: IpcMainInvokeEvent, url: string) => {
+    return shell.openExternal(url)
+  })
+
   ipcMain.handle(
     'shareScreenshot',
     async (event: IpcMainInvokeEvent, destinationId: DestinationId, filePath: string) => {
@@ -173,8 +178,9 @@ function registerIpcHandlers(): void {
  * Unregisters IPC handlers for messages from the renderer process.
  */
 function unregisterIpcHandlers(): void {
-  ipcMain.removeHandler('shareScreenshot')
   ipcMain.removeHandler('closeWindow')
+  ipcMain.removeHandler('openUrl')
+  ipcMain.removeHandler('shareScreenshot')
 }
 
 /**
@@ -221,17 +227,17 @@ function onOpenUrl(event: Electron.Event, url: string): void {
 
   // Handle OAuth calls.
   if (parsedUrl.hostname === 'oauth' && parsedUrl.pathname.length > 2) {
-    const destination = parsedUrl.pathname.substr(1)
-    const queryString = querystring.parse(parsedUrl.search)
+    const destinationId = parsedUrl.pathname.substr(1)
+    const queryString = querystring.parse(parsedUrl.search) as ParsedQueryString
 
-    let parsedHash: Optional<ReturnType<typeof querystring.parse>> = undefined
+    let parsedHash: Optional<ParsedQueryString> = undefined
 
     if (parsedUrl.hash.length > 2) {
       const sanitizedHash = parsedUrl.hash.startsWith('#') ? parsedUrl.hash.substr(1) : parsedUrl.hash
-      parsedHash = querystring.parse(sanitizedHash)
+      parsedHash = querystring.parse(sanitizedHash) as ParsedQueryString
     }
 
-    sendToRenderer(window, 'newOAuthRequest', destination, queryString, parsedHash)
+    sendToRenderer(window, 'newOAuthRequest', destinationId, queryString, parsedHash)
   }
 }
 
@@ -298,6 +304,25 @@ async function onWillQuit(): Promise<void> {
 
     // Unregister all shortcuts.
     globalShortcut.unregisterAll()
+  }
+}
+
+/**
+ * Tests a custom URI scheme by tricking the application by manually calling `onOpenUrl` after a few seconds with a
+ * specific URL as on macOS, we can only register protocols that have been added in the application `info.plist`, which
+ * cannot be modified at runtime or in dev mode.
+ * Note: this only works in dev mode.
+ * @see https://www.electronjs.org/docs/api/app#appsetasdefaultprotocolclientprotocol-path-args
+ * @param url
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function debugCustomScheme(url: string): void {
+  if (isDev) {
+    setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      onOpenUrl({ preventDefault: () => {} }, url)
+    }, 5000)
   }
 }
 

@@ -8,6 +8,24 @@ import Destination, { DestinationConfiguration, DestinationSettings } from '../u
  */
 class Imgur implements Destination {
   /**
+   * Returns a formatted URL to access the Imgur API.
+   * @param  path - The path to the API.
+   * @param  searchParams - Any search parameters to add to the URL.
+   * @return The URL.
+   */
+  getUrl(path: string, searchParams?: Record<string, string>): string {
+    const url = new URL(`https://api.imgur.com/${path}`)
+
+    if (searchParams) {
+      Object.entries(searchParams).forEach(([name, value]) => {
+        url.searchParams.append(name, value)
+      })
+    }
+
+    return url.toString()
+  }
+
+  /**
    * Returns the destination configuration.
    * @return The configuration.
    */
@@ -23,9 +41,7 @@ class Imgur implements Destination {
    * @return The default settings.
    */
   getDefaultSettings(): ImgurSettings {
-    return {
-      test: 'test1',
-    }
+    return {}
   }
 
   /**
@@ -45,21 +61,47 @@ class Imgur implements Destination {
    * @return The settings panel.
    */
   getSettingsPanel(): React.FC<SettingsPanelProps> {
-    return ({ getSettings, setSettings, Ui }) => {
+    return ({ getSettings, openUrl, setSettings, Ui }) => {
       const settings = getSettings<ImgurSettings>()
 
       function updateSetting(): void {
-        setSettings<ImgurSettings>('test', `imgur - ${new Date().toString()}`)
+        setSettings<ImgurSettings>('accessToken', `imgur - ${new Date().toString()}`)
+      }
+
+      const goToSite = (): Promise<void> => {
+        return openUrl(
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          this.getUrl('oauth2/authorize', { client_id: process.env.REACT_APP_IMGUR_CLIENT_ID, response_type: 'token' })
+        )
       }
 
       // TODO Clean UI so only passed down UI is used.
       return (
         <div>
           Imgur settings - {JSON.stringify(settings)}
-          <div>{settings.test}</div>
           <Ui.Button onClick={updateSetting}>Update destination setting</Ui.Button>
+          <div>
+            <Ui.Button onClick={goToSite}>Login</Ui.Button>
+          </div>
         </div>
       )
+    }
+  }
+
+  /**
+   * Triggered when an OAuth request is received for the Imgur destination.
+   */
+  onOAuthRequest(
+    setSettings: SettingsPanelProps['setSettings'],
+    queryString: ParsedQueryString,
+    hash: Optional<ParsedQueryString>
+  ): void {
+    if (hash) {
+      setSettings<ImgurSettings>('accessToken', hash['access_token'])
+      setSettings<ImgurSettings>('expiresIn', hash['expires_in'])
+      setSettings<ImgurSettings>('id', hash['account_id'])
+      setSettings<ImgurSettings>('refreshToken', hash['refresh_token'])
+      setSettings<ImgurSettings>('username', hash['account_username'])
     }
   }
 }
@@ -67,5 +109,9 @@ class Imgur implements Destination {
 export default new Imgur()
 
 export interface ImgurSettings extends DestinationSettings {
-  test: string
+  accessToken?: string
+  expiresIn?: string
+  id?: string
+  refreshToken?: string
+  username?: string
 }

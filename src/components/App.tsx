@@ -4,8 +4,9 @@ import styled, { ThemeProvider } from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { getDestination } from '../destinations'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
-import { useApp } from '../store'
+import { useApp, useSettings } from '../store'
 import { Panel } from '../store/app'
 import Theme from '../utils/theme'
 import AppSideBar from './AppSideBar'
@@ -43,18 +44,22 @@ const Content = styled.div<ContentProps>`
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
   const { currentPanel, isFocused, pushToQueue, setWindowFocus } = useApp()
+  const { getDestinationSetter } = useSettings()
 
   useEffect(() => {
     function onOAuthRequest(
       event: IpcRendererEvent,
-      destination: string,
+      destinationId: string,
       queryString: ParsedQueryString,
       hash: Optional<ParsedQueryString>
     ): void {
-      // TODO Do something relevant.
-      console.log('destination ', destination)
-      console.log('queryString ', queryString)
-      console.log('hash ', hash)
+      // TODO Ensure settings and proper settings panel are visible.
+
+      const destination = getDestination(destinationId)
+
+      if (destination.onOAuthRequest) {
+        destination.onOAuthRequest(getDestinationSetter(destinationId), queryString, hash)
+      }
     }
 
     function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
