@@ -5,9 +5,9 @@ import React from 'react'
 import tw from 'tailwind.macro'
 
 import { getDestinations } from '../destinations'
+import { getIpcRenderer } from '../main/ipc'
 import { useApp, useSettings } from '../store'
 import { SettingsPanelId } from '../store/app'
-import { DestinationSettings, DestinationSettingValue } from '../utils/Destination'
 import Button from './Button'
 import GeneralSetting, { GeneralSettingConfiguration } from './GeneralSettings'
 import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
@@ -44,32 +44,27 @@ const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.FC<
 
 const Settings: React.FC<{}> = () => {
   const { currentSettingsPanel } = useApp()
-  const { getDestinationSettings, setDestinationSetting } = useSettings()
+  const { getDestinationGetter, getDestinationSetter } = useSettings()
 
   const CurrentPanel = observer(SettingsPanelMap[currentSettingsPanel])
 
   /**
-   * Destination-scoped settings getter.
+   * Opens a URL in the default browser.
    */
-  function getSettings<Settings extends DestinationSettings>(): Settings {
-    return getDestinationSettings<Settings>(currentSettingsPanel)
-  }
-
-  /**
-   * Destination-scoped settings setter.
-   */
-  function setSettings<Settings extends DestinationSettings>(
-    settingId: KnownKeys<Settings>,
-    value: DestinationSettingValue
-  ): void {
-    return setDestinationSetting<Settings>(currentSettingsPanel, settingId, value)
+  function openUrl(url: string): Promise<void> {
+    return getIpcRenderer().invoke('openUrl', url)
   }
 
   return (
     <div css={tw`h-full w-full flex`}>
       <SettingsSideBar entries={SidebarEntries} />
       <SettingsPanel>
-        <CurrentPanel getSettings={getSettings} setSettings={setSettings} Ui={{ Button }} />
+        <CurrentPanel
+          Ui={{ Button }}
+          openUrl={openUrl}
+          getSettings={getDestinationGetter(currentSettingsPanel)}
+          setSettings={getDestinationSetter(currentSettingsPanel)}
+        />
       </SettingsPanel>
     </div>
   )

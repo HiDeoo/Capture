@@ -34,8 +34,19 @@ export default class SettingsStore {
    * @param  id - The destination ID.
    * @return The destination settings.
    */
-  getDestinationSettings = <Settings extends DestinationSettings>(id: DestinationId): Settings => {
+  private getDestinationSettings = <Settings extends DestinationSettings>(id: DestinationId): Settings => {
+    console.log('id ', id)
     return this.destinations[id] as Settings
+  }
+
+  /**
+   * Returns a destination-scoped settings getter.
+   * @param id - The destination ID.
+   */
+  getDestinationGetter = (id: DestinationId) => {
+    return <Settings extends DestinationSettings>(): Settings => {
+      return this.getDestinationSettings<Settings>(id)
+    }
   }
 
   /**
@@ -45,11 +56,24 @@ export default class SettingsStore {
    * @param value - The new setting value.
    */
   @action
-  setDestinationSetting = <Settings extends DestinationSettings>(
+  private setDestinationSetting = <Settings extends DestinationSettings>(
     id: DestinationId,
     settingId: KnownKeys<Settings>,
     value: DestinationSettingValue
   ): void => {
     this.destinations[id][settingId as string] = value
+  }
+
+  /**
+   * Returns a destination-scoped settings setter.
+   * @param id - The destination ID.
+   */
+  getDestinationSetter = (id: DestinationId) => {
+    return <Settings extends DestinationSettings>(
+      settingId: KnownKeys<Settings>,
+      value: DestinationSettingValue
+    ): void => {
+      this.setDestinationSetting<Settings>(id, settingId, value)
+    }
   }
 }
