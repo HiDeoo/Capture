@@ -36,6 +36,17 @@ export default {
     shadow: '#0f0f11',
     size: '120px',
   },
+  settings: {
+    button: {
+      background: '#2f2d34',
+      border: color.black1,
+      hover: {
+        background: '#29272e',
+        border: color.black,
+        color: color.tint,
+      },
+    },
+  },
   // Application sidebar.
   sideBar: {
     background: '#25242d',

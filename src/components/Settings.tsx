@@ -8,10 +8,10 @@ import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useSettings } from '../store'
 import { SettingsPanelId } from '../store/app'
-import Button from './Button'
 import GeneralSetting, { GeneralSettingConfiguration } from './GeneralSettings'
 import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
 import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
+import { Button, Group } from './SettingsUi'
 
 /**
  * The ordered settings sidebar entries.
@@ -60,7 +60,7 @@ const Settings: React.FC<{}> = () => {
       <SettingsSideBar entries={SidebarEntries} />
       <SettingsPanel>
         <CurrentPanel
-          Ui={{ Button }}
+          Ui={{ Button, Group }}
           openUrl={openUrl}
           getSettings={getDestinationGetter(currentSettingsPanel)}
           setSettings={getDestinationSetter(currentSettingsPanel)}

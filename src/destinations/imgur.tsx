@@ -63,27 +63,29 @@ class Imgur implements Destination {
   getSettingsPanel(): React.FC<SettingsPanelProps> {
     return ({ getSettings, openUrl, setSettings, Ui }) => {
       const settings = getSettings<ImgurSettings>()
+      const isLoggedIn = settings.username !== undefined
 
-      function updateSetting(): void {
-        setSettings<ImgurSettings>('accessToken', `imgur - ${new Date().toString()}`)
+      function logout(): void {
+        setSettings<ImgurSettings>('accessToken', undefined)
+        setSettings<ImgurSettings>('expiresIn', undefined)
+        setSettings<ImgurSettings>('id', undefined)
+        setSettings<ImgurSettings>('refreshToken', undefined)
+        setSettings<ImgurSettings>('username', undefined)
       }
 
-      const goToSite = (): Promise<void> => {
+      const authorize = (): Promise<void> => {
         return openUrl(
           // eslint-disable-next-line @typescript-eslint/camelcase
           this.getUrl('oauth2/authorize', { client_id: process.env.REACT_APP_IMGUR_CLIENT_ID, response_type: 'token' })
         )
       }
 
-      // TODO Clean UI so only passed down UI is used.
       return (
-        <div>
-          Imgur settings - {JSON.stringify(settings)}
-          <Ui.Button onClick={updateSetting}>Update destination setting</Ui.Button>
-          <div>
-            <Ui.Button onClick={goToSite}>Login</Ui.Button>
-          </div>
-        </div>
+        <>
+          <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
+            <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
+          </Ui.Group>
+        </>
       )
     }
   }
