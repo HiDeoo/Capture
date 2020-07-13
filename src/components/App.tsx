@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import styled, { ThemeProvider } from 'styled-components/macro'
-import { ifProp, theme } from 'styled-tools'
+import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
@@ -35,15 +35,11 @@ const Main = styled.div`
   ${tw`flex-1 flex h-full overflow-y-hidden`}
 `
 
-const Content = styled.div<ContentProps>`
-  ${tw`h-full flex-1 border-solid border-t overflow-y-auto flex flex-col`}
-
-  border-color: ${ifProp('isFocused', theme('titleBar.border'), theme('titleBar.blurred.border'))};
-`
+const Content = tw.div`h-full flex-1 overflow-y-auto flex flex-col`
 
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
-  const { currentPanel, isFocused, pushToQueue, setWindowFocus } = useApp()
+  const { currentPanel, pushToQueue, setWindowFocus } = useApp()
   const { getDestinationSettingsSetter } = useSettings()
 
   useEffect(() => {
@@ -96,7 +92,7 @@ const App: React.FC<{}> = (props) => {
             <TitleBar />
             <Main>
               <AppSideBar />
-              <Content isFocused={isFocused}>{AppPanelMap[currentPanel]}</Content>
+              <Content>{AppPanelMap[currentPanel]}</Content>
             </Main>
           </TitleBarProvider>
         </Wrapper>
@@ -106,7 +102,3 @@ const App: React.FC<{}> = (props) => {
 }
 
 export default observer(App)
-
-interface ContentProps {
-  isFocused: boolean
-}

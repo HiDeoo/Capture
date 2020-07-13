@@ -76,6 +76,12 @@ const CloseButton = styled(Button)<IsFocusedProps>`
   }
 `
 
+const Main = styled.div<IsFocusedProps>`
+  ${tw`flex px-4 w-full h-full items-center border-solid border-b`}
+
+  border-color: ${ifProp('isFocused', theme('titleBar.border'), theme('titleBar.blurred.border'))};
+`
+
 const TitleBar: React.FC<{}> = () => {
   const { isFocused } = useApp()
   const { titleBarContent } = useTitleBar()
@@ -91,11 +97,11 @@ const TitleBar: React.FC<{}> = () => {
           <CloseButtonIcon symbol={IconSymbol.XMark} />
         </CloseButton>
       </SideBar>
-      <div css={tw`flex px-4 w-full h-full items-center`}>
+      <Main isFocused={isFocused}>
         Capture
         <div css={tw`flex-1`} />
         {titleBarContent}
-      </div>
+      </Main>
     </Wrapper>
   )
 }
