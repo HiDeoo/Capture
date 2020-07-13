@@ -1,11 +1,10 @@
 import Destination, { DestinationId, DestinationSettings } from '../utils/Destination'
 import Imgur from './imgur'
-import TransferSh from './transfer.sh'
 
 /**
  * Imported destinations.
  */
-const rawDestinations = [Imgur, TransferSh]
+const rawDestinations = [Imgur]
 
 /**
  * A lazy-loaded list of sanitized destinations.
