@@ -1,9 +1,15 @@
 import fs from 'fs'
-import React from 'react'
+import React, { useState } from 'react'
 import wretch, { Wretcher } from 'wretch'
 
 import type { SettingsPanelProps } from '../components/SettingsPanel'
+import type { DestinationToolBarProps } from '../components/ToolBar'
 import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
+
+enum AccountShareOption {
+  Anon = 'Share anonymously',
+  User = 'Share as',
+}
 
 /**
  * Imgur destination.
@@ -86,6 +92,35 @@ class Imgur implements Destination {
           </Ui.Group>
         </>
       )
+    }
+  }
+
+  /**
+   * Returns the destination toolbar if any.
+   * @return The destination toolbar visible in the editor.
+   */
+  getToolBar(): React.FC<DestinationToolBarProps> {
+    return ({ getSettings, Ui }) => {
+      const { username } = getSettings<ImgurSettings>()
+      const [accountShareOption, setAccountShareOption] = useState(AccountShareOption.Anon)
+
+      function onChangeAccountShareOption(event: React.ChangeEvent<HTMLSelectElement>): void {
+        setAccountShareOption(event.target.value as AccountShareOption)
+      }
+
+      // TODO Fix condition
+      const AccountPicker = !username ? (
+        <Ui.Select
+          value={accountShareOption}
+          onChange={onChangeAccountShareOption}
+          options={[
+            AccountShareOption.Anon,
+            { label: `${AccountShareOption.User} ${username}`, value: AccountShareOption.User },
+          ]}
+        />
+      ) : null
+
+      return <>{AccountPicker}</>
     }
   }
 

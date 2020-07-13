@@ -19,7 +19,7 @@ export default class AppStore {
   /**
    * The current application panel to display.
    */
-  @ignore @observable currentPanel: Panel = Panel.Settings
+  @ignore @observable currentPanel: Panel = Panel.Library
 
   /**
    * Changes the current panel.

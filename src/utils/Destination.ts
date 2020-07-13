@@ -1,4 +1,5 @@
 import type { SettingsPanelProps } from '../components/SettingsPanel'
+import type { DestinationToolBarProps } from '../components/ToolBar'
 
 /**
  * Abstract definition of a destination.
@@ -27,6 +28,12 @@ export default abstract class Destination {
    * @return The settings panel.
    */
   abstract getSettingsPanel?(): React.FC<SettingsPanelProps>
+
+  /**
+   * Returns the destination toolbar if any.
+   * @return The destination toolbar visible in the editor.
+   */
+  abstract getToolBar?(): React.FC<DestinationToolBarProps>
 
   /**
    * Triggered when an associated OAuth request is received for the destination.

@@ -34,7 +34,7 @@ const Editor: React.FC<{}> = () => {
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const { getDestinationSettingsGetter } = useSettings()
-  const [destination, setDestination] = useState(defaultDestination)
+  const [destinationId, setDestinationId] = useState(defaultDestination)
 
   const onClickCancel = useCallback(() => {
     shiftFromQueue()
@@ -46,9 +46,9 @@ const Editor: React.FC<{}> = () => {
 
       await getIpcRenderer().invoke(
         'shareScreenshot',
-        destination,
+        destinationId,
         pendingScreenshot,
-        toJS(getDestinationSettingsGetter(destination)())
+        toJS(getDestinationSettingsGetter(destinationId)())
       )
 
       addToHistory({ path: pendingScreenshot })
@@ -60,7 +60,7 @@ const Editor: React.FC<{}> = () => {
     } finally {
       lockUi(false)
     }
-  }, [addToHistory, destination, getDestinationSettingsGetter, lockUi, pendingScreenshot, shiftFromQueue])
+  }, [addToHistory, destinationId, getDestinationSettingsGetter, lockUi, pendingScreenshot, shiftFromQueue])
 
   useEffect(() => {
     setTitleBarContent(
@@ -75,13 +75,16 @@ const Editor: React.FC<{}> = () => {
     }
   }, [isUiLocked, onClickCancel, onClickShare, setTitleBarContent])
 
-  function onChangeDestination(destinationId: DestinationId): void {
-    setDestination(destinationId)
-  }
+  const onChangeDestination = useCallback(
+    (newDestinationId: DestinationId) => {
+      setDestinationId(newDestinationId)
+    },
+    [setDestinationId]
+  )
 
   return (
     <>
-      <EditorToolBar locked={isUiLocked} onChangeDestination={onChangeDestination} />
+      <EditorToolBar locked={isUiLocked} destinationId={destinationId} onChangeDestination={onChangeDestination} />
       <LoadingBar enabled={isUiLocked} />
       <Content>
         <StyledImg src={`file://${pendingScreenshot}`} alt="" />
@@ -92,7 +95,3 @@ const Editor: React.FC<{}> = () => {
 }
 
 export default observer(Editor)
-
-interface LoadingBarProps {
-  enabled: boolean
-}

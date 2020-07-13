@@ -5,6 +5,8 @@ import tw from 'tailwind.macro'
 
 import Icon, { IconSymbol } from './Icon'
 
+const Wrapper = tw.div`relative`
+
 const StyledSelect = styled.select`
   ${tw`rounded pl-3 py-1 appearance-none pr-10`}
 
@@ -37,12 +39,12 @@ const Select: React.FC<Props> = ({ disabled, options, ...restProps }) => {
   })
 
   return (
-    <div css={tw`relative`}>
+    <Wrapper>
       <StyledSelect {...restProps} disabled={disabled}>
         {children}
       </StyledSelect>
       <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled ?? false} />
-    </div>
+    </Wrapper>
   )
 }
 
@@ -50,12 +52,12 @@ export default Select
 
 export interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   onChange: React.ChangeEventHandler<HTMLSelectElement>
-  options: (string | SelectOption)[]
+  options: (string | number | SelectOption)[]
 }
 
 export interface SelectOption {
   label?: string
-  value: string
+  value: string | number
 }
 
 interface StyledIconProps {
