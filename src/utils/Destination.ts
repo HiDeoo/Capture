@@ -20,7 +20,7 @@ export default abstract class Destination {
    * Share a file to the destination.
    * @param filePath - The path of the file to share.
    */
-  abstract share(filePath: string): Promise<void>
+  abstract share(filePath: string, destinationSettings: DestinationSettings): Promise<void>
 
   /**
    * Returns the destination settings panel if any.

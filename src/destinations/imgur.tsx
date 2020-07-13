@@ -1,4 +1,6 @@
+import fs from 'fs'
 import React from 'react'
+import wretch, { Wretcher } from 'wretch'
 
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
@@ -8,21 +10,10 @@ import Destination, { DestinationConfiguration, DestinationSettings } from '../u
  */
 class Imgur implements Destination {
   /**
-   * Returns a formatted URL to access the Imgur API.
-   * @param  path - The path to the API.
-   * @param  searchParams - Any search parameters to add to the URL.
-   * @return The URL.
+   * Returns the API object used to perform HTTP requests.
    */
-  getUrl(path: string, searchParams?: Record<string, string>): string {
-    const url = new URL(`https://api.imgur.com/${path}`)
-
-    if (searchParams) {
-      Object.entries(searchParams).forEach(([name, value]) => {
-        url.searchParams.append(name, value)
-      })
-    }
-
-    return url.toString()
+  static get Api(): Wretcher {
+    return wretch('https://api.imgur.com')
   }
 
   /**
@@ -48,10 +39,17 @@ class Imgur implements Destination {
    * Share a file to Imgur.
    * @param filePath - The path of the file to share.
    */
-  async share(filePath: string): Promise<void> {
-    console.log('filePath ', filePath)
+  async share(filePath: string, destinationSettings: ImgurSettings): Promise<void> {
+    // TODO Refresh token if needed
 
-    // TODO Add implementation
+    // TODO Do something relevant with the response and pass back proper infos to the renderer.
+    const response = await Imgur.Api.url('/3/upload')
+      .headers({ Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` })
+      .formData({ image: fs.createReadStream(filePath) })
+      .post()
+      .json()
+
+    console.log('response ', response)
 
     return Promise.resolve()
   }
@@ -74,10 +72,11 @@ class Imgur implements Destination {
       }
 
       const authorize = (): Promise<void> => {
-        return openUrl(
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          this.getUrl('oauth2/authorize', { client_id: process.env.REACT_APP_IMGUR_CLIENT_ID, response_type: 'token' })
-        )
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        const queryParameters = { client_id: process.env.REACT_APP_IMGUR_CLIENT_ID, response_type: 'token' }
+        const request = Imgur.Api.url('/oauth2/authorize').query(queryParameters)
+
+        return openUrl(request._url)
       }
 
       return (

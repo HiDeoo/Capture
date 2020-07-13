@@ -1,6 +1,6 @@
 import type { BrowserWindow, IpcMain, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from 'electron'
 
-import type { DestinationId } from '../utils/Destination'
+import type { DestinationId, DestinationSettings } from '../utils/Destination'
 
 export type { IpcRendererEvent } from 'electron'
 
@@ -20,7 +20,7 @@ type CaptureMainToRendererEvents = {
 type CaptureRendererToMainEvents = {
   closeWindow: () => void
   openUrl: (url: string) => void
-  shareScreenshot: (destinationId: DestinationId, filePath: string) => void
+  shareScreenshot: (destinationId: DestinationId, filePath: string, destinationSettings: DestinationSettings) => void
 }
 
 /**

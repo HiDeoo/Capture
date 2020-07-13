@@ -1,5 +1,5 @@
 // Even tho `_types` looks unused, it is used to provide TS typings for the `css` prop through styled-components.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, simple-import-sort/sort
+// eslint-disable-next-line
 import * as _types from 'styled-components/cssprop'
 
 import './styles.css'

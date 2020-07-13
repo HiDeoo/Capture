@@ -1,3 +1,4 @@
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -5,7 +6,7 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { getIpcRenderer } from '../main/ipc'
-import { useApp, useHistory } from '../store'
+import { useApp, useHistory, useSettings } from '../store'
 import { DestinationId } from '../utils/Destination'
 import { defaultDestination } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
@@ -32,6 +33,7 @@ const Editor: React.FC<{}> = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
+  const { getDestinationSettingsGetter } = useSettings()
   const [destination, setDestination] = useState(defaultDestination)
 
   const onClickCancel = useCallback(() => {
@@ -42,7 +44,12 @@ const Editor: React.FC<{}> = () => {
     try {
       lockUi()
 
-      await getIpcRenderer().invoke('shareScreenshot', destination, pendingScreenshot)
+      await getIpcRenderer().invoke(
+        'shareScreenshot',
+        destination,
+        pendingScreenshot,
+        toJS(getDestinationSettingsGetter(destination)())
+      )
 
       addToHistory({ path: pendingScreenshot })
 
@@ -53,7 +60,7 @@ const Editor: React.FC<{}> = () => {
     } finally {
       lockUi(false)
     }
-  }, [addToHistory, destination, lockUi, pendingScreenshot, shiftFromQueue])
+  }, [addToHistory, destination, getDestinationSettingsGetter, lockUi, pendingScreenshot, shiftFromQueue])
 
   useEffect(() => {
     setTitleBarContent(

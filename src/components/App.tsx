@@ -44,7 +44,7 @@ const Content = styled.div<ContentProps>`
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
   const { currentPanel, isFocused, pushToQueue, setWindowFocus } = useApp()
-  const { getDestinationSetter } = useSettings()
+  const { getDestinationSettingsSetter } = useSettings()
 
   useEffect(() => {
     function onOAuthRequest(
@@ -58,7 +58,7 @@ const App: React.FC<{}> = (props) => {
       const destination = getDestination(destinationId)
 
       if (destination.onOAuthRequest) {
-        destination.onOAuthRequest(getDestinationSetter(destinationId), queryString, hash)
+        destination.onOAuthRequest(getDestinationSettingsSetter(destinationId), queryString, hash)
       }
     }
 

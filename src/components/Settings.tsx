@@ -44,7 +44,7 @@ const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.FC<
 
 const Settings: React.FC<{}> = () => {
   const { currentSettingsPanel } = useApp()
-  const { getDestinationGetter, getDestinationSetter } = useSettings()
+  const { getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
 
   const CurrentPanel = observer(SettingsPanelMap[currentSettingsPanel])
 
@@ -62,8 +62,8 @@ const Settings: React.FC<{}> = () => {
         <CurrentPanel
           Ui={{ Button, Group }}
           openUrl={openUrl}
-          getSettings={getDestinationGetter(currentSettingsPanel)}
-          setSettings={getDestinationSetter(currentSettingsPanel)}
+          getSettings={getDestinationSettingsGetter(currentSettingsPanel)}
+          setSettings={getDestinationSettingsSetter(currentSettingsPanel)}
         />
       </SettingsPanel>
     </div>

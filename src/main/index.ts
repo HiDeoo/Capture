@@ -1,6 +1,7 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
+import dotenv from 'dotenv-flow'
 import {
   app,
   BrowserWindow,
@@ -14,9 +15,10 @@ import {
 import isDev from 'electron-is-dev'
 import path from 'path'
 import querystring from 'querystring'
+import wretch from 'wretch'
 
 import { getDestination } from '../destinations'
-import { DestinationId } from '../utils/Destination'
+import { DestinationId, DestinationSettings } from '../utils/Destination'
 import Theme from '../utils/theme'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
@@ -161,11 +163,16 @@ function registerIpcHandlers(): void {
 
   ipcMain.handle(
     'shareScreenshot',
-    async (event: IpcMainInvokeEvent, destinationId: DestinationId, filePath: string) => {
+    async (
+      event: IpcMainInvokeEvent,
+      destinationId: DestinationId,
+      filePath: string,
+      destinationSettings: DestinationSettings
+    ) => {
       // TODO Extract & do something relevant
       const destination = getDestination(destinationId)
 
-      await destination.share(filePath)
+      await destination.share(filePath, destinationSettings)
 
       if (window?.isVisible()) {
         window.hide()
@@ -334,6 +341,16 @@ if (isDev) {
 
 // Hide the Dock icon.
 app.dock.hide()
+
+// Load dotenv configuration in the main process.
+dotenv.config({ path: isDev ? process.cwd() : app.getAppPath() })
+
+// Configure wretch polyfills.
+wretch().polyfills({
+  fetch: require('node-fetch'),
+  FormData: require('form-data'),
+  URLSearchParams: require('url').URLSearchParams,
+})
 
 /**
  * Handle application lifecycle.

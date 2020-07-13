@@ -42,7 +42,7 @@ export default class SettingsStore {
    * Returns a destination-scoped settings getter.
    * @param id - The destination ID.
    */
-  getDestinationGetter = (id: DestinationId) => {
+  getDestinationSettingsGetter = (id: DestinationId) => {
     return <Settings extends DestinationSettings>(): Settings => {
       return this.getDestinationSettings<Settings>(id)
     }
@@ -67,7 +67,7 @@ export default class SettingsStore {
    * Returns a destination-scoped settings setter.
    * @param id - The destination ID.
    */
-  getDestinationSetter = (id: DestinationId) => {
+  getDestinationSettingsSetter = (id: DestinationId) => {
     return <Settings extends DestinationSettings>(
       settingId: KnownKeys<Settings>,
       value: DestinationSettingValue
