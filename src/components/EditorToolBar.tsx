@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
@@ -15,7 +16,7 @@ const StyledDestinationSelect = styled(DestinationSelect)`
   }
 `
 
-const EditorToolBar: React.FC<Props> = React.memo(({ destinationId, locked, onChangeDestination }) => {
+const EditorToolBar: React.FC<Props> = ({ destinationId, locked, onChangeDestination }) => {
   const { getDestinationSettingsGetter } = useSettings()
 
   const destination = getDestination(destinationId)
@@ -28,9 +29,9 @@ const EditorToolBar: React.FC<Props> = React.memo(({ destinationId, locked, onCh
       <StyledDestinationSelect onChangeDestination={onChangeDestination} disabled={locked} />
     </ToolBar>
   )
-})
+}
 
-export default EditorToolBar
+export default observer(EditorToolBar)
 
 interface Props extends ToolbarLockedProps {
   destinationId: DestinationId

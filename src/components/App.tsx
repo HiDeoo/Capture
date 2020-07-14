@@ -39,8 +39,8 @@ const Content = tw.div`h-full flex-1 overflow-y-auto flex flex-col`
 
 const App: React.FC<{}> = (props) => {
   const ipcRenderer = getIpcRenderer()
-  const { currentPanel, pushToQueue, setWindowFocus } = useApp()
   const { getDestinationSettingsSetter } = useSettings()
+  const { currentPanel, pushToQueue, setWindowFocus } = useApp()
 
   useEffect(() => {
     function onOAuthRequest(

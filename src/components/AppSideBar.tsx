@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
@@ -70,7 +71,7 @@ const AppSideBar: React.FC<{}> = () => {
   return <StyledSideBar entries={Entries} onClick={onClickEntry} getEntryProps={getEntryProps} />
 }
 
-export default AppSideBar
+export default observer(AppSideBar)
 
 interface AppSideBarEntry extends SideBarEntry {
   symbol: IconSymbol
