@@ -5,10 +5,10 @@ import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { useSettings } from '../store'
-import type { DestinationId, ShareOptions, ShareOptionValue } from '../utils/Destination'
+import type { DestinationId } from '../utils/Destination'
 import DestinationSelect from './DestinationSelect'
 import Select from './Select'
-import ToolBar, { ToolbarLockedProps } from './ToolBar'
+import ToolBar, { DestinationToolBarProps, ToolbarLockedProps } from './ToolBar'
 
 const StyledDestinationSelect = styled(DestinationSelect)`
   && {
@@ -48,10 +48,7 @@ export default observer(EditorToolBar)
 
 interface Props extends ToolbarLockedProps {
   destinationId: DestinationId
-  getShareOptions: <DestinationShareOptions extends ShareOptions>() => DestinationShareOptions
+  getShareOptions: DestinationToolBarProps['getOptions']
   onChangeDestination: (destinationId: DestinationId) => void
-  setShareOption: <DestinationShareOptions extends ShareOptions>(
-    key: KnownKeys<DestinationShareOptions>,
-    value: ShareOptionValue
-  ) => void
+  setShareOption: DestinationToolBarProps['setOption']
 }
