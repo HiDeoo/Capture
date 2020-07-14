@@ -109,7 +109,7 @@ class Imgur implements Destination {
    * @return The destination toolbar visible in the editor.
    */
   getToolBar(): React.FC<DestinationToolBarProps> {
-    return ({ getOptions, getSettings, setOption, Ui }) => {
+    return ({ disabled, getOptions, getSettings, setOption, Ui }) => {
       const options = getOptions<ImgurShareOptions>()
       const { username } = getSettings<ImgurSettings>()
 
@@ -120,6 +120,7 @@ class Imgur implements Destination {
       // TODO Fix condition
       const AccountPicker = !username ? (
         <Ui.Select
+          disabled={disabled}
           value={options.account}
           onChange={onChangeAccountShareOption}
           options={[

@@ -67,6 +67,7 @@ export interface ToolbarLockedProps {
  * Props available to all destinations toolbars.
  */
 export interface DestinationToolBarProps {
+  disabled: boolean
   getOptions: <DestinationShareOptions extends ShareOptions>() => DestinationShareOptions
   getSettings: <Settings extends DestinationSettings>() => Settings
   Ui: {

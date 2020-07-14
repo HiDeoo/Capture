@@ -34,6 +34,7 @@ const EditorToolBar: React.FC<Props> = ({
       {DestinationToolBar && (
         <DestinationToolBar
           Ui={{ Select }}
+          disabled={locked}
           setOption={setShareOption}
           getOptions={getShareOptions}
           getSettings={getDestinationSettingsGetter(destinationId)}
