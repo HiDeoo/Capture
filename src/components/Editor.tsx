@@ -55,7 +55,8 @@ const Editor: React.FC<{}> = () => {
         'shareScreenshot',
         destinationId,
         pendingScreenshot,
-        toJS(getDestinationSettingsGetter(destinationId)())
+        toJS(getDestinationSettingsGetter(destinationId)()),
+        shareOptions
       )
 
       addToHistory({ path: pendingScreenshot })
@@ -67,7 +68,15 @@ const Editor: React.FC<{}> = () => {
     } finally {
       lockUi(false)
     }
-  }, [addToHistory, destinationId, getDestinationSettingsGetter, lockUi, pendingScreenshot, shiftFromQueue])
+  }, [
+    addToHistory,
+    destinationId,
+    getDestinationSettingsGetter,
+    lockUi,
+    pendingScreenshot,
+    shareOptions,
+    shiftFromQueue,
+  ])
 
   useEffect(() => {
     setTitleBarContent(

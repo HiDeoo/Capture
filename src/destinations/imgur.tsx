@@ -53,8 +53,10 @@ class Imgur implements Destination {
   /**
    * Share a file to Imgur.
    * @param filePath - The path of the file to share.
+   * @param destinationSettings - The destination settings.
+   * @param shareOptions - The options related to this specific share.
    */
-  async share(filePath: string, destinationSettings: ImgurSettings): Promise<void> {
+  async share(filePath: string, destinationSettings: ImgurSettings, shareOptions: ImgurShareOptions): Promise<void> {
     // TODO Refresh token if needed
 
     // TODO Do something relevant with the response and pass back proper infos to the renderer.

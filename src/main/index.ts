@@ -18,7 +18,7 @@ import querystring from 'querystring'
 import wretch from 'wretch'
 
 import { getDestination } from '../destinations'
-import { DestinationId, DestinationSettings } from '../utils/Destination'
+import { DestinationId, DestinationSettings, ShareOptions } from '../utils/Destination'
 import Theme from '../utils/theme'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
@@ -167,12 +167,13 @@ function registerIpcHandlers(): void {
       event: IpcMainInvokeEvent,
       destinationId: DestinationId,
       filePath: string,
-      destinationSettings: DestinationSettings
+      destinationSettings: DestinationSettings,
+      shareOptions: ShareOptions
     ) => {
       // TODO Extract & do something relevant
       const destination = getDestination(destinationId)
 
-      await destination.share(filePath, destinationSettings)
+      await destination.share(filePath, destinationSettings, shareOptions)
 
       if (window?.isVisible()) {
         window.hide()
