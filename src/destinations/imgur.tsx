@@ -43,10 +43,11 @@ class Imgur implements Destination {
 
   /**
    * Returns the destination default share options.
+   * @param  settings - The destination settings.
    * @return The default share options.
    */
-  getDefaultShareOptions(): ImgurShareOptions {
-    return { account: AccountShareOption.Anon }
+  getDefaultShareOptions(settings: ImgurSettings): ImgurShareOptions {
+    return { account: settings.username ? AccountShareOption.User : AccountShareOption.Anon }
   }
 
   /**

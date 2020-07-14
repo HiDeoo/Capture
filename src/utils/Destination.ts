@@ -19,9 +19,10 @@ export default abstract class Destination {
 
   /**
    * Returns the destination default share options.
+   * @param  settings - The destination settings.
    * @return The default share options.
    */
-  abstract getDefaultShareOptions?(): ShareOptions
+  abstract getDefaultShareOptions?(settings: DestinationSettings): ShareOptions
 
   /**
    * Share a file to the destination.

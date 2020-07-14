@@ -38,7 +38,9 @@ const Editor: React.FC<{}> = () => {
   const [destinationId, setDestinationId] = useState(defaultDestination)
   const destination = getDestination(destinationId)
   const [shareOptions, setShareOptions] = useState<ShareOptions>(
-    destination.getDefaultShareOptions ? destination.getDefaultShareOptions() : {}
+    destination.getDefaultShareOptions
+      ? destination.getDefaultShareOptions(getDestinationSettingsGetter(destinationId)())
+      : {}
   )
 
   const onClickCancel = useCallback(() => {
