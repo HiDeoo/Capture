@@ -1,10 +1,10 @@
 import fs from 'fs'
-import React, { useState } from 'react'
+import React from 'react'
 import wretch, { Wretcher } from 'wretch'
 
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
-import Destination, { DestinationConfiguration, DestinationSettings } from '../utils/Destination'
+import Destination, { DestinationConfiguration, DestinationSettings, ShareOptions } from '../utils/Destination'
 
 enum AccountShareOption {
   Anon = 'Share anonymously',
@@ -39,6 +39,14 @@ class Imgur implements Destination {
    */
   getDefaultSettings(): ImgurSettings {
     return {}
+  }
+
+  /**
+   * Returns the destination default share options.
+   * @return The default share options.
+   */
+  getDefaultShareOptions(): ImgurShareOptions {
+    return { account: AccountShareOption.Anon }
   }
 
   /**
@@ -100,18 +108,18 @@ class Imgur implements Destination {
    * @return The destination toolbar visible in the editor.
    */
   getToolBar(): React.FC<DestinationToolBarProps> {
-    return ({ getSettings, Ui }) => {
+    return ({ getOptions, getSettings, setOption, Ui }) => {
+      const options = getOptions<ImgurShareOptions>()
       const { username } = getSettings<ImgurSettings>()
-      const [accountShareOption, setAccountShareOption] = useState(AccountShareOption.Anon)
 
       function onChangeAccountShareOption(event: React.ChangeEvent<HTMLSelectElement>): void {
-        setAccountShareOption(event.target.value as AccountShareOption)
+        setOption<ImgurShareOptions>('account', event.target.value as AccountShareOption)
       }
 
       // TODO Fix condition
       const AccountPicker = !username ? (
         <Ui.Select
-          value={accountShareOption}
+          value={options.account}
           onChange={onChangeAccountShareOption}
           options={[
             AccountShareOption.Anon,
@@ -150,4 +158,8 @@ export interface ImgurSettings extends DestinationSettings {
   id?: string
   refreshToken?: string
   username?: string
+}
+
+export interface ImgurShareOptions extends ShareOptions {
+  account: AccountShareOption
 }

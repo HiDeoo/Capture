@@ -5,9 +5,10 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
-import { DestinationId } from '../utils/Destination'
+import { DestinationId, ShareOptions, ShareOptionValue } from '../utils/Destination'
 import { defaultDestination } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
@@ -35,6 +36,10 @@ const Editor: React.FC<{}> = () => {
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const { getDestinationSettingsGetter } = useSettings()
   const [destinationId, setDestinationId] = useState(defaultDestination)
+  const destination = getDestination(destinationId)
+  const [shareOptions, setShareOptions] = useState<ShareOptions>(
+    destination.getDefaultShareOptions ? destination.getDefaultShareOptions() : {}
+  )
 
   const onClickCancel = useCallback(() => {
     shiftFromQueue()
@@ -82,9 +87,31 @@ const Editor: React.FC<{}> = () => {
     [setDestinationId]
   )
 
+  const getDestinationShareOptions = useCallback(<
+    DestinationShareOptions extends ShareOptions
+  >(): DestinationShareOptions => {
+    return shareOptions as DestinationShareOptions
+  }, [shareOptions])
+
+  const setDestinationShareOption = useCallback(
+    <DestinationShareOptions extends ShareOptions>(
+      key: KnownKeys<DestinationShareOptions>,
+      value: ShareOptionValue
+    ): void => {
+      setShareOptions({ ...shareOptions, [key]: value })
+    },
+    [setShareOptions, shareOptions]
+  )
+
   return (
     <>
-      <EditorToolBar locked={isUiLocked} destinationId={destinationId} onChangeDestination={onChangeDestination} />
+      <EditorToolBar
+        locked={isUiLocked}
+        destinationId={destinationId}
+        onChangeDestination={onChangeDestination}
+        setShareOption={setDestinationShareOption}
+        getShareOptions={getDestinationShareOptions}
+      />
       <LoadingBar enabled={isUiLocked} />
       <Content>
         <StyledImg src={`file://${pendingScreenshot}`} alt="" />

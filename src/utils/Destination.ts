@@ -18,6 +18,12 @@ export default abstract class Destination {
   abstract getDefaultSettings(): DestinationSettings
 
   /**
+   * Returns the destination default share options.
+   * @return The default share options.
+   */
+  abstract getDefaultShareOptions?(): ShareOptions
+
+  /**
    * Share a file to the destination.
    * @param filePath - The path of the file to share.
    */
@@ -53,7 +59,13 @@ export interface DestinationConfiguration {
 }
 
 /**
- * The default settings of a destination.
+ * The settings of a destination.
  */
 export type DestinationSettingValue = Optional<string | number | boolean>
 export type DestinationSettings = Record<string, DestinationSettingValue>
+
+/**
+ * Share options that can be customized by a destination before sharing an image.
+ */
+export type ShareOptionValue = Optional<string | number | boolean>
+export type ShareOptions = Record<string, ShareOptionValue>

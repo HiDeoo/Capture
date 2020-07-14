@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import type { DestinationSettings } from '../utils/Destination'
+import type { DestinationSettings, ShareOptions, ShareOptionValue } from '../utils/Destination'
 import type Select from './Select'
 
 const Wrapper = styled.div<Props>`
@@ -67,8 +67,13 @@ export interface ToolbarLockedProps {
  * Props available to all destinations toolbars.
  */
 export interface DestinationToolBarProps {
+  getOptions: <DestinationShareOptions extends ShareOptions>() => DestinationShareOptions
   getSettings: <Settings extends DestinationSettings>() => Settings
   Ui: {
     Select: typeof Select
   }
+  setOption: <DestinationShareOptions extends ShareOptions>(
+    key: KnownKeys<DestinationShareOptions>,
+    value: ShareOptionValue
+  ) => void
 }
