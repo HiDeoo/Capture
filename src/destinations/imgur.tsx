@@ -1,8 +1,12 @@
 import React from 'react'
 
-import type { SettingsPanelProps } from '../components/SettingsPanel'
-import type { DestinationToolBarProps } from '../components/ToolBar'
-import Destination, { DestinationConfiguration, DestinationSettings, ShareOptions } from '../utils/Destination'
+import Destination, {
+  DestinationConfiguration,
+  DestinationSettings,
+  DestinationToolBarProps,
+  SettingsPanelProps,
+  ShareOptions,
+} from '../utils/Destination'
 
 enum AccountShareOption {
   Anon = 'Share anonymously',

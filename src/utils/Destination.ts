@@ -3,6 +3,8 @@ import wretch, { Wretcher } from 'wretch'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
 
+export type { DestinationToolBarProps, SettingsPanelProps }
+
 /**
  * Abstract definition of a destination.
  */
