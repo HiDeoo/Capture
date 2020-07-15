@@ -1,5 +1,4 @@
 import React from 'react'
-import wretch, { Wretcher } from 'wretch'
 
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
@@ -14,13 +13,6 @@ enum AccountShareOption {
  * Imgur destination.
  */
 class Imgur extends Destination {
-  /**
-   * Returns the API object used to perform HTTP requests.
-   */
-  static get Api(): Wretcher {
-    return wretch('https://api.imgur.com')
-  }
-
   /**
    * Returns the destination configuration.
    * @return The configuration.
@@ -61,7 +53,8 @@ class Imgur extends Destination {
     const blob = await this.getFileBlob(filePath)
 
     // TODO Do something relevant with the response and pass back proper infos to the renderer.
-    const response = await Imgur.Api.url('/3/upload')
+    const response = await this.api
+      .url('/3/upload')
       .headers({ Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` })
       .formData({ image: blob })
       .post()
@@ -92,7 +85,7 @@ class Imgur extends Destination {
       const authorize = (): Promise<void> => {
         // eslint-disable-next-line @typescript-eslint/camelcase
         const queryParameters = { client_id: process.env.REACT_APP_IMGUR_CLIENT_ID, response_type: 'token' }
-        const request = Imgur.Api.url('/oauth2/authorize').query(queryParameters)
+        const request = this.api.url('/oauth2/authorize').query(queryParameters)
 
         return openUrl(request._url)
       }
@@ -155,7 +148,7 @@ class Imgur extends Destination {
   }
 }
 
-export default new Imgur()
+export default new Imgur('https://api.imgur.com')
 
 export interface ImgurSettings extends DestinationSettings {
   accessToken?: string

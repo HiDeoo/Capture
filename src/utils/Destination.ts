@@ -1,3 +1,5 @@
+import wretch, { Wretcher } from 'wretch'
+
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
 
@@ -52,6 +54,24 @@ export default abstract class Destination {
     queryString: ParsedQueryString,
     hash: Optional<ParsedQueryString>
   ): void
+
+  private wretcher: Wretcher
+
+  /**
+   * Creates a new instance of the destination.
+   * @class
+   */
+  constructor(private baseUrl: string) {
+    this.wretcher = wretch(baseUrl)
+  }
+
+  /**
+   * Returns the API object used to perform HTTP requests.
+   * @return The API object.
+   */
+  get api(): Wretcher {
+    return this.wretcher
+  }
 
   /**
    * Fetches the blob of raw data for a specific file.
