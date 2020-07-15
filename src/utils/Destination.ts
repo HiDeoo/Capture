@@ -52,6 +52,16 @@ export default abstract class Destination {
     queryString: ParsedQueryString,
     hash: Optional<ParsedQueryString>
   ): void
+
+  /**
+   * Fetches the blob of raw data for a specific file.
+   * @param  filePath - The path of the file.
+   * @return The blob.
+   */
+  async getFileBlob(filePath: string): Promise<Blob> {
+    const response = await fetch(`file://${filePath}`)
+    return response.blob()
+  }
 }
 
 export type DestinationId = string

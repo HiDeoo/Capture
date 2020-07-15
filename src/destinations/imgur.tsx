@@ -13,7 +13,7 @@ enum AccountShareOption {
 /**
  * Imgur destination.
  */
-class Imgur implements Destination {
+class Imgur extends Destination {
   /**
    * Returns the API object used to perform HTTP requests.
    */
@@ -58,9 +58,7 @@ class Imgur implements Destination {
   async share(filePath: string, destinationSettings: ImgurSettings, shareOptions: ImgurShareOptions): Promise<void> {
     // TODO Refresh token if needed
 
-    // TODO Refactor this somewhere else
-    const fileResponse = await fetch(`file://${filePath}`)
-    const blob = await fileResponse.blob()
+    const blob = await this.getFileBlob(filePath)
 
     // TODO Do something relevant with the response and pass back proper infos to the renderer.
     const response = await Imgur.Api.url('/3/upload')
