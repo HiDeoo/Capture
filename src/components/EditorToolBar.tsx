@@ -5,10 +5,10 @@ import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { useSettings } from '../store'
-import type { DestinationId } from '../utils/Destination'
+import type { DestinationId, ShareOptions } from '../utils/Destination'
 import DestinationSelect from './DestinationSelect'
 import Select from './Select'
-import ToolBar, { DestinationToolBarProps, ToolbarLockedProps } from './ToolBar'
+import ToolBar, { ShareOptionSetter, ToolbarLockedProps } from './ToolBar'
 
 const StyledDestinationSelect = styled(DestinationSelect)`
   && {
@@ -18,10 +18,10 @@ const StyledDestinationSelect = styled(DestinationSelect)`
 
 const EditorToolBar: React.FC<Props> = ({
   destinationId,
-  getShareOptions,
   locked,
   onChangeDestination,
   setShareOption,
+  shareOptions,
 }) => {
   const { getDestinationSettingsGetter } = useSettings()
 
@@ -35,8 +35,8 @@ const EditorToolBar: React.FC<Props> = ({
         <DestinationToolBar
           Ui={{ Select }}
           disabled={locked}
-          setOption={setShareOption}
-          getOptions={getShareOptions}
+          shareOptions={shareOptions}
+          setShareOption={setShareOption}
           getSettings={getDestinationSettingsGetter(destinationId)}
         />
       )}
@@ -49,7 +49,7 @@ export default observer(EditorToolBar)
 
 interface Props extends ToolbarLockedProps {
   destinationId: DestinationId
-  getShareOptions: DestinationToolBarProps['getOptions']
   onChangeDestination: (destinationId: DestinationId) => void
-  setShareOption: DestinationToolBarProps['setOption']
+  setShareOption: ShareOptionSetter
+  shareOptions: ShareOptions
 }

@@ -22,13 +22,6 @@ export default abstract class Destination {
   abstract getDefaultSettings(): DestinationSettings
 
   /**
-   * Returns the destination default share options.
-   * @param  settings - The destination settings.
-   * @return The default share options.
-   */
-  abstract getDefaultShareOptions?(settings: DestinationSettings): ShareOptions
-
-  /**
    * Share a file to the destination.
    * @param filePath - The path of the file to share.
    * @param destinationSettings - The destination settings.
@@ -46,7 +39,7 @@ export default abstract class Destination {
    * Returns the destination toolbar if any.
    * @return The destination toolbar visible in the editor.
    */
-  abstract getToolBar?(): React.FC<DestinationToolBarProps>
+  abstract getToolBar?(): React.FC<DestinationToolBarProps<ShareOptions>>
 
   /**
    * Triggered when an associated OAuth request is received for the destination.
@@ -83,6 +76,15 @@ export default abstract class Destination {
   async getFileBlob(filePath: string): Promise<Blob> {
     const response = await fetch(`file://${filePath}`)
     return response.blob()
+  }
+
+  /**
+   * Returns the destination default share options.
+   * @param  settings - The destination settings.
+   * @return The default share options.
+   */
+  getDefaultShareOptions(settings: DestinationSettings): ShareOptions {
+    return {}
   }
 }
 

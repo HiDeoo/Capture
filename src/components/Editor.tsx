@@ -34,12 +34,12 @@ const Editor: React.FC<{}> = () => {
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const { getDestinationSettingsGetter } = useSettings()
+
   const [destinationId, setDestinationId] = useState(defaultDestination)
+
   const destination = getDestination(destinationId)
   const [shareOptions, setShareOptions] = useState<ShareOptions>(
-    destination.getDefaultShareOptions
-      ? destination.getDefaultShareOptions(getDestinationSettingsGetter(destinationId)())
-      : {}
+    destination.getDefaultShareOptions(getDestinationSettingsGetter(destinationId)())
   )
 
   const onClickCancel = useCallback(() => {
@@ -94,12 +94,6 @@ const Editor: React.FC<{}> = () => {
     [setDestinationId]
   )
 
-  const getDestinationShareOptions = useCallback(<
-    DestinationShareOptions extends ShareOptions
-  >(): DestinationShareOptions => {
-    return shareOptions as DestinationShareOptions
-  }, [shareOptions])
-
   const setDestinationShareOption = useCallback(
     <DestinationShareOptions extends ShareOptions>(
       key: KnownKeys<DestinationShareOptions>,
@@ -115,9 +109,9 @@ const Editor: React.FC<{}> = () => {
       <EditorToolBar
         locked={isUiLocked}
         destinationId={destinationId}
+        shareOptions={shareOptions}
         onChangeDestination={onChangeDestination}
         setShareOption={setDestinationShareOption}
-        getShareOptions={getDestinationShareOptions}
       />
       <LoadingBar enabled={isUiLocked} />
       <Content>

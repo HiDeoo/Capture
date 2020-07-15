@@ -108,20 +108,19 @@ class Imgur extends Destination {
    * Returns the destination toolbar if any.
    * @return The destination toolbar visible in the editor.
    */
-  getToolBar(): React.FC<DestinationToolBarProps> {
-    return ({ disabled, getOptions, getSettings, setOption, Ui }) => {
-      const options = getOptions<ImgurShareOptions>()
+  getToolBar(): React.FC<DestinationToolBarProps<ImgurShareOptions>> {
+    return ({ disabled, getSettings, shareOptions, setShareOption, Ui }) => {
       const { username } = getSettings<ImgurSettings>()
 
       function onChangeAccountShareOption(event: React.ChangeEvent<HTMLSelectElement>): void {
-        setOption<ImgurShareOptions>('account', event.target.value as AccountShareOption)
+        setShareOption<ImgurShareOptions>('account', event.target.value as AccountShareOption)
       }
 
       // TODO Fix condition
       const AccountPicker = !username ? (
         <Ui.Select
           disabled={disabled}
-          value={options.account}
+          value={shareOptions.account}
           onChange={onChangeAccountShareOption}
           options={[
             AccountShareOption.Anon,
@@ -163,5 +162,5 @@ export interface ImgurSettings extends DestinationSettings {
 }
 
 export interface ImgurShareOptions extends ShareOptions {
-  account: AccountShareOption
+  account?: AccountShareOption
 }

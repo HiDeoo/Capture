@@ -66,15 +66,17 @@ export interface ToolbarLockedProps {
 /**
  * Props available to all destinations toolbars.
  */
-export interface DestinationToolBarProps {
+export interface DestinationToolBarProps<DestinationShareOptions extends ShareOptions> {
   disabled: boolean
-  getOptions: <DestinationShareOptions extends ShareOptions>() => DestinationShareOptions
   getSettings: <Settings extends DestinationSettings>() => Settings
+  setShareOption: ShareOptionSetter
+  shareOptions: DestinationShareOptions
   Ui: {
     Select: typeof Select
   }
-  setOption: <DestinationShareOptions extends ShareOptions>(
-    key: KnownKeys<DestinationShareOptions>,
-    value: ShareOptionValue
-  ) => void
 }
+
+export type ShareOptionSetter = <DestinationShareOptions extends ShareOptions>(
+  key: KnownKeys<DestinationShareOptions>,
+  value: ShareOptionValue
+) => void
