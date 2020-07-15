@@ -1,4 +1,3 @@
-import fs from 'fs'
 import React from 'react'
 import wretch, { Wretcher } from 'wretch'
 
@@ -59,10 +58,14 @@ class Imgur implements Destination {
   async share(filePath: string, destinationSettings: ImgurSettings, shareOptions: ImgurShareOptions): Promise<void> {
     // TODO Refresh token if needed
 
+    // TODO Refactor this somewhere else
+    const fileResponse = await fetch(`file://${filePath}`)
+    const blob = await fileResponse.blob()
+
     // TODO Do something relevant with the response and pass back proper infos to the renderer.
     const response = await Imgur.Api.url('/3/upload')
       .headers({ Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` })
-      .formData({ image: fs.createReadStream(filePath) })
+      .formData({ image: blob })
       .post()
       .json()
 

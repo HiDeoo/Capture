@@ -15,10 +15,7 @@ import {
 import isDev from 'electron-is-dev'
 import path from 'path'
 import querystring from 'querystring'
-import wretch from 'wretch'
 
-import { getDestination } from '../destinations'
-import { DestinationId, DestinationSettings, ShareOptions } from '../utils/Destination'
 import Theme from '../utils/theme'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
@@ -66,7 +63,7 @@ async function createWindow(): Promise<void> {
     webPreferences: {
       allowRunningInsecureContent: false,
       preload: path.join(__dirname, 'preload'),
-      // We disable the `webSecurity` option in dev mode so we can load images from the filesystem while serving the
+      // Disable the `webSecurity` option in dev mode so we can load images from the filesystem while serving the
       // renderer application from an HTTP server.
       // This is not an issue in production as we are serving the renderer application from the filesystem in that case.
       webSecurity: !isDev,
@@ -160,26 +157,6 @@ function registerIpcHandlers(): void {
   ipcMain.handle('openUrl', (event: IpcMainInvokeEvent, url: string) => {
     return shell.openExternal(url)
   })
-
-  ipcMain.handle(
-    'shareScreenshot',
-    async (
-      event: IpcMainInvokeEvent,
-      destinationId: DestinationId,
-      filePath: string,
-      destinationSettings: DestinationSettings,
-      shareOptions: ShareOptions
-    ) => {
-      // TODO Extract & do something relevant
-      const destination = getDestination(destinationId)
-
-      await destination.share(filePath, destinationSettings, shareOptions)
-
-      if (window?.isVisible()) {
-        window.hide()
-      }
-    }
-  )
 }
 
 /**
@@ -188,7 +165,6 @@ function registerIpcHandlers(): void {
 function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('closeWindow')
   ipcMain.removeHandler('openUrl')
-  ipcMain.removeHandler('shareScreenshot')
 }
 
 /**
@@ -334,9 +310,19 @@ function debugCustomScheme(url: string): void {
   }
 }
 
-// Hide security warnings in dev as we are explicitely disabling the `webSecurity` option in dev mode to load images
-// from the filesystem while serving the renderer application from an HTTP server.
 if (isDev) {
+  /**
+   * Disable CORS in dev mode so we can make API calss from the renderer application while serving it from an HTTP
+   * server.
+   * This is not an issue in production as we are serving the renderer application from the filesystem in that case.
+   * Note: this should not be necessary as we are also disabling the `webSecurity` option in dev mode but this is an
+   * issue in the Electron version we are using (and still not fixed as of 15/07/20).
+   * @see https://github.com/electron/electron/issues/23664
+   */
+  app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+
+  // Hide security warnings in dev as we are explicitely disabling the `webSecurity` option in dev mode to load images
+  // from the filesystem while serving the renderer application from an HTTP server.
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
 }
 
@@ -345,13 +331,6 @@ app.dock.hide()
 
 // Load dotenv configuration in the main process.
 dotenv.config({ path: isDev ? process.cwd() : app.getAppPath() })
-
-// Configure wretch polyfills.
-wretch().polyfills({
-  fetch: require('node-fetch'),
-  FormData: require('form-data'),
-  URLSearchParams: require('url').URLSearchParams,
-})
 
 /**
  * Handle application lifecycle.

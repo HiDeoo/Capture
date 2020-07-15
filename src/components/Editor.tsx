@@ -1,4 +1,3 @@
-import { toJS } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -51,17 +50,13 @@ const Editor: React.FC<{}> = () => {
     try {
       lockUi()
 
-      await getIpcRenderer().invoke(
-        'shareScreenshot',
-        destinationId,
-        pendingScreenshot,
-        toJS(getDestinationSettingsGetter(destinationId)()),
-        shareOptions
-      )
+      await destination.share(pendingScreenshot, getDestinationSettingsGetter(destinationId)(), shareOptions)
 
       addToHistory({ path: pendingScreenshot })
 
       shiftFromQueue()
+
+      await getIpcRenderer().invoke('closeWindow')
     } catch (error) {
       // TODO Handle errors
       console.log('error ', error)
@@ -70,6 +65,7 @@ const Editor: React.FC<{}> = () => {
     }
   }, [
     addToHistory,
+    destination,
     destinationId,
     getDestinationSettingsGetter,
     lockUi,
