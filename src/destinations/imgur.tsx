@@ -1,3 +1,4 @@
+import { addMonths, formatISO, isAfter, parseISO } from 'date-fns'
 import React from 'react'
 
 import Destination, {
@@ -60,7 +61,25 @@ class Imgur extends Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<void> {
-    // TODO Refresh token if needed
+    let settings = getSettings<ImgurSettings>()
+
+    if (shareOptions.account === AccountShareOption.User) {
+      if (!settings.accessToken || !settings.expiry || !settings.refreshToken) {
+        throw new Error('Missing access token, refresh token or expiry to share file.')
+      }
+
+      const expiry = parseISO(settings.expiry)
+
+      if (isAfter(new Date(), expiry)) {
+        const refreshedAccessToken = await this.getRefreshedAccessToken(settings.refreshToken)
+
+        setSettings<ImgurSettings>('accessToken', refreshedAccessToken.accessToken)
+        setSettings<ImgurSettings>('expiry', refreshedAccessToken.expiry)
+        setSettings<ImgurSettings>('refreshToken', refreshedAccessToken.refreshToken)
+
+        settings = getSettings<ImgurSettings>()
+      }
+    }
 
     const blob = await this.getFileBlob(filePath)
 
@@ -78,6 +97,53 @@ class Imgur extends Destination {
   }
 
   /**
+   * Refreshes an expired access token.
+   * @param  refreshToken - The refresh token to use to get a new access token.
+   * @return The new access token, refresh token and expiry.
+   */
+  async getRefreshedAccessToken(
+    refreshToken: string
+  ): Promise<{ accessToken: string; expiry: string; refreshToken: string }> {
+    const response = await this.api
+      .url('/oauth2/token')
+      .post({
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        client_id: process.env.REACT_APP_IMGUR_CLIENT_ID,
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        client_secret: process.env.REACT_APP_IMGUR_CLIENT_SECRET,
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        grant_type: 'refresh_token',
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        refresh_token: refreshToken,
+      })
+      .json<{
+        access_token: string
+        refresh_token: string
+        expires_in: number
+        token_type: string
+        account_username: string
+      }>()
+
+    return {
+      accessToken: response.access_token,
+      expiry: this.getTokenExpiry(),
+      refreshToken: response.refresh_token,
+    }
+  }
+
+  /**
+   * Returns the expiry of an access token in the ISO 8601 format.
+   * @return The expiry.
+   */
+  getTokenExpiry(): string {
+    // We are not using the `expires_in` field returned by the API to calculate the expiry as the documentation states
+    // that the access token expires after 1 month but returns 315360000 (10 years ^^).
+    const expiry = addMonths(new Date(), 1)
+
+    return formatISO(expiry)
+  }
+
+  /**
    * Returns the destination settings panel.
    * @return The settings panel.
    */
@@ -88,7 +154,7 @@ class Imgur extends Destination {
 
       function logout(): void {
         setSettings<ImgurSettings>('accessToken', undefined)
-        setSettings<ImgurSettings>('expiresIn', undefined)
+        setSettings<ImgurSettings>('expiry', undefined)
         setSettings<ImgurSettings>('id', undefined)
         setSettings<ImgurSettings>('refreshToken', undefined)
         setSettings<ImgurSettings>('username', undefined)
@@ -150,7 +216,7 @@ class Imgur extends Destination {
   ): void {
     if (hash) {
       setSettings<ImgurSettings>('accessToken', hash['access_token'])
-      setSettings<ImgurSettings>('expiresIn', hash['expires_in'])
+      setSettings<ImgurSettings>('expiry', this.getTokenExpiry())
       setSettings<ImgurSettings>('id', hash['account_id'])
       setSettings<ImgurSettings>('refreshToken', hash['refresh_token'])
       setSettings<ImgurSettings>('username', hash['account_username'])
@@ -162,7 +228,7 @@ export default new Imgur('https://api.imgur.com')
 
 export interface ImgurSettings extends DestinationSettings {
   accessToken?: string
-  expiresIn?: string
+  expiry?: string
   id?: string
   refreshToken?: string
   username?: string
