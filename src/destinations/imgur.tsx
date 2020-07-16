@@ -9,6 +9,7 @@ import Destination, {
   DestinationToolBarProps,
   SettingsPanelProps,
   ShareOptions,
+  ShareResponse,
 } from '../utils/Destination'
 
 enum AccountShareOption {
@@ -60,7 +61,7 @@ class Imgur extends Destination {
     shareOptions: ImgurShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
-  ): Promise<void> {
+  ): Promise<ShareResponse> {
     let settings = getSettings<ImgurSettings>()
     let headers: Record<string, string>
 
@@ -88,12 +89,21 @@ class Imgur extends Destination {
 
     const blob = await this.getFileBlob(filePath)
 
-    // TODO Do something relevant with the response and pass back proper infos to the renderer.
-    const response = await this.api.url('/3/upload').headers(headers).formData({ image: blob }).post().json()
+    const response = await this.api
+      .url('/3/upload')
+      .headers(headers)
+      .formData({ image: blob })
+      .post()
+      .json<UploadApiResponse>()
 
-    console.log('response ', response)
+    const { id, deletehash, link } = response.data
+    const request = this.api.url(`/3/image/${deletehash}`)
 
-    return Promise.resolve()
+    return {
+      id,
+      deleteLink: request._url,
+      link,
+    }
   }
 
   /**
@@ -112,13 +122,7 @@ class Imgur extends Destination {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
       })
-      .json<{
-        access_token: string
-        refresh_token: string
-        expires_in: number
-        token_type: string
-        account_username: string
-      }>()
+      .json<RefreshTokenApiResponse>()
 
     return {
       accessToken: response.access_token,
@@ -231,4 +235,33 @@ export interface ImgurSettings extends DestinationSettings {
 
 export interface ImgurShareOptions extends ShareOptions {
   account?: AccountShareOption
+}
+
+interface RefreshTokenApiResponse {
+  access_token: string
+  refresh_token: string
+  expires_in: number
+  token_type: string
+  account_username: string
+}
+
+interface UploadApiResponse {
+  status: number
+  success: boolean
+  data: {
+    id: string
+    deletehash: string
+    account_id: string | null
+    account_url: string | null
+    title: string | null
+    description: string | null
+    name: string
+    type: string
+    width: number
+    height: number
+    size: number
+    link: string
+    tags: string[]
+    datetime: number
+  }
 }

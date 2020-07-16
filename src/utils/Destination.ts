@@ -23,17 +23,18 @@ export default abstract class Destination {
 
   /**
    * Share a file to the destination.
-   * @param filePath - The path of the file to share.
-   * @param shareOptions - The options related to this specific share.
-   * @param getSettings - A destination settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param  filePath - The path of the file to share.
+   * @param  shareOptions - The options related to this specific share.
+   * @param  getSettings - A destination settings getter.
+   * @param  setSettings - A destination settings setter.
+   * @return An object containing informations regarding the completed share.
    */
   abstract share(
     filePath: string,
     shareOptions: ShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
-  ): Promise<void>
+  ): Promise<ShareResponse>
 
   /**
    * Returns the destination settings panel if any.
@@ -62,7 +63,7 @@ export default abstract class Destination {
    * Creates a new instance of the destination.
    * @class
    */
-  constructor(private baseUrl: string) {
+  constructor(private readonly baseUrl: string) {
     this.wretcher = wretch(baseUrl)
   }
 
@@ -99,6 +100,12 @@ export type DestinationId = string
 export interface DestinationConfiguration {
   id: DestinationId
   name: string
+}
+
+export type ShareResponse = {
+  id: string | number
+  link: string
+  deleteLink?: string
 }
 
 /**
