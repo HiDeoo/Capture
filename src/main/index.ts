@@ -1,7 +1,6 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
 import dateFormat from 'date-fns/format'
-import dotenv from 'dotenv-flow'
 import {
   app,
   BrowserWindow,
@@ -328,9 +327,6 @@ if (isDev) {
 
 // Hide the Dock icon.
 app.dock.hide()
-
-// Load dotenv configuration in the main process.
-dotenv.config({ path: isDev ? process.cwd() : app.getAppPath() })
 
 /**
  * Handle application lifecycle.
