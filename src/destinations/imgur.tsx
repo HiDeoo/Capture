@@ -62,6 +62,7 @@ class Imgur extends Destination {
     setSettings: DestinationSettingSetter
   ): Promise<void> {
     let settings = getSettings<ImgurSettings>()
+    let headers: Record<string, string>
 
     if (shareOptions.account === AccountShareOption.User) {
       if (!settings.accessToken || !settings.expiry || !settings.refreshToken) {
@@ -79,17 +80,16 @@ class Imgur extends Destination {
 
         settings = getSettings<ImgurSettings>()
       }
+
+      headers = { Authorization: `Bearer ${settings.accessToken}` }
+    } else {
+      headers = { Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` }
     }
 
     const blob = await this.getFileBlob(filePath)
 
     // TODO Do something relevant with the response and pass back proper infos to the renderer.
-    const response = await this.api
-      .url('/3/upload')
-      .headers({ Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` })
-      .formData({ image: blob })
-      .post()
-      .json()
+    const response = await this.api.url('/3/upload').headers(headers).formData({ image: blob }).post().json()
 
     console.log('response ', response)
 
