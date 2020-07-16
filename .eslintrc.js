@@ -15,6 +15,7 @@ module.exports = {
   rules: {
     'simple-import-sort/sort': 'error',
     'no-shadow': 'error',
+    '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-floating-promises': ['error', { ignoreVoid: true }],

@@ -107,13 +107,9 @@ class Imgur extends Destination {
     const response = await this.api
       .url('/oauth2/token')
       .post({
-        // eslint-disable-next-line @typescript-eslint/camelcase
         client_id: process.env.REACT_APP_IMGUR_CLIENT_ID,
-        // eslint-disable-next-line @typescript-eslint/camelcase
         client_secret: process.env.REACT_APP_IMGUR_CLIENT_SECRET,
-        // eslint-disable-next-line @typescript-eslint/camelcase
         grant_type: 'refresh_token',
-        // eslint-disable-next-line @typescript-eslint/camelcase
         refresh_token: refreshToken,
       })
       .json<{
@@ -161,7 +157,6 @@ class Imgur extends Destination {
       }
 
       const authorize = (): Promise<void> => {
-        // eslint-disable-next-line @typescript-eslint/camelcase
         const queryParameters = { client_id: process.env.REACT_APP_IMGUR_CLIENT_ID, response_type: 'token' }
         const request = this.api.url('/oauth2/authorize').query(queryParameters)
 
