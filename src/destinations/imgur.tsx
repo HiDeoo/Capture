@@ -3,6 +3,8 @@ import React from 'react'
 import Destination, {
   DestinationConfiguration,
   DestinationSettings,
+  DestinationSettingSetter,
+  DestinationSettingsGetter,
   DestinationToolBarProps,
   SettingsPanelProps,
   ShareOptions,
@@ -48,10 +50,16 @@ class Imgur extends Destination {
   /**
    * Share a file to Imgur.
    * @param filePath - The path of the file to share.
-   * @param destinationSettings - The destination settings.
    * @param shareOptions - The options related to this specific share.
+   * @param getSettings - A destination settings getter.
+   * @param setSettings - A destination settings setter.
    */
-  async share(filePath: string, destinationSettings: ImgurSettings, shareOptions: ImgurShareOptions): Promise<void> {
+  async share(
+    filePath: string,
+    shareOptions: ImgurShareOptions,
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter
+  ): Promise<void> {
     // TODO Refresh token if needed
 
     const blob = await this.getFileBlob(filePath)
@@ -116,8 +124,7 @@ class Imgur extends Destination {
         setShareOption<ImgurShareOptions>('account', event.target.value as AccountShareOption)
       }
 
-      // TODO Fix condition
-      const AccountPicker = !username ? (
+      const AccountPicker = username ? (
         <Ui.Select
           disabled={disabled}
           value={shareOptions.account}

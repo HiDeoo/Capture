@@ -24,10 +24,16 @@ export default abstract class Destination {
   /**
    * Share a file to the destination.
    * @param filePath - The path of the file to share.
-   * @param destinationSettings - The destination settings.
    * @param shareOptions - The options related to this specific share.
+   * @param getSettings - A destination settings getter.
+   * @param setSettings - A destination settings setter.
    */
-  abstract share(filePath: string, destinationSettings: DestinationSettings, shareOptions: ShareOptions): Promise<void>
+  abstract share(
+    filePath: string,
+    shareOptions: ShareOptions,
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter
+  ): Promise<void>
 
   /**
    * Returns the destination settings panel if any.
@@ -45,7 +51,7 @@ export default abstract class Destination {
    * Triggered when an associated OAuth request is received for the destination.
    */
   abstract onOAuthRequest?(
-    setSettings: SettingsPanelProps['setSettings'],
+    setSettings: DestinationSettingSetter,
     queryString: ParsedQueryString,
     hash: Optional<ParsedQueryString>
   ): void
@@ -101,8 +107,19 @@ export interface DestinationConfiguration {
 export type DestinationSettingValue = Optional<string | number | boolean>
 export type DestinationSettings = Record<string, DestinationSettingValue>
 
+export type DestinationSettingsGetter = <Settings extends DestinationSettings>() => Settings
+export type DestinationSettingSetter = <Settings extends DestinationSettings>(
+  settingId: KnownKeys<Settings>,
+  value: DestinationSettingValue
+) => void
+
 /**
  * Share options that can be customized by a destination before sharing an image.
  */
 export type ShareOptionValue = Optional<string | number | boolean>
 export type ShareOptions = Record<string, ShareOptionValue>
+
+export type ShareOptionSetter = <DestinationShareOptions extends ShareOptions>(
+  key: KnownKeys<DestinationShareOptions>,
+  value: ShareOptionValue
+) => void

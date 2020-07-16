@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
-import type { DestinationSettings, DestinationSettingValue } from '../utils/Destination'
+import type { DestinationSettingSetter, DestinationSettingsGetter } from '../utils/Destination'
 import { Button, Group } from './SettingsUi'
 
 const Wrapper = styled.div`
@@ -21,12 +21,9 @@ export default SettingsPanel
  * Props available to all settings panel.
  */
 export interface SettingsPanelProps {
-  getSettings: <Settings extends DestinationSettings>() => Settings
+  getSettings: DestinationSettingsGetter
   openUrl(url: string): Promise<void>
-  setSettings: <Settings extends DestinationSettings>(
-    settingId: KnownKeys<Settings>,
-    value: DestinationSettingValue
-  ) => void
+  setSettings: DestinationSettingSetter
   Ui: {
     Button: typeof Button
     Group: typeof Group

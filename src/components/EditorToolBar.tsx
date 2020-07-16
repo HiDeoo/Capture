@@ -5,10 +5,10 @@ import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { useSettings } from '../store'
-import type { DestinationId, ShareOptions } from '../utils/Destination'
+import type { DestinationId, ShareOptions, ShareOptionSetter } from '../utils/Destination'
 import DestinationSelect from './DestinationSelect'
 import Select from './Select'
-import ToolBar, { ShareOptionSetter, ToolbarLockedProps } from './ToolBar'
+import ToolBar, { ToolbarLockedProps } from './ToolBar'
 
 const StyledDestinationSelect = styled(DestinationSelect)`
   && {

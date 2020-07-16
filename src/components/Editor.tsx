@@ -32,7 +32,7 @@ const StyledImg = styled(Img)`
 const Editor: React.FC<{}> = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
-  const { getDestinationSettings } = useSettings()
+  const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
 
   const [destinationId, setDestinationId] = useState(defaultDestination)
@@ -50,7 +50,12 @@ const Editor: React.FC<{}> = () => {
     try {
       lockUi()
 
-      await destination.share(pendingScreenshot, getDestinationSettings(destinationId), shareOptions)
+      await destination.share(
+        pendingScreenshot,
+        shareOptions,
+        getDestinationSettingsGetter(destinationId),
+        getDestinationSettingsSetter(destinationId)
+      )
 
       addToHistory({ path: pendingScreenshot })
 
@@ -67,7 +72,8 @@ const Editor: React.FC<{}> = () => {
     addToHistory,
     destination,
     destinationId,
-    getDestinationSettings,
+    getDestinationSettingsGetter,
+    getDestinationSettingsSetter,
     lockUi,
     pendingScreenshot,
     shareOptions,
