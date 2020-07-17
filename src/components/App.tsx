@@ -58,8 +58,8 @@ const App: React.FC<{}> = (props) => {
       }
     }
 
-    function onNewScreenshot(event: IpcRendererEvent, filePath: string): void {
-      pushToQueue(filePath)
+    function onNewScreenshot(event: IpcRendererEvent, path: string): void {
+      pushToQueue(path)
     }
 
     function onWindowBlur(): void {

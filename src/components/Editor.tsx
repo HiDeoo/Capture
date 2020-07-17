@@ -33,7 +33,7 @@ const Editor: React.FC<{}> = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
-  const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
+  const { isUiLocked, lockUi, pendingScreenshotPath, shiftFromQueue } = useApp()
 
   const [destinationId, setDestinationId] = useState(defaultDestination)
 
@@ -51,13 +51,13 @@ const Editor: React.FC<{}> = () => {
       lockUi()
 
       await destination.share(
-        pendingScreenshot,
+        pendingScreenshotPath,
         shareOptions,
         getDestinationSettingsGetter(destinationId),
         getDestinationSettingsSetter(destinationId)
       )
 
-      addToHistory({ path: pendingScreenshot })
+      addToHistory({ path: pendingScreenshotPath })
 
       shiftFromQueue()
 
@@ -75,7 +75,7 @@ const Editor: React.FC<{}> = () => {
     getDestinationSettingsGetter,
     getDestinationSettingsSetter,
     lockUi,
-    pendingScreenshot,
+    pendingScreenshotPath,
     shareOptions,
     shiftFromQueue,
   ])
@@ -121,9 +121,9 @@ const Editor: React.FC<{}> = () => {
       />
       <LoadingBar enabled={isUiLocked} />
       <Content>
-        <StyledImg src={`file://${pendingScreenshot}`} alt="" />
+        <StyledImg src={`file://${pendingScreenshotPath}`} alt="" />
       </Content>
-      <EditorInfoBar locked={isUiLocked} filePath={pendingScreenshot} />
+      <EditorInfoBar locked={isUiLocked} path={pendingScreenshotPath} />
     </>
   )
 }

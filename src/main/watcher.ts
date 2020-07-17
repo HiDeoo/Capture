@@ -19,8 +19,8 @@ export function installCreatedFileWatcher(
     ignoreInitial: true,
   })
 
-  watcher.on('add', (filePath: string) => {
-    callback(filePath)
+  watcher.on('add', (path: string) => {
+    callback(path)
   })
 
   return watcher

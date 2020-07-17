@@ -43,7 +43,7 @@ export default class AppStore {
   }
 
   /**
-   * The pending screenshot queue.
+   * The pending screenshot path queue.
    */
   @ignore @observable private queue: string[] = []
 
@@ -56,11 +56,11 @@ export default class AppStore {
   }
 
   /**
-   * Returns the first element of the queue.
-   * @return The current pending screenshot.
+   * Returns the first path in the queue.
+   * @return The current pending screenshot path.
    */
   @computed
-  get pendingScreenshot(): string {
+  get pendingScreenshotPath(): string {
     if (this.queue.length > 0) {
       return this.queue[0]
     }
@@ -70,11 +70,11 @@ export default class AppStore {
 
   /**
    * Adds a new screenshot at the end of the queue.
-   * @param filePath - The new screenshot file path.
+   * @param path - The new screenshot file path.
    */
   @action
-  pushToQueue = (filePath: string): void => {
-    this.queue.push(filePath)
+  pushToQueue = (path: string): void => {
+    this.queue.push(path)
 
     this.setCurrentPanel(Panel.Editor)
   }

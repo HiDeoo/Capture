@@ -8,10 +8,10 @@ const StyledToolbar = styled(ToolBar)`
   ${tw`text-xs`}
 `
 
-const EditorInfoBar: React.FC<Props> = ({ filePath }) => {
+const EditorInfoBar: React.FC<Props> = ({ path }) => {
   return (
     <StyledToolbar bottom>
-      <div>{filePath}</div>
+      <div>{path}</div>
       <div css={tw`flex-1`} />
     </StyledToolbar>
   )
@@ -20,5 +20,5 @@ const EditorInfoBar: React.FC<Props> = ({ filePath }) => {
 export default EditorInfoBar
 
 interface Props extends ToolbarLockedProps {
-  filePath: string
+  path: string
 }

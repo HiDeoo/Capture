@@ -7,7 +7,7 @@ export type { IpcRendererEvent } from 'electron'
  */
 type CaptureMainToRendererEvents = {
   newOAuthRequest: (destinationId: string, queryString: ParsedQueryString, hash: Optional<ParsedQueryString>) => void
-  newScreenshot: (filePath: string) => void
+  newScreenshot: (path: string) => void
   windowBlur: () => void
   windowFocus: () => void
 }

@@ -51,13 +51,13 @@ class Imgur extends Destination {
 
   /**
    * Share a file to Imgur.
-   * @param filePath - The path of the file to share.
+   * @param path - The path of the file to share.
    * @param shareOptions - The options related to this specific share.
    * @param getSettings - A destination settings getter.
    * @param setSettings - A destination settings setter.
    */
   async share(
-    filePath: string,
+    path: string,
     shareOptions: ImgurShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
@@ -87,7 +87,7 @@ class Imgur extends Destination {
       headers = { Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` }
     }
 
-    const blob = await this.getFileBlob(filePath)
+    const blob = await this.getFileBlob(path)
 
     const response = await this.api
       .url('/3/upload')
@@ -99,11 +99,11 @@ class Imgur extends Destination {
     const { id, deletehash, link } = response.data
     const request = this.api.url(`/3/image/${deletehash}`)
 
-    return {
+    return this.getShareResponse(path, {
       id,
       deleteLink: request._url,
       link,
-    }
+    })
   }
 
   /**

@@ -23,14 +23,14 @@ export default abstract class Destination {
 
   /**
    * Share a file to the destination.
-   * @param  filePath - The path of the file to share.
+   * @param  path - The path of the file to share.
    * @param  shareOptions - The options related to this specific share.
    * @param  getSettings - A destination settings getter.
    * @param  setSettings - A destination settings setter.
    * @return An object containing informations regarding the completed share.
    */
   abstract share(
-    filePath: string,
+    path: string,
     shareOptions: ShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
@@ -77,11 +77,11 @@ export default abstract class Destination {
 
   /**
    * Fetches the blob of raw data for a specific file.
-   * @param  filePath - The path of the file.
+   * @param  path - The path of the file.
    * @return The blob.
    */
-  async getFileBlob(filePath: string): Promise<Blob> {
-    const response = await fetch(`file://${filePath}`)
+  async getFileBlob(path: string): Promise<Blob> {
+    const response = await fetch(`file://${path}`)
     return response.blob()
   }
 
@@ -92,6 +92,21 @@ export default abstract class Destination {
    */
   getDefaultShareOptions(settings: DestinationSettings): ShareOptions {
     return {}
+  }
+
+  /**
+   * Returns a complete share response based on informations provided by a destination after a share.
+   * @param  path - The path of the shared file.
+   * @param  partialResponse - Informations known by a destination after a share.
+   * @return The share response.
+   */
+  getShareResponse(path: string, partialResponse: Pick<ShareResponse, 'id' | 'link' | 'deleteLink'>): ShareResponse {
+    return {
+      ...partialResponse,
+      date: new Date(),
+      destinationId: this.getConfiguration().id,
+      path,
+    }
   }
 }
 
@@ -104,8 +119,11 @@ export interface DestinationConfiguration {
 
 export type ShareResponse = {
   id: string | number
-  link: string
+  date: Date
   deleteLink?: string
+  destinationId: string
+  link: string
+  path: string
 }
 
 /**
