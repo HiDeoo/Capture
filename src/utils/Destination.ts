@@ -95,16 +95,20 @@ export default abstract class Destination {
   }
 
   /**
-   * Returns a complete share response based on informations provided by a destination after a share.
+   * Returns a share response based on informations provided by a destination after a share.
    * @param  path - The path of the shared file.
-   * @param  partialResponse - Informations known by a destination after a share.
+   * @param  destinationShareResponse - The share response from the destination.
    * @return The share response.
    */
-  getShareResponse(path: string, partialResponse: Pick<ShareResponse, 'id' | 'link' | 'deleteLink'>): ShareResponse {
+  getShareResponse(path: string, destinationShareResponse: DestinationShareResponse): ShareResponse {
+    const { id, deleteLink, link } = destinationShareResponse
+
     return {
-      ...partialResponse,
       date: new Date(),
+      deleteLink,
       destinationId: this.getConfiguration().id,
+      link,
+      shareId: id,
       path,
     }
   }
@@ -117,13 +121,17 @@ export interface DestinationConfiguration {
   name: string
 }
 
-export type ShareResponse = {
-  id: string | number
+export interface ShareResponse {
   date: Date
   deleteLink?: string
   destinationId: string
   link: string
   path: string
+  shareId: string | number
+}
+
+interface DestinationShareResponse extends Pick<ShareResponse, 'link' | 'deleteLink'> {
+  id: ShareResponse['shareId']
 }
 
 /**

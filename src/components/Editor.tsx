@@ -50,14 +50,14 @@ const Editor: React.FC<{}> = () => {
     try {
       lockUi()
 
-      await destination.share(
+      const response = await destination.share(
         pendingScreenshotPath,
         shareOptions,
         getDestinationSettingsGetter(destinationId),
         getDestinationSettingsSetter(destinationId)
       )
 
-      addToHistory({ path: pendingScreenshotPath })
+      addToHistory(response)
 
       shiftFromQueue()
 

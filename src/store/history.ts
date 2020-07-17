@@ -1,4 +1,7 @@
 import { action, observable } from 'mobx'
+import { nanoid } from 'nanoid'
+
+import { ShareResponse } from '../utils/Destination'
 
 /**
  * The history store.
@@ -10,12 +13,12 @@ export default class HistoryStore {
   @observable entries: HistoryEntry[] = []
 
   /**
-   * Adds an entry to the history.
-   * @param entry - The entry to add to the history.
+   * Adds an entry to the history based on a share response.
+   * @param shareResponse - The share response.
    */
   @action
-  addToHistory = (entry: HistoryEntry): void => {
-    this.entries.unshift(entry)
+  addToHistory = (shareResponse: ShareResponse): void => {
+    this.entries.unshift({ ...shareResponse, id: nanoid() })
   }
 
   /**
@@ -27,9 +30,6 @@ export default class HistoryStore {
   }
 }
 
-/**
- * Interface describing an history entry.
- */
-export interface HistoryEntry {
-  path: string
+export interface HistoryEntry extends ShareResponse {
+  id: string
 }
