@@ -1,5 +1,6 @@
 import React from 'react'
-import GridList, { GridListProps } from 'react-gridlist'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeGrid, GridChildComponentProps } from 'react-window'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
@@ -17,74 +18,121 @@ const GridEntryHeight = stripUnit(Theme.history.size)
 const GridEntryWidth = stripUnit(Theme.history.size)
 
 const Entry = styled.div`
-  ${tw`flex justify-center items-center w-full`}
+  ${tw`flex items-center justify-center items-center w-full`}
 
-  height: ${Theme.history.size};
+  padding: ${Theme.history.gap};
 `
 
 const StyledImg = styled(Img)`
-  ${tw`max-h-full max-w-full border-2 border-solid`}
+  ${tw`block max-h-full max-w-full border-2 border-solid`}
 
   border-color: ${theme('history.border')};
   outline: 1px solid ${theme('history.shadow')};
 `
 
 /**
- * Returns the history grid gap between entries.
- * @return The gap.
- */
-function getHistoryGridGap(): number {
-  return GridGap
-}
-
-/**
- * Returns the history grid column count.
+ * Returns the history grid column count & width.
  * @param  gridWidth - The history grid width.
- * @return The column count.
+ * @return The column count and size.
  */
-function getHistoryGridColumnCount(gridWidth: number): number {
-  return Math.floor(gridWidth / GridEntryWidth)
-}
+function getGridColumnInfos(gridWidth: number): { count: number; width: number } {
+  const count = Math.floor(gridWidth / (GridEntryWidth + GridGap))
 
-/**
- * Returns the history grid entry data used to render each entries.
- * @param  entry - The history entry being rendered.
- * @return The data associated to each history grid entries.
- */
-function getHistoryEntryRenderingData(entry: HistoryEntry): ReturnType<GridListProps<HistoryEntry>['getItemData']> {
   return {
-    key: entry.path,
-    height: GridEntryHeight,
+    count,
+    width: Math.floor(gridWidth / count),
   }
 }
 
 /**
- * Renders a history grid entry.
- * @param  entry - The entry to render.
- * @return The rendered history entry.
+ * Returns the history grid row count.
+ * @param  columnCount - The history grid column count.
+ * @param  numEntries - The number of entries in the history.
+ * @return The row count.
  */
-function renderHistoryGridEntry(entry: HistoryEntry): React.ReactNode {
-  return (
-    <Entry>
-      <StyledImg src={`file://${entry.path}`} />
-    </Entry>
-  )
+function getGridRowCount(columnCount: number, numEntries: number): number {
+  return Math.ceil(numEntries / columnCount)
 }
 
-const HistoryGridList: React.FC<Props> = ({ entries }) => {
-  return (
-    <GridList
-      items={entries}
-      getGridGap={getHistoryGridGap}
-      renderItem={renderHistoryGridEntry}
-      getItemData={getHistoryEntryRenderingData}
-      getColumnCount={getHistoryGridColumnCount}
-    />
-  )
-}
+const HistoryGrid: React.FC<Props> = React.memo(({ entries }) => {
+  const getItemKey: ItemKeySelector = ({ columnCount, columnIndex, data, rowIndex }) => {
+    const index = rowIndex * columnCount + columnIndex
 
-export default HistoryGridList
+    if (index > data.length - 1) {
+      return `${rowIndex}-${columnIndex}`
+    }
+
+    const entry = data[index]
+
+    // TODO Replace by id
+    return `${entry.path}-${columnIndex}`
+  }
+
+  return (
+    <AutoSizer>
+      {({ height, width }) => {
+        const columnInfos = getGridColumnInfos(width)
+        const rowCount = getGridRowCount(columnInfos.count, entries.length)
+
+        return (
+          <FixedSizeGrid
+            width={width}
+            height={height}
+            itemData={entries}
+            rowCount={rowCount}
+            columnCount={columnInfos.count}
+            columnWidth={columnInfos.width}
+            rowHeight={GridEntryHeight + GridGap}
+            itemKey={(infos) => getItemKey({ ...infos, columnCount: columnInfos.count })}
+          >
+            {({ columnIndex, data, rowIndex, style }) => (
+              <HistoryGridEntry
+                data={data}
+                style={style}
+                rowIndex={rowIndex}
+                columnIndex={columnIndex}
+                columnCount={columnInfos.count}
+              />
+            )}
+          </FixedSizeGrid>
+        )
+      }}
+    </AutoSizer>
+  )
+})
+
+const HistoryGridEntry: React.FC<HistoryGridEntryProps> = React.memo(
+  ({ columnCount, columnIndex, data, rowIndex, style }) => {
+    const index = rowIndex * columnCount + columnIndex
+
+    if (index > data.length - 1) {
+      return null
+    }
+
+    const entry = data[index]
+
+    return (
+      <Entry style={style}>
+        <StyledImg src={`file://${entry.path}`} />
+      </Entry>
+    )
+  }
+)
+
+export default HistoryGrid
 
 interface Props {
   entries: HistoryEntry[]
 }
+
+interface HistoryGridEntryProps extends GridChildComponentProps {
+  columnCount: number
+  data: HistoryEntry[]
+}
+
+type ItemKeySelector = (params: {
+  columnCount: number
+  columnIndex: number
+  data: HistoryEntry[]
+  rowIndex: number
+}) => React.Key

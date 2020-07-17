@@ -11,7 +11,7 @@ const Library: React.FC<{}> = () => {
   const { entries } = useHistory()
 
   return (
-    <div css={tw`p-3`}>
+    <div css={tw`flex flex-1`}>
       <HistoryGrid entries={entries} />
     </div>
   )
