@@ -64,8 +64,7 @@ const HistoryGrid: React.FC<Props> = React.memo(({ entries }) => {
 
     const entry = data[index]
 
-    // TODO Replace by id
-    return `${entry.path}-${columnIndex}`
+    return `${entry.id}-${columnIndex}`
   }
 
   return (
