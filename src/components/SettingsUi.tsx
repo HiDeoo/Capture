@@ -24,7 +24,12 @@ const SettingsButton = styled(Button)`
   }
 `
 
-const SettingsGroupTitle = tw.div`text-lg font-semibold mb-3`
+const SettingsGroupTitle = styled.div`
+  ${tw`text-lg font-semibold mb-3 border-b border-solid`}
+
+  border-color: rgb(255, 255, 255, 0.9);
+  padding-bottom: 8px;
+`
 
 const SettingsGroup: React.FC<SettingsGroupProps> = ({ children, title }) => {
   return (
