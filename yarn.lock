@@ -9884,7 +9884,7 @@ react-dev-utils@^10.2.1:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@16.13.1:
+react-dom@16.13.1, react-dom@^16.6.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
   integrity sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag==
@@ -9964,6 +9964,15 @@ react-scripts@3.4.1:
   optionalDependencies:
     fsevents "2.1.2"
 
+react-sketch2@0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/react-sketch2/-/react-sketch2-0.5.7.tgz#7e3bf0e13e9c71465ba9238277caae2753c8d92e"
+  integrity sha512-HisVkQ/EE0dg22H9iqvkoxINVAmCwvnMiJ3HEVD80u97MFm/v/6PuTJf+BMJ8tA1bH6RtTLaWmupkC8lHFg1gw==
+  dependencies:
+    prop-types "^15.6.2"
+    react "^16.6.1"
+    react-dom "^16.6.1"
+
 react-virtualized-auto-sizer@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-1.0.2.tgz#a61dd4f756458bbf63bd895a92379f9b70f803bd"
@@ -9977,7 +9986,7 @@ react-window@1.8.5:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
 
-react@16.13.1:
+react@16.13.1, react@^16.6.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==

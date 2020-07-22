@@ -12,6 +12,7 @@ import {
   Tray,
 } from 'electron'
 import isDev from 'electron-is-dev'
+import { promises as fs } from 'fs'
 import path from 'path'
 import querystring from 'querystring'
 
@@ -156,6 +157,10 @@ function registerIpcHandlers(): void {
   ipcMain.handle('openUrl', (event: IpcMainInvokeEvent, url: string) => {
     return shell.openExternal(url)
   })
+
+  ipcMain.handle('saveImage', (event: IpcMainInvokeEvent, filePath: string, data: string) => {
+    return fs.writeFile(filePath, data, { encoding: 'base64' })
+  })
 }
 
 /**
@@ -164,6 +169,7 @@ function registerIpcHandlers(): void {
 function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('closeWindow')
   ipcMain.removeHandler('openUrl')
+  ipcMain.removeHandler('saveImage')
 }
 
 /**

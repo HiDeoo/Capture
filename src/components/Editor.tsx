@@ -1,39 +1,33 @@
 import { observer } from 'mobx-react-lite'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { DestinationId, ShareOptions, ShareOptionValue } from '../utils/Destination'
+import { mergeImages } from '../utils/image'
 import { defaultDestination } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
-import Img from './Img'
+import ImageEditor, { useImageEditor } from './ImageEditor'
 import LoadingBar from './LoadingBar'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
 
 const Content = styled.div`
-  ${tw`h-full overflow-auto`}
+  ${tw`flex-1 overflow-auto`}
 
   padding: 14px;
-  padding-top: 11px;
-`
-
-const StyledImg = styled(Img)`
-  ${tw`border border-solid`}
-
-  border-color: ${theme('editor.border')};
 `
 
 const Editor: React.FC<{}> = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
-  const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
   const { isUiLocked, lockUi, pendingScreenshotPath, shiftFromQueue } = useApp()
+  const { imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
+  const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
 
   const [destinationId, setDestinationId] = useState(defaultDestination)
 
@@ -49,6 +43,16 @@ const Editor: React.FC<{}> = () => {
   const onClickShare = useCallback(async () => {
     try {
       lockUi()
+
+      if (imageEditorUtils.hasAnnotations()) {
+        const images = imageEditorUtils.getImages()
+
+        if (images && imageEditorImage.current) {
+          const imageData = mergeImages(images, imageEditorImage.current.width, imageEditorImage.current.height)
+
+          await getIpcRenderer().invoke('saveImage', pendingScreenshotPath, imageData)
+        }
+      }
 
       const response = await destination.share(
         pendingScreenshotPath,
@@ -72,6 +76,8 @@ const Editor: React.FC<{}> = () => {
     addToHistory,
     destination,
     destinationId,
+    imageEditorImage,
+    imageEditorUtils,
     getDestinationSettingsGetter,
     getDestinationSettingsSetter,
     lockUi,
@@ -79,19 +85,6 @@ const Editor: React.FC<{}> = () => {
     shareOptions,
     shiftFromQueue,
   ])
-
-  useEffect(() => {
-    setTitleBarContent(
-      <>
-        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={onClickCancel} />
-        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
-      </>
-    )
-
-    return () => {
-      setTitleBarContent(null)
-    }
-  }, [isUiLocked, onClickCancel, onClickShare, setTitleBarContent])
 
   const onChangeDestination = useCallback(
     (newDestinationId: DestinationId) => {
@@ -110,8 +103,22 @@ const Editor: React.FC<{}> = () => {
     [setShareOptions, shareOptions]
   )
 
+  useEffect(() => {
+    setTitleBarContent(
+      <>
+        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={onClickCancel} />
+        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
+      </>
+    )
+
+    return () => {
+      setTitleBarContent(null)
+    }
+  }, [isUiLocked, onClickCancel, onClickShare, setTitleBarContent])
+
   return (
     <>
+      <LoadingBar enabled={isUiLocked} />
       <EditorToolBar
         locked={isUiLocked}
         destinationId={destinationId}
@@ -119,9 +126,8 @@ const Editor: React.FC<{}> = () => {
         onChangeDestination={onChangeDestination}
         setShareOption={setDestinationShareOption}
       />
-      <LoadingBar enabled={isUiLocked} />
       <Content>
-        <StyledImg src={`file://${pendingScreenshotPath}`} alt="" />
+        <ImageEditor image={imageEditorImage} sketch={imageEditorSketch} path={`file://${pendingScreenshotPath}`} />
       </Content>
       <EditorInfoBar locked={isUiLocked} path={pendingScreenshotPath} />
     </>

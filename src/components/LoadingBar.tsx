@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
+import tw from 'tailwind.macro'
 
 const LoadingBarAnimation = keyframes`
   0% {
@@ -17,13 +18,15 @@ const LoadingBarAnimation = keyframes`
 `
 
 const LoadingBar = styled.div<Props>`
+  ${tw`fixed inset-0`}
+
   animation-duration: 2s;
   animation-iteration-count: infinite;
   animation-name: ${ifProp('enabled', LoadingBarAnimation, 'none')};
   animation-timing-function: linear;
   animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
   background-color: ${ifProp('enabled', theme('color.tint'), 'transparent')};
-  height: 3px;
+  height: 4px;
   will-change: margin-left, width;
 `
 

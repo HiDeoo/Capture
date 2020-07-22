@@ -18,6 +18,7 @@ type CaptureMainToRendererEvents = {
 type CaptureRendererToMainEvents = {
   closeWindow: () => void
   openUrl: (url: string) => void
+  saveImage: (path: string, data: string) => void
 }
 
 /**
