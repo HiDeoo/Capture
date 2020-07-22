@@ -1,5 +1,5 @@
-import Destination, { DestinationId, DestinationSettings } from '../utils/Destination'
-import Imgur from './imgur'
+import Destination, { DestinationId, DestinationSettings } from './DestinationBase'
+import Imgur from './Imgur'
 
 /**
  * Imported destinations.

@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx'
 import { nanoid } from 'nanoid'
 
-import { ShareResponse } from '../utils/Destination'
+import type { ShareResponse } from '../destinations/DestinationBase'
 
 /**
  * The history store.

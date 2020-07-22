@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { getDestinations } from '../destinations'
-import { DestinationId } from '../utils/Destination'
+import type { DestinationId } from '../destinations/DestinationBase'
 import Select from './Select'
 
 /**

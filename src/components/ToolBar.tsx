@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import type { DestinationSettingsGetter, ShareOptions, ShareOptionSetter } from '../utils/Destination'
+import type { DestinationSettingsGetter, ShareOptions, ShareOptionSetter } from '../destinations/DestinationBase'
 import type Select from './Select'
 
 const Wrapper = styled.div<Props>`

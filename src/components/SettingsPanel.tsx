@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
-import type { DestinationSettingSetter, DestinationSettingsGetter } from '../utils/Destination'
+import type { DestinationSettingSetter, DestinationSettingsGetter } from '../destinations/DestinationBase'
 import { Button, Group } from './SettingsUi'
 
 const Wrapper = styled.div`

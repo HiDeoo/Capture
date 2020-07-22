@@ -10,7 +10,7 @@ import Destination, {
   SettingsPanelProps,
   ShareOptions,
   ShareResponse,
-} from '../utils/Destination'
+} from './DestinationBase'
 
 enum AccountShareOption {
   Anon = 'Share anonymously',
