@@ -15,6 +15,7 @@ export enum IconSymbol {
   ListDash = '􀋱',
   PaperPlane = '􀈟',
   Pencil = '􀈊',
+  PencilTip = '􀒋',
   XMark = '􀆄',
 }
 

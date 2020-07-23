@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useReducer, useRef, useState } from 'react'
 import { SketchField, Tools } from 'react-sketch2'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
@@ -17,9 +17,30 @@ const Layers = styled.div`
   }
 `
 
+export type ImageEditorAction = { type: 'set_tool'; tool: Optional<Tools> }
+
+const imageEditorInitialState: ImageEditorState = {
+  tool: Tools.Select,
+}
+
+function imageEditorReducer(state: ImageEditorState, action: ImageEditorAction): ImageEditorState {
+  switch (action.type) {
+    case 'set_tool':
+      return { ...state, tool: action.tool ?? imageEditorInitialState.tool }
+    default: {
+      throw new Error('Invalid image editor action.')
+    }
+  }
+}
+
 export function useImageEditor(): ImageEditorHook {
   const imageEditorSketch = useRef<SketchField>()
   const imageEditorImage = useRef<HTMLImageElement>(null)
+
+  const [imageEditorState, imageEditorDispatch] = useReducer<typeof imageEditorReducer>(
+    imageEditorReducer,
+    imageEditorInitialState
+  )
 
   const imageEditorUtils = useMemo(
     () => ({
@@ -44,22 +65,14 @@ export function useImageEditor(): ImageEditorHook {
   )
 
   return {
+    getImageEditorStateProps: () => ({ imageEditorDispatch, imageEditorState }),
     imageEditorImage,
     imageEditorSketch,
     imageEditorUtils,
   }
 }
 
-interface ImageEditorHook {
-  imageEditorImage: React.RefObject<HTMLImageElement>
-  imageEditorSketch: React.MutableRefObject<SketchField | undefined>
-  imageEditorUtils: {
-    getImages: () => Optional<CanvasImageSource[]>
-    hasAnnotations: () => boolean
-  }
-}
-
-const ImageEditor: React.FC<Props> = ({ image, path, sketch }) => {
+const ImageEditor: React.FC<Props> = ({ image, imageEditorState, path, sketch }) => {
   const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
 
   function setSketchRef(ref: SketchField): void {
@@ -80,19 +93,38 @@ const ImageEditor: React.FC<Props> = ({ image, path, sketch }) => {
           lineWidth={3}
           lineColor="black"
           ref={setSketchRef}
-          tool={Tools.Pencil}
           width={imageSize?.width}
           height={imageSize?.height}
+          tool={imageEditorState.tool}
         />
       </div>
     </Layers>
   )
 }
 
-interface Props {
+interface Props extends ImageEditorStateProps {
   image: ImageEditorHook['imageEditorImage']
   path: string
   sketch: ImageEditorHook['imageEditorSketch']
 }
 
 export default ImageEditor
+
+interface ImageEditorHook {
+  getImageEditorStateProps: () => ImageEditorStateProps
+  imageEditorImage: React.RefObject<HTMLImageElement>
+  imageEditorSketch: React.MutableRefObject<SketchField | undefined>
+  imageEditorUtils: {
+    getImages: () => Optional<CanvasImageSource[]>
+    hasAnnotations: () => boolean
+  }
+}
+
+export interface ImageEditorStateProps {
+  imageEditorDispatch: React.Dispatch<ImageEditorAction>
+  imageEditorState: ImageEditorState
+}
+
+export interface ImageEditorState {
+  tool: Optional<Tools>
+}

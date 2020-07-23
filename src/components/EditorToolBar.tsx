@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React from 'react'
+import { Tools } from 'react-sketch2'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
@@ -8,6 +9,7 @@ import type { DestinationId, ShareOptions, ShareOptionSetter } from '../destinat
 import { useSettings } from '../store'
 import DestinationSelect from './DestinationSelect'
 import { IconSymbol } from './Icon'
+import type { ImageEditorStateProps } from './ImageEditor'
 import Select from './Select'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
 import ToolBarButton, { ToolBarButtonGroup } from './ToolBarButton'
@@ -20,6 +22,8 @@ const StyledDestinationSelect = styled(DestinationSelect)`
 
 const EditorToolBar: React.FC<Props> = ({
   destinationId,
+  imageEditorDispatch,
+  imageEditorState,
   locked,
   onChangeDestination,
   setShareOption,
@@ -30,27 +34,14 @@ const EditorToolBar: React.FC<Props> = ({
   const destination = getDestination(destinationId)
   const DestinationToolBar = destination.getToolBar && destination.getToolBar()
 
-  const [debugActiveId, setDebugActiveId] = useState<Optional<string>>('1')
-
-  function onClickDebugThingy(id: Optional<string>): void {
-    setDebugActiveId(id)
+  function onClickTool(id: Optional<string>): void {
+    imageEditorDispatch({ type: 'set_tool', tool: id as Optional<Tools> })
   }
 
   return (
     <ToolBar top>
-      <ToolBarButton symbol={IconSymbol.Gear} />
-      <ToolBarButton symbol={IconSymbol.Gear} disabled />
-      <ToolBarButtonGroup onClick={onClickDebugThingy} activeId={debugActiveId}>
-        <ToolBarButton symbol={IconSymbol.Gear} id="1" />
-        <div>test</div>
-        <ToolBarButton symbol={IconSymbol.Gear} id="2" />
-        <ToolBarButton symbol={IconSymbol.Gear} id="3" />
-      </ToolBarButtonGroup>
-      <ToolBarButtonGroup onClick={onClickDebugThingy} activeId={debugActiveId} disabled>
-        <ToolBarButton symbol={IconSymbol.Gear} id="1" />
-        <div>test</div>
-        <ToolBarButton symbol={IconSymbol.Gear} id="2" />
-        <ToolBarButton symbol={IconSymbol.Gear} id="3" />
+      <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool}>
+        <ToolBarButton symbol={IconSymbol.PencilTip} id={Tools.Pencil} />
       </ToolBarButtonGroup>
       <div css={tw`flex-1`} />
       {DestinationToolBar && (
@@ -69,7 +60,7 @@ const EditorToolBar: React.FC<Props> = ({
 
 export default observer(EditorToolBar)
 
-interface Props extends ToolbarLockedProps {
+interface Props extends ToolbarLockedProps, ImageEditorStateProps {
   destinationId: DestinationId
   onChangeDestination: (destinationId: DestinationId) => void
   setShareOption: ShareOptionSetter

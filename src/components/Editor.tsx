@@ -26,8 +26,8 @@ const Editor: React.FC<{}> = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshotPath, shiftFromQueue } = useApp()
-  const { imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
   const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
+  const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
   const [destinationId, setDestinationId] = useState(defaultDestination)
 
@@ -121,13 +121,19 @@ const Editor: React.FC<{}> = () => {
       <LoadingBar enabled={isUiLocked} />
       <EditorToolBar
         locked={isUiLocked}
-        destinationId={destinationId}
         shareOptions={shareOptions}
+        destinationId={destinationId}
+        {...getImageEditorStateProps()}
         onChangeDestination={onChangeDestination}
         setShareOption={setDestinationShareOption}
       />
       <Content>
-        <ImageEditor image={imageEditorImage} sketch={imageEditorSketch} path={`file://${pendingScreenshotPath}`} />
+        <ImageEditor
+          image={imageEditorImage}
+          sketch={imageEditorSketch}
+          {...getImageEditorStateProps()}
+          path={`file://${pendingScreenshotPath}`}
+        />
       </Content>
       <EditorInfoBar locked={isUiLocked} path={pendingScreenshotPath} />
     </>
