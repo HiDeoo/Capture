@@ -22,6 +22,7 @@ const Wrapper = styled.div<Props>`
     }
   }
 
+  button,
   select {
     ${tw`border border-solid font-normal`}
 

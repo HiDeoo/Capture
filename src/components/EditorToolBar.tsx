@@ -7,8 +7,10 @@ import { getDestination } from '../destinations'
 import type { DestinationId, ShareOptions, ShareOptionSetter } from '../destinations/DestinationBase'
 import { useSettings } from '../store'
 import DestinationSelect from './DestinationSelect'
+import { IconSymbol } from './Icon'
 import Select from './Select'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
+import ToolBarButton, { ToolBarButtonGroup } from './ToolBarButton'
 
 const StyledDestinationSelect = styled(DestinationSelect)`
   && {
@@ -30,6 +32,20 @@ const EditorToolBar: React.FC<Props> = ({
 
   return (
     <ToolBar top>
+      <ToolBarButton symbol={IconSymbol.Gear} />
+      <ToolBarButton symbol={IconSymbol.Gear} disabled />
+      <ToolBarButtonGroup activeId="2">
+        <ToolBarButton symbol={IconSymbol.Gear} id="1" />
+        <div>test</div>
+        <ToolBarButton symbol={IconSymbol.Gear} id="2" />
+        <ToolBarButton symbol={IconSymbol.Gear} id="3" />
+      </ToolBarButtonGroup>
+      <ToolBarButtonGroup activeId="2" disabled>
+        <ToolBarButton symbol={IconSymbol.Gear} id="1" />
+        <div>test</div>
+        <ToolBarButton symbol={IconSymbol.Gear} id="2" />
+        <ToolBarButton symbol={IconSymbol.Gear} id="3" />
+      </ToolBarButtonGroup>
       <div css={tw`flex-1`} />
       {DestinationToolBar && (
         <DestinationToolBar

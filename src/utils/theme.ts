@@ -18,6 +18,10 @@ export default {
     background: '#181718',
     border: color.black1,
     button: {
+      active: {
+        background: '#2d2b2e',
+        color: color.tint,
+      },
       background: '#252325',
       border: color.black1,
       hover: {
