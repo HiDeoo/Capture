@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components/macro'
 import tw from 'tailwind.macro'
 
@@ -30,17 +30,23 @@ const EditorToolBar: React.FC<Props> = ({
   const destination = getDestination(destinationId)
   const DestinationToolBar = destination.getToolBar && destination.getToolBar()
 
+  const [debugActiveId, setDebugActiveId] = useState<Optional<string>>('1')
+
+  function onClickDebugThingy(id: Optional<string>): void {
+    setDebugActiveId(id)
+  }
+
   return (
     <ToolBar top>
       <ToolBarButton symbol={IconSymbol.Gear} />
       <ToolBarButton symbol={IconSymbol.Gear} disabled />
-      <ToolBarButtonGroup activeId="2">
+      <ToolBarButtonGroup onClick={onClickDebugThingy} activeId={debugActiveId}>
         <ToolBarButton symbol={IconSymbol.Gear} id="1" />
         <div>test</div>
         <ToolBarButton symbol={IconSymbol.Gear} id="2" />
         <ToolBarButton symbol={IconSymbol.Gear} id="3" />
       </ToolBarButtonGroup>
-      <ToolBarButtonGroup activeId="2" disabled>
+      <ToolBarButtonGroup onClick={onClickDebugThingy} activeId={debugActiveId} disabled>
         <ToolBarButton symbol={IconSymbol.Gear} id="1" />
         <div>test</div>
         <ToolBarButton symbol={IconSymbol.Gear} id="2" />

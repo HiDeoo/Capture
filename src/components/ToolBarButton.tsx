@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
@@ -20,7 +20,6 @@ const StyledButton = styled(Button)<StyledButtonProps>`
         background-color: ${theme('bar.button.active.background')(props)};
         border-color: ${theme('bar.button.border')(props)};
         color: ${theme('bar.button.active.color')(props)};
-        cursor: default;
       }
 
       &:hover:disabled {
@@ -62,12 +61,26 @@ function isToolBarButton(element: {} | null | undefined): element is React.React
   return React.isValidElement<ToolBarButtonProps>(element) && element.type === ToolBarButton
 }
 
-export const ToolBarButtonGroup: React.FC<ToolBarButtonGroupProps> = ({ activeId, children, disabled = false }) => {
+export const ToolBarButtonGroup: React.FC<ToolBarButtonGroupProps> = ({
+  activeId,
+  children,
+  disabled = false,
+  onClick,
+}) => {
+  const onClickButton = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      const { id } = event.currentTarget
+
+      onClick(id === activeId ? undefined : id)
+    },
+    [activeId, onClick]
+  )
+
   return (
     <Group disabled={disabled}>
       {React.Children.map(children, (child) => {
         if (isToolBarButton(child)) {
-          return React.cloneElement(child, { active: child.props.id === activeId, disabled })
+          return React.cloneElement(child, { active: child.props.id === activeId, disabled, onClick: onClickButton })
         }
 
         return null
@@ -84,8 +97,9 @@ interface ToolBarButtonProps extends Omit<ButtonProps, 'children'> {
 }
 
 interface ToolBarButtonGroupProps {
-  activeId: string
+  activeId?: string
   disabled?: boolean
+  onClick: (id: Optional<string>) => void
 }
 
 interface StyledButtonProps {
