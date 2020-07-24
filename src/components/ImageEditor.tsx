@@ -133,6 +133,11 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
           sketch.current._fc.discardActiveObject()
           sketch.current._fc.renderAll()
         }
+      } else if (event.key === 'Backspace' || event.key === 'Delete') {
+        if (sketch.current) {
+          // Remove the selections.
+          sketch.current.removeSelected()
+        }
       }
     }
 
