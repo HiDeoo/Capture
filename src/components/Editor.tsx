@@ -129,6 +129,7 @@ const Editor: React.FC<{}> = () => {
       />
       <Content>
         <ImageEditor
+          readonly={isUiLocked}
           image={imageEditorImage}
           sketch={imageEditorSketch}
           {...getImageEditorStateProps()}

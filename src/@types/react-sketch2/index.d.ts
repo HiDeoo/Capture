@@ -62,6 +62,7 @@ declare module 'react-sketch2' {
      * @see http://fabricjs.com/docs/fabric.Canvas.html
      */
     _fc: {
+      defaultCursor: string
       toCanvasElement(
         multiplieropt?: number,
         croppingopt?: { left?: number; top?: number; width?: number; height?: number }

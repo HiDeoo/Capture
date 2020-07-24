@@ -40,7 +40,7 @@ const EditorToolBar: React.FC<Props> = ({
 
   return (
     <ToolBar top>
-      <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool}>
+      <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool} disabled={locked}>
         <ToolBarButton symbol={IconSymbol.PencilTip} id={Tools.Pencil} />
       </ToolBarButtonGroup>
       <div css={tw`flex-1`} />

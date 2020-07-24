@@ -1,9 +1,10 @@
-import React, { useMemo, useReducer, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { SketchField, Tools } from 'react-sketch2'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { usePrevious } from '../utils/react'
 import Img, { ImageSize } from './Img'
 
 const Layers = styled.div`
@@ -72,8 +73,10 @@ export function useImageEditor(): ImageEditorHook {
   }
 }
 
-const ImageEditor: React.FC<Props> = ({ image, imageEditorState, path, sketch }) => {
+const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorState, path, readonly, sketch }) => {
   const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
+  const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
+  const previous = usePrevious({ readonly, tool: imageEditorState.tool })
 
   function setSketchRef(ref: SketchField): void {
     sketch.current = ref
@@ -84,6 +87,22 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorState, path, sketch })
       setImageSize({ height: image.current.height, width: image.current.width })
     }
   }
+
+  useEffect(() => {
+    if (previous && previous.readonly !== readonly) {
+      if (readonly) {
+        readOnlyPreviousTool.current = imageEditorState.tool
+        imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool })
+        requestAnimationFrame(() => {
+          if (sketch.current) {
+            sketch.current._fc.defaultCursor = 'default'
+          }
+        })
+      } else {
+        imageEditorDispatch({ type: 'set_tool', tool: readOnlyPreviousTool.current })
+      }
+    }
+  }, [imageEditorDispatch, imageEditorState.tool, previous, readonly, sketch])
 
   return (
     <Layers>
@@ -105,6 +124,7 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorState, path, sketch })
 interface Props extends ImageEditorStateProps {
   image: ImageEditorHook['imageEditorImage']
   path: string
+  readonly: boolean
   sketch: ImageEditorHook['imageEditorSketch']
 }
 
