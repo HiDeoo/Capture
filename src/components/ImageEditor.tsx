@@ -5,6 +5,7 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { usePrevious } from '../utils/react'
+import Theme from '../utils/theme'
 import Img, { ImageSize } from './Img'
 
 const Layers = styled.div`
@@ -74,12 +75,24 @@ export function useImageEditor(): ImageEditorHook {
 }
 
 const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorState, path, readonly, sketch }) => {
+  const isSketchInitialized = useRef(false)
   const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
   const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
   const previous = usePrevious({ readonly, tool: imageEditorState.tool })
 
   function setSketchRef(ref: SketchField): void {
     sketch.current = ref
+
+    if (sketch.current && !isSketchInitialized.current) {
+      isSketchInitialized.current = true
+
+      // Update the Fabric.js selection handle colors.
+      ref._fc.on('selection:created', (event) => {
+        event.target.transparentCorners = true
+        event.target.borderColor = Theme.color.tint
+        event.target.cornerColor = Theme.color.tint
+      })
+    }
   }
 
   function onImageLoaded(): void {

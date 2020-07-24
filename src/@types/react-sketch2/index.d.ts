@@ -63,6 +63,17 @@ declare module 'react-sketch2' {
      */
     _fc: {
       defaultCursor: string
+      on(
+        name: 'selection:created',
+        callback: (event: {
+          e: MouseEvent
+          target: {
+            transparentCorners: boolean
+            borderColor: string
+            cornerColor: string
+          }
+        }) => void
+      )
       toCanvasElement(
         multiplieropt?: number,
         croppingopt?: { left?: number; top?: number; width?: number; height?: number }
