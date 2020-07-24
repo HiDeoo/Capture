@@ -91,14 +91,19 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
   useEffect(() => {
     if (previous && previous.readonly !== readonly) {
       if (readonly) {
+        // When the editor is transitionning in readonly mode, we save the current tool (to restore it when disabling
+        // the readonly mode) and set the current tool to the default one.
         readOnlyPreviousTool.current = imageEditorState.tool
         imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool })
         requestAnimationFrame(() => {
           if (sketch.current) {
+            // We also manually update the canvas cursor so it doesn't indicate that some actions are possible while the
+            // editor is in readonly mode.
             sketch.current._fc.defaultCursor = 'default'
           }
         })
       } else {
+        // When disabling the readonly mode, restore the previously saved tool that was used before.
         imageEditorDispatch({ type: 'set_tool', tool: readOnlyPreviousTool.current })
       }
     }
