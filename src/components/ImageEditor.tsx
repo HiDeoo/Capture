@@ -122,6 +122,27 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
     }
   }, [imageEditorDispatch, imageEditorState.tool, previous, readonly, sketch])
 
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent): void {
+      if (event.key === 'Escape') {
+        // Disable the current tool.
+        imageEditorDispatch({ type: 'set_tool', tool: undefined })
+
+        if (sketch.current) {
+          // Discard existing selections.
+          sketch.current._fc.discardActiveObject()
+          sketch.current._fc.renderAll()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  })
+
   return (
     <Layers>
       <Img src={path} onLoad={onImageLoaded} ref={image} />

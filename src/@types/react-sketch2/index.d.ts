@@ -63,6 +63,7 @@ declare module 'react-sketch2' {
      */
     _fc: {
       defaultCursor: string
+      discardActiveObject(): void
       on(
         name: 'selection:created',
         callback: (event: {
@@ -73,11 +74,12 @@ declare module 'react-sketch2' {
             cornerColor: string
           }
         }) => void
-      )
+      ): void
+      renderAll(): void
       toCanvasElement(
         multiplieropt?: number,
         croppingopt?: { left?: number; top?: number; width?: number; height?: number }
-      )
+      ): HTMLCanvasElement
     }
 
     /**
