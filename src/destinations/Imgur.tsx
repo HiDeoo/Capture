@@ -199,6 +199,7 @@ class Imgur extends Destination {
       const AccountPicker = username ? (
         <Ui.Select
           disabled={disabled}
+          style={{ minWidth: 200 }}
           itemRenderer={accountOptionRenderer}
           onChange={onChangeAccountShareOption}
           items={[AccountShareOption.Anon, AccountShareOption.User]}

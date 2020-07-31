@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 `
 
 const Button = styled.button<OpenedProps>`
-  ${tw`rounded pl-3 py-1 appearance-none pr-10 relative`}
+  ${tw`rounded pl-3 py-1 appearance-none pr-10 relative text-left`}
 
   border-bottom-left-radius: ${ifProp('opened', 0, '0.25rem')};
   border-bottom-right-radius: ${ifProp('opened', 0, '0.25rem')};
@@ -34,7 +34,7 @@ const StyledIcon = styled(Icon)<StyledIconProps>`
 `
 
 const Menu = styled.ul<OpenedProps>`
-  ${tw`absolute outline-none border border-solid rounded inset-x-0 overflow-hidden rounded-t-none border-t-0`}
+  ${tw`absolute outline-none border border-solid rounded inset-x-0 overflow-hidden rounded-t-none border-t-0 z-10`}
 
   background-color: ${theme('bar.button.background')};
   border-color: ${theme('bar.button.border')};
@@ -54,6 +54,7 @@ export function Select<T>({
   itemToString,
   onChange,
   selectedItem,
+  style,
   ...restProps
 }: Props<T>): JSX.Element {
   const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect<T>({
@@ -83,7 +84,7 @@ export function Select<T>({
 
   return (
     <Wrapper>
-      <Button {...getToggleButtonProps({ disabled })} opened={isOpen} {...restProps}>
+      <Button {...getToggleButtonProps({ disabled })} opened={isOpen} style={style} {...restProps}>
         {itemRenderer ? itemRenderer(selectedItem) : selectedItem}
         <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} />
       </Button>
@@ -112,6 +113,7 @@ interface Props<T> {
   itemToString?: (item: T) => string
   onChange: (item: T) => void
   selectedItem: T
+  style?: React.CSSProperties
 }
 
 interface OpenedProps {
