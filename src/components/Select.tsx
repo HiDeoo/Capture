@@ -31,6 +31,10 @@ const StyledIcon = styled(Icon)<StyledIconProps>`
   font-size: 14px;
   opacity: ${ifProp('disabled', 0.6, 1)};
   padding-top: 6px;
+  transform: rotate(${ifProp('opened', '180deg', 0)});
+  transition-duration: 250ms;
+  transform-origin: 50% 57% 0;
+  transition-property: transform;
 `
 
 const Menu = styled.ul<OpenedProps>`
@@ -86,7 +90,7 @@ export function Select<T>({
     <Wrapper>
       <Button {...getToggleButtonProps({ disabled })} opened={isOpen} style={style} {...restProps}>
         {itemRenderer ? itemRenderer(selectedItem) : selectedItem}
-        <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} />
+        <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} opened={isOpen} />
       </Button>
       <Menu {...getMenuProps()} opened={isOpen}>
         {isOpen &&
@@ -124,6 +128,6 @@ interface ItemProps {
   selected: boolean
 }
 
-interface StyledIconProps {
+interface StyledIconProps extends OpenedProps {
   disabled: boolean
 }
