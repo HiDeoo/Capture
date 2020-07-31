@@ -10,8 +10,11 @@ const Wrapper = styled.div`
   ${tw`relative`}
 `
 
-const Button = styled.button`
+const Button = styled.button<OpenedProps>`
   ${tw`rounded pl-3 py-1 appearance-none pr-10 relative`}
+
+  border-bottom-left-radius: ${ifProp('opened', 0, '0.25rem')};
+  border-bottom-right-radius: ${ifProp('opened', 0, '0.25rem')};
 
   &:focus {
     ${tw`outline-none`}
@@ -30,8 +33,8 @@ const StyledIcon = styled(Icon)<StyledIconProps>`
   padding-top: 6px;
 `
 
-const Menu = styled.ul<MenuProps>`
-  ${tw`absolute outline-none border border-solid rounded inset-x-0 overflow-hidden`}
+const Menu = styled.ul<OpenedProps>`
+  ${tw`absolute outline-none border border-solid rounded inset-x-0 overflow-hidden rounded-t-none border-t-0`}
 
   background-color: ${theme('bar.button.background')};
   border-color: ${theme('bar.button.border')};
@@ -80,7 +83,7 @@ export function Select<T>({
 
   return (
     <Wrapper>
-      <Button {...getToggleButtonProps({ disabled })} {...restProps}>
+      <Button {...getToggleButtonProps({ disabled })} opened={isOpen} {...restProps}>
         {itemRenderer ? itemRenderer(selectedItem) : selectedItem}
         <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} />
       </Button>
@@ -111,7 +114,7 @@ interface Props<T> {
   selectedItem: T
 }
 
-interface MenuProps {
+interface OpenedProps {
   opened: boolean
 }
 
