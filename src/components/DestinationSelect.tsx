@@ -1,31 +1,34 @@
 import React from 'react'
 
-import { getDestinations } from '../destinations'
+import { getDestination, getDestinations } from '../destinations'
 import type { DestinationId } from '../destinations/DestinationBase'
 import Select from './Select'
 
 /**
- * List of destinations options to use in a <Select />
+ * List of destinations IDs to use in a <Select />
  */
-const DestinationOptions = Object.entries(getDestinations()).map(([id, destination]) => {
-  return {
-    label: destination.getConfiguration().name,
-    value: id,
-  }
-})
+const DestinationIds: DestinationId[] = Object.keys(getDestinations())
 
 /**
  * Default destination to select.
  */
 // TODO This should be a setting
-export const defaultDestination = DestinationOptions[0].value
+export const defaultDestinationId = DestinationIds[0]
+
+function destinationRenderer(destinationId: DestinationId): React.ReactNode {
+  return getDestination(destinationId).getConfiguration().name
+}
 
 const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps }) => {
-  function onChangeSelect(event: React.ChangeEvent<HTMLSelectElement>): void {
-    onChangeDestination(event.target.value)
-  }
-
-  return <Select {...restProps} options={DestinationOptions} onChange={onChangeSelect} />
+  return (
+    <Select
+      {...restProps}
+      items={DestinationIds}
+      onChange={onChangeDestination}
+      itemRenderer={destinationRenderer}
+      selectedItem={defaultDestinationId}
+    />
+  )
 }
 
 export default DestinationSelect

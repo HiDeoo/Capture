@@ -185,19 +185,24 @@ class Imgur extends Destination {
     return ({ disabled, getSettings, shareOptions, setShareOption, Ui }) => {
       const { username } = getSettings<ImgurSettings>()
 
-      function onChangeAccountShareOption(event: React.ChangeEvent<HTMLSelectElement>): void {
-        setShareOption<ImgurShareOptions>('account', event.target.value as AccountShareOption)
+      function onChangeAccountShareOption(newAccountShareOption: AccountShareOption): void {
+        setShareOption<ImgurShareOptions>('account', newAccountShareOption)
       }
 
+      function accountOptionRenderer(accountShareOption: AccountShareOption): React.ReactNode {
+        if (accountShareOption === AccountShareOption.User) {
+          return `${AccountShareOption.User} ${username}`
+        }
+
+        return accountShareOption
+      }
       const AccountPicker = username ? (
         <Ui.Select
           disabled={disabled}
-          value={shareOptions.account}
+          itemRenderer={accountOptionRenderer}
           onChange={onChangeAccountShareOption}
-          options={[
-            AccountShareOption.Anon,
-            { label: `${AccountShareOption.User} ${username}`, value: AccountShareOption.User },
-          ]}
+          items={[AccountShareOption.Anon, AccountShareOption.User]}
+          selectedItem={shareOptions.account ?? AccountShareOption.Anon}
         />
       ) : null
 

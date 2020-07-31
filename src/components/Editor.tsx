@@ -8,7 +8,7 @@ import type { DestinationId, ShareOptions, ShareOptionValue } from '../destinati
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { mergeImages } from '../utils/image'
-import { defaultDestination } from './DestinationSelect'
+import { defaultDestinationId } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
 import ImageEditor, { useImageEditor } from './ImageEditor'
@@ -29,7 +29,7 @@ const Editor: React.FC<{}> = () => {
   const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
   const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
-  const [destinationId, setDestinationId] = useState(defaultDestination)
+  const [destinationId, setDestinationId] = useState(defaultDestinationId)
 
   const destination = getDestination(destinationId)
   const [shareOptions, setShareOptions] = useState<ShareOptions>(

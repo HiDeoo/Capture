@@ -1,25 +1,24 @@
+import { useSelect, UseSelectStateChange } from 'downshift'
 import React from 'react'
 import styled from 'styled-components/macro'
-import { ifProp } from 'styled-tools'
+import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Icon, { IconSymbol } from './Icon'
 
-const Wrapper = tw.div`relative`
+const Wrapper = styled.div`
+  ${tw`relative`}
+`
 
-const StyledSelect = styled.select`
-  ${tw`rounded pl-3 py-1 appearance-none pr-10`}
+const Button = styled.button`
+  ${tw`rounded pl-3 py-1 appearance-none pr-10 relative`}
 
-  &:hover {
-    ${tw`cursor-pointer`}
+  &:focus {
+    ${tw`outline-none`}
   }
 
   &:disabled {
     ${tw`cursor-not-allowed`}
-  }
-
-  &:focus {
-    ${tw`outline-none`}
   }
 `
 
@@ -31,33 +30,93 @@ const StyledIcon = styled(Icon)<StyledIconProps>`
   padding-top: 6px;
 `
 
-const Select: React.FC<Props> = ({ disabled, options, ...restProps }) => {
-  const children = options.map((option) => {
-    const optionProps: SelectOption = typeof option === 'object' ? option : { value: option }
+const Menu = styled.ul<MenuProps>`
+  ${tw`absolute outline-none border border-solid rounded inset-x-0 overflow-hidden`}
 
-    return <option {...optionProps} key={optionProps.value} children={optionProps.label || optionProps.value} />
+  background-color: ${theme('bar.button.background')};
+  border-color: ${theme('bar.button.border')};
+  display: ${ifProp('opened', 'block', 'none')};
+`
+
+const Item = styled.li<ItemProps>`
+  ${tw`px-3 py-1 cursor-pointer`}
+
+  background-color: ${ifProp('selected', theme('color.tint'), 'transparent')};
+`
+
+export function Select<T>({
+  disabled = false,
+  itemRenderer,
+  items,
+  itemToString,
+  onChange,
+  selectedItem,
+  ...restProps
+}: Props<T>): JSX.Element {
+  const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect<T>({
+    items,
+    itemToString: internalItemToString,
+    onSelectedItemChange,
+    selectedItem,
   })
+
+  function onSelectedItemChange(changes: UseSelectStateChange<T>): void {
+    if (changes.selectedItem) {
+      onChange(changes.selectedItem)
+    }
+  }
+
+  function internalItemToString(item: T | null): string {
+    if (!item) {
+      return ''
+    }
+
+    if (!itemToString) {
+      return typeof item === 'string' ? item : ''
+    }
+
+    return itemToString(item)
+  }
 
   return (
     <Wrapper>
-      <StyledSelect {...restProps} disabled={disabled}>
-        {children}
-      </StyledSelect>
-      <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled ?? false} />
+      <Button {...getToggleButtonProps({ disabled })} {...restProps}>
+        {itemRenderer ? itemRenderer(selectedItem) : selectedItem}
+        <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} />
+      </Button>
+      <Menu {...getMenuProps()} opened={isOpen}>
+        {isOpen &&
+          items.map((item, index) => (
+            <Item
+              {...getItemProps({ item, index })}
+              selected={highlightedIndex === index}
+              key={`${itemToString ? itemToString(item) : item}-${index}`}
+            >
+              {itemRenderer ? itemRenderer(item) : item}
+            </Item>
+          ))}
+      </Menu>
     </Wrapper>
   )
 }
 
 export default Select
 
-export interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  onChange: React.ChangeEventHandler<HTMLSelectElement>
-  options: (string | number | SelectOption)[]
+interface Props<T> {
+  disabled?: boolean
+  items: T[]
+  itemRenderer?: (item: T) => React.ReactNode
+  itemToString?: (item: T) => string
+  onChange: (item: T) => void
+  selectedItem: T
 }
 
-export interface SelectOption {
-  label?: string
-  value: string | number
+interface MenuProps {
+  opened: boolean
+}
+
+interface ItemProps {
+  selected: boolean
 }
 
 interface StyledIconProps {

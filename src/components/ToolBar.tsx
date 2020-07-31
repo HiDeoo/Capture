@@ -22,8 +22,7 @@ const Wrapper = styled.div<Props>`
     }
   }
 
-  button,
-  select {
+  button {
     ${tw`border border-solid font-normal`}
 
     background-color: ${theme('bar.button.background')};
