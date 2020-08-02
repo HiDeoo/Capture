@@ -26,14 +26,14 @@ const Button = styled.button<OpenedProps>`
 `
 
 const StyledIcon = styled(Icon)<StyledIconProps>`
-  ${tw`absolute top-0 right-0 px-3 pointer-events-none`}
+  ${tw`absolute right-0 px-3 pointer-events-none`}
 
   font-size: 14px;
   opacity: ${ifProp('disabled', 0.6, 1)};
-  padding-top: 6px;
+  top: calc(50% - 9px);
   transform: rotate(${ifProp('opened', '180deg', 0)});
   transition-duration: 250ms;
-  transform-origin: 50% 57% 0;
+  transform-origin: 50% 50% 0;
   transition-property: transform;
 `
 
@@ -89,7 +89,7 @@ export function Select<T>({
   return (
     <Wrapper>
       <Button {...getToggleButtonProps({ disabled })} opened={isOpen} style={style} {...restProps}>
-        {itemRenderer ? itemRenderer(selectedItem) : selectedItem}
+        {itemRenderer ? itemRenderer(selectedItem, true) : selectedItem}
         <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} opened={isOpen} />
       </Button>
       <Menu {...getMenuProps()} opened={isOpen}>
@@ -100,7 +100,7 @@ export function Select<T>({
               selected={highlightedIndex === index}
               key={`${itemToString ? itemToString(item) : item}-${index}`}
             >
-              {itemRenderer ? itemRenderer(item) : item}
+              {itemRenderer ? itemRenderer(item, false) : item}
             </Item>
           ))}
       </Menu>
@@ -113,7 +113,7 @@ export default Select
 interface Props<T> {
   disabled?: boolean
   items: T[]
-  itemRenderer?: (item: T) => React.ReactNode
+  itemRenderer?: (item: T, isButton: boolean) => React.ReactNode
   itemToString?: (item: T) => string
   onChange: (item: T) => void
   selectedItem: T

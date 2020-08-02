@@ -15,7 +15,7 @@ const Wrapper = styled.div<Props>`
   border-top-width: ${ifProp('bottom', '1px', '0')};
 
   & > div {
-    ${tw`mr-2`}
+    ${tw`h-full mr-2`}
 
     &:last-child {
       ${tw`mr-0`}
@@ -23,7 +23,7 @@ const Wrapper = styled.div<Props>`
   }
 
   button {
-    ${tw`border border-solid font-normal`}
+    ${tw`border border-solid font-normal h-full`}
 
     background-color: ${theme('bar.button.background')};
     border-color: ${theme('bar.button.border')};
@@ -36,10 +36,26 @@ const Wrapper = styled.div<Props>`
       & + .icon {
         color: ${theme('bar.button.hover.color')};
       }
+
+      svg {
+        fill: ${theme('bar.button.hover.color')};
+      }
     }
 
     &:disabled {
       opacity: 0.6;
+    }
+
+    svg {
+      fill: ${theme('bar.button.color')};
+      height: 22px
+    }
+  }
+
+  li {
+    svg {
+      fill: ${theme('bar.button.color')};
+      height: 22px
     }
   }
 `

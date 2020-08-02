@@ -9,8 +9,9 @@ import type { DestinationId, ShareOptions, ShareOptionSetter } from '../destinat
 import { useSettings } from '../store'
 import DestinationSelect from './DestinationSelect'
 import { IconSymbol } from './Icon'
-import type { ImageEditorStateProps } from './ImageEditor'
+import { ImageEditorStateProps, LineWidth, LineWidths } from './ImageEditor'
 import Select from './Select'
+import Svg from './Svg'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
 import ToolBarButton, { ToolBarButtonGroup } from './ToolBarButton'
 
@@ -19,6 +20,14 @@ const StyledDestinationSelect = styled(DestinationSelect)`
     ${tw`font-semibold`}
   }
 `
+
+function lineWidthRenderer(item: LineWidth, isButton: boolean): React.ReactNode {
+  if (isButton) {
+    return <Svg icon="lineWidth" width={16} />
+  }
+
+  return <Svg icon={item.svgIcon} width={32} />
+}
 
 const EditorToolBar: React.FC<Props> = ({
   destinationId,
@@ -38,11 +47,21 @@ const EditorToolBar: React.FC<Props> = ({
     imageEditorDispatch({ type: 'set_tool', tool: id as Optional<Tools> })
   }
 
+  function onChangeLineWidth(newLineWidth: LineWidth): void {
+    imageEditorDispatch({ type: 'set_line_width', width: newLineWidth })
+  }
+
   return (
     <ToolBar top>
       <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool} disabled={locked}>
         <ToolBarButton symbol={IconSymbol.PencilTip} id={Tools.Pencil} />
       </ToolBarButtonGroup>
+      <Select
+        items={LineWidths}
+        onChange={onChangeLineWidth}
+        itemRenderer={lineWidthRenderer}
+        selectedItem={imageEditorState.lineWidth}
+      />
       <div css={tw`flex-1`} />
       {DestinationToolBar && (
         <DestinationToolBar

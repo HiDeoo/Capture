@@ -24,6 +24,7 @@ export default {
       },
       background: '#252325',
       border: color.black1,
+      color: color.white,
       hover: {
         background: '#2a282a',
         border: color.black,
