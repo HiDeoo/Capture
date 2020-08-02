@@ -26,7 +26,7 @@ function lineWidthRenderer(item: LineWidth, isButton: boolean): React.ReactNode 
     return <Svg icon="lineWidth" width={16} />
   }
 
-  return <Svg icon={item.svgIcon} width={32} />
+  return <Svg icon={item.svgIcon} width={22} />
 }
 
 const EditorToolBar: React.FC<Props> = ({

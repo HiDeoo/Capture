@@ -46,9 +46,15 @@ const Menu = styled.ul<OpenedProps>`
 `
 
 const Item = styled.li<ItemProps>`
-  ${tw`px-3 py-1 cursor-pointer`}
+  ${tw`px-3 py-1 cursor-pointer flex`}
 
   background-color: ${ifProp('selected', theme('color.tint'), 'transparent')};
+`
+
+const Checkmark = styled(Icon)<CheckmarkProps>`
+  ${tw`mr-2`}
+
+  visibility: ${ifProp('visible', 'visible', 'hidden')};
 `
 
 export function Select<T>({
@@ -100,6 +106,7 @@ export function Select<T>({
               selected={highlightedIndex === index}
               key={`${itemToString ? itemToString(item) : item}-${index}`}
             >
+              <Checkmark symbol={IconSymbol.Checkmark} visible={item === selectedItem} />
               {itemRenderer ? itemRenderer(item, false) : item}
             </Item>
           ))}
@@ -130,4 +137,8 @@ interface ItemProps {
 
 interface StyledIconProps extends OpenedProps {
   disabled: boolean
+}
+
+interface CheckmarkProps {
+  visible: boolean
 }

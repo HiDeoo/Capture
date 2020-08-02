@@ -53,6 +53,10 @@ const Wrapper = styled.div<Props>`
   }
 
   li {
+    & > div {
+      ${tw`inline`}
+    }
+
     svg {
       fill: ${theme('bar.button.color')};
       height: 22px
