@@ -40,6 +40,14 @@ const Wrapper = styled.div<Props>`
       svg {
         fill: ${theme('bar.button.hover.color')};
       }
+
+      .colorSelectBorderPreview {
+        border-color: ${theme('bar.button.hover.color')};
+
+        & > div > div {
+          border-color: ${theme('bar.button.hover.color')} !important;
+        }
+      }
     }
 
     &:disabled {

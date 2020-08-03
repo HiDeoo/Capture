@@ -1,3 +1,4 @@
+import { stripUnit } from 'polished'
 import React from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeGrid, GridChildComponentProps } from 'react-window'
@@ -6,7 +7,6 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { HistoryEntry } from '../store/history'
-import { stripUnit } from '../utils/css'
 import Theme from '../utils/theme'
 import Img from './Img'
 

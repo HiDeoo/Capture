@@ -6,6 +6,7 @@ import tw from 'tailwind.macro'
 
 import { usePrevious } from '../utils/react'
 import Theme from '../utils/theme'
+import { Color, Colors } from './ColorSelect'
 import Img, { ImageSize } from './Img'
 import type { SvgIconName } from './Svg'
 
@@ -31,8 +32,10 @@ export const LineWidths: LineWidth[] = [
 export type ImageEditorAction =
   | { type: 'set_tool'; tool: Optional<Tools> }
   | { type: 'set_line_width'; width: LineWidth }
+  | { type: 'set_line_color'; color: Color }
 
 const imageEditorInitialState: ImageEditorState = {
+  lineColor: Colors[0],
   lineWidth: LineWidths[1],
   tool: Tools.Select,
 }
@@ -44,6 +47,9 @@ function imageEditorReducer(state: ImageEditorState, action: ImageEditorAction):
     }
     case 'set_line_width': {
       return { ...state, lineWidth: action.width }
+    }
+    case 'set_line_color': {
+      return { ...state, lineColor: action.color }
     }
     default: {
       throw new Error('Invalid image editor action.')
@@ -178,11 +184,11 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
       <Img src={path} onLoad={onImageLoaded} ref={image} />
       <div css={tw`absolute inset-0`}>
         <SketchField
-          lineColor="black"
           ref={setSketchRef}
           width={imageSize?.width}
           height={imageSize?.height}
           tool={imageEditorState.tool}
+          lineColor={imageEditorState.lineColor}
           lineWidth={imageEditorState.lineWidth.value}
         />
       </div>
@@ -215,6 +221,7 @@ export interface ImageEditorStateProps {
 }
 
 export interface ImageEditorState {
+  lineColor: Color
   lineWidth: LineWidth
   tool: Optional<Tools>
 }

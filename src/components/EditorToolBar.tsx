@@ -7,6 +7,7 @@ import tw from 'tailwind.macro'
 import { getDestination } from '../destinations'
 import type { DestinationId, ShareOptions, ShareOptionSetter } from '../destinations/DestinationBase'
 import { useSettings } from '../store'
+import ColorSelect, { Color, ColorType } from './ColorSelect'
 import DestinationSelect from './DestinationSelect'
 import { IconSymbol } from './Icon'
 import { ImageEditorStateProps, LineWidth, LineWidths } from './ImageEditor'
@@ -21,8 +22,8 @@ const StyledDestinationSelect = styled(DestinationSelect)`
   }
 `
 
-function lineWidthRenderer(item: LineWidth, isButton: boolean): React.ReactNode {
-  if (isButton) {
+function lineWidthRenderer(item: LineWidth, isOption: boolean): React.ReactNode {
+  if (!isOption) {
     return <Svg icon="lineWidth" width={16} />
   }
 
@@ -51,6 +52,10 @@ const EditorToolBar: React.FC<Props> = ({
     imageEditorDispatch({ type: 'set_line_width', width: newLineWidth })
   }
 
+  function onChangeLineColor(newLineColor: Color): void {
+    imageEditorDispatch({ type: 'set_line_color', color: newLineColor })
+  }
+
   return (
     <ToolBar top>
       <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool} disabled={locked}>
@@ -61,6 +66,11 @@ const EditorToolBar: React.FC<Props> = ({
         onChange={onChangeLineWidth}
         itemRenderer={lineWidthRenderer}
         selectedItem={imageEditorState.lineWidth}
+      />
+      <ColorSelect
+        type={ColorType.Border}
+        onChangeColor={onChangeLineColor}
+        selectedColor={imageEditorState.lineColor}
       />
       <div css={tw`flex-1`} />
       {DestinationToolBar && (

@@ -95,7 +95,7 @@ export function Select<T>({
   return (
     <Wrapper>
       <Button {...getToggleButtonProps({ disabled })} opened={isOpen} style={style} {...restProps}>
-        {itemRenderer ? itemRenderer(selectedItem, true) : selectedItem}
+        {itemRenderer ? itemRenderer(selectedItem, false) : selectedItem}
         <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} opened={isOpen} />
       </Button>
       <Menu {...getMenuProps()} opened={isOpen}>
@@ -107,7 +107,7 @@ export function Select<T>({
               key={`${itemToString ? itemToString(item) : item}-${index}`}
             >
               <Checkmark symbol={IconSymbol.Checkmark} visible={item === selectedItem} />
-              {itemRenderer ? itemRenderer(item, false) : item}
+              {itemRenderer ? itemRenderer(item, true) : item}
             </Item>
           ))}
       </Menu>
@@ -120,7 +120,7 @@ export default Select
 interface Props<T> {
   disabled?: boolean
   items: T[]
-  itemRenderer?: (item: T, isButton: boolean) => React.ReactNode
+  itemRenderer?: (item: T, isOption: boolean) => React.ReactNode
   itemToString?: (item: T) => string
   onChange: (item: T) => void
   selectedItem: T
