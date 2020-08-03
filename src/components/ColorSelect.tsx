@@ -1,9 +1,11 @@
 import { lighten } from 'polished'
 import React from 'react'
 import styled from 'styled-components/macro'
+import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Select from './Select'
+import Svg from './Svg'
 
 export enum ColorType {
   Background,
@@ -25,53 +27,110 @@ export const Colors: Color[] = [
   '#000000',
 ]
 
+const TransparentColor = 'TRANSPARENT'
+
 const Option = styled.div`
   ${tw`border border-solid`}
 
-  height: 19px;
+  height: ${theme('bar.color.optionSize')};
   margin-top: 1px;
-  width: 100%;
+  width: ${theme('bar.color.optionSize')};
 `
 
-const Preview = styled.div`
+const PreviewWrapper = styled.div`
   ${tw`border border-solid border-white flex`}
 
-  height: 15px;
+  height: ${theme('bar.color.size')};
   margin-bottom: 1px;
-  width: 16px;
+  width: ${theme('bar.color.size')};
 `
-
 const PreviewElement = styled.div`
   ${tw`border border-solid flex-1 flex`}
 `
 
-const ColorSelect: React.FC<Props> = ({ onChangeColor, selectedColor, type }) => {
-  function colorRenderer(color: Color, isOption: boolean): React.ReactNode {
+const TransparentPreview = styled.div`
+  ${tw`border border-solid border-white flex`}
+
+  height: ${theme('bar.color.size')};
+  margin-bottom: 1px;
+  width: ${theme('bar.color.size')};
+
+  & > div {
+    ${tw`relative w-full h-full`}
+
+    & > svg {
+      ${tw`absolute`}
+
+      height: 13px;
+      width: 13px;
+      fill: ${theme('bar.color.transparentBackground')};
+    }
+  }
+`
+
+const ColorSelect: React.FC<Props> = ({ allowTransparent = false, onChangeColor, selectedColor, type }) => {
+  function colorRenderer(color: Optional<Color>, isOption: boolean): React.ReactNode {
     if (!isOption) {
       if (type === ColorType.Border) {
         return (
-          <Preview className="colorSelectBorderPreview">
+          <PreviewWrapper className="colorSelectBorderPreview">
             <PreviewElement style={{ borderColor: color, borderWidth: 2 }}>
               <PreviewElement style={{ borderColor: 'white' }} />
             </PreviewElement>
-          </Preview>
+          </PreviewWrapper>
         )
+      } else if (type === ColorType.Background) {
+        if (color === TransparentColor) {
+          return <TransparentBackground />
+        } else {
+          return (
+            <PreviewWrapper className="colorSelectBackgroundPreview">
+              <PreviewElement style={{ backgroundColor: color, borderWidth: 0 }} />
+            </PreviewWrapper>
+          )
+        }
       } else {
         throw new Error('Unsupported color type.')
       }
     }
 
-    return <Option style={{ backgroundColor: color, borderColor: lighten(0.1, color) }} />
+    if (color && color !== TransparentColor) {
+      return <Option style={{ backgroundColor: color, borderColor: lighten(0.1, color) }} />
+    }
+
+    return <TransparentBackground />
   }
 
-  return <Select items={Colors} onChange={onChangeColor} itemRenderer={colorRenderer} selectedItem={selectedColor} />
+  function onChange(newColor: Optional<Color>): void {
+    onChangeColor(newColor)
+  }
+
+  const selectedItem = !selectedColor && allowTransparent ? TransparentColor : selectedColor
+
+  return (
+    <Select
+      onChange={onChange}
+      selectedItem={selectedItem}
+      itemRenderer={colorRenderer}
+      items={allowTransparent ? [TransparentColor, ...Colors] : Colors}
+    />
+  )
 }
 
 export default ColorSelect
 
+const TransparentBackground: React.FC<{}> = () => {
+  return (
+    <TransparentPreview className="colorSelectBackgroundPreview">
+      <Svg icon="diagonal" />
+    </TransparentPreview>
+  )
+}
+
 interface Props {
-  onChangeColor: (color: Color) => void
-  selectedColor: Color
+  allowTransparent?: boolean
+  onChangeColor: (color: Optional<Color>) => void
+  selectedColor: Optional<Color>
   type: ColorType
 }
 

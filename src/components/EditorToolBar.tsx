@@ -52,8 +52,14 @@ const EditorToolBar: React.FC<Props> = ({
     imageEditorDispatch({ type: 'set_line_width', width: newLineWidth })
   }
 
-  function onChangeLineColor(newLineColor: Color): void {
-    imageEditorDispatch({ type: 'set_line_color', color: newLineColor })
+  function onChangeLineColor(newLineColor: Optional<Color>): void {
+    if (newLineColor) {
+      imageEditorDispatch({ type: 'set_line_color', color: newLineColor })
+    }
+  }
+
+  function onChangeFillColor(newFillColor: Optional<Color>): void {
+    imageEditorDispatch({ type: 'set_fill_color', color: newFillColor })
   }
 
   return (
@@ -72,6 +78,12 @@ const EditorToolBar: React.FC<Props> = ({
         type={ColorType.Border}
         onChangeColor={onChangeLineColor}
         selectedColor={imageEditorState.lineColor}
+      />
+      <ColorSelect
+        allowTransparent
+        type={ColorType.Background}
+        onChangeColor={onChangeFillColor}
+        selectedColor={imageEditorState.fillColor}
       />
       <div css={tw`flex-1`} />
       {DestinationToolBar && (

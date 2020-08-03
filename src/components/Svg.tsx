@@ -28,6 +28,12 @@ interface Props extends StyleProps {
 export default Svg
 
 const SvgIcon = {
+  diagonal: (
+    <svg viewBox="0 0 32 32">
+      <path d="M-1.017 30.9L30.59-.709l2.12 2.121L1.105 33.021z" />
+      <path d="M30.59 0L32 1.41 1.1 32.31-.31 30.9 30.59 0m0-1.41L-1.73 30.9l2.83 2.83L33.41 1.41l-2.82-2.82z" />
+    </svg>
+  ),
   lineWidth: (
     <svg viewBox="0 0 32 32" preserveAspectRatio="none">
       <path d="M.5 4.5h31v1H.5z" />

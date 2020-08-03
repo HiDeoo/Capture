@@ -48,6 +48,14 @@ const Wrapper = styled.div<Props>`
           border-color: ${theme('bar.button.hover.color')} !important;
         }
       }
+
+      .colorSelectBackgroundPreview {
+        border-color: ${theme('bar.button.hover.color')};
+
+        svg {
+          fill: ${theme('bar.color.transparentBackground')};
+        }
+      }
     }
 
     &:disabled {
@@ -68,6 +76,16 @@ const Wrapper = styled.div<Props>`
     svg {
       fill: ${theme('bar.button.color')};
       height: 22px
+    }
+
+    & .colorSelectBackgroundPreview {
+      height: ${theme('bar.color.optionSize')};
+      width: ${theme('bar.color.optionSize')};
+
+      & > div > svg {
+        height: 17px;
+        width: 17px;
+      }
     }
   }
 `

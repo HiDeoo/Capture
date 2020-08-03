@@ -33,8 +33,10 @@ export type ImageEditorAction =
   | { type: 'set_tool'; tool: Optional<Tools> }
   | { type: 'set_line_width'; width: LineWidth }
   | { type: 'set_line_color'; color: Color }
+  | { type: 'set_fill_color'; color: Optional<Color> }
 
 const imageEditorInitialState: ImageEditorState = {
+  fillColor: undefined,
   lineColor: Colors[0],
   lineWidth: LineWidths[1],
   tool: Tools.Select,
@@ -50,6 +52,9 @@ function imageEditorReducer(state: ImageEditorState, action: ImageEditorAction):
     }
     case 'set_line_color': {
       return { ...state, lineColor: action.color }
+    }
+    case 'set_fill_color': {
+      return { ...state, fillColor: action.color }
     }
     default: {
       throw new Error('Invalid image editor action.')
@@ -100,7 +105,12 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
   const isSketchInitialized = useRef(false)
   const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
   const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
-  const previous = usePrevious({ lineWidth: imageEditorState.lineWidth, readonly, tool: imageEditorState.tool })
+  const previous = usePrevious({
+    fillColor: imageEditorState.fillColor,
+    lineWidth: imageEditorState.lineWidth,
+    readonly,
+    tool: imageEditorState.tool,
+  })
 
   function setSketchRef(ref: SketchField): void {
     sketch.current = ref
@@ -142,16 +152,27 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
           // When disabling the readonly mode, restore the previously saved tool that was used before.
           imageEditorDispatch({ type: 'set_tool', tool: readOnlyPreviousTool.current })
         }
-      } else if (previous.lineWidth.value !== imageEditorState.lineWidth.value) {
-        // When updating the line width, we need to reset the current tool to the default one and immediately restore
-        // back the current tool for the line width to be updated.
+      } else if (
+        previous.lineWidth.value !== imageEditorState.lineWidth.value ||
+        previous.fillColor !== imageEditorState.fillColor
+      ) {
+        // When updating the line width or fill color, we need to reset the current tool to the default one and
+        // immediately restore back the current tool for the changes to take effect.
         imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool })
         requestAnimationFrame(() => {
           imageEditorDispatch({ type: 'set_tool', tool: imageEditorState.tool })
         })
       }
     }
-  }, [imageEditorDispatch, imageEditorState.lineWidth, imageEditorState.tool, previous, readonly, sketch])
+  }, [
+    imageEditorDispatch,
+    imageEditorState.fillColor,
+    imageEditorState.lineWidth,
+    imageEditorState.tool,
+    previous,
+    readonly,
+    sketch,
+  ])
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent): void {
@@ -188,6 +209,7 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
           width={imageSize?.width}
           height={imageSize?.height}
           tool={imageEditorState.tool}
+          fillColor={imageEditorState.fillColor}
           lineColor={imageEditorState.lineColor}
           lineWidth={imageEditorState.lineWidth.value}
         />
@@ -221,6 +243,7 @@ export interface ImageEditorStateProps {
 }
 
 export interface ImageEditorState {
+  fillColor: Optional<Color>
   lineColor: Color
   lineWidth: LineWidth
   tool: Optional<Tools>

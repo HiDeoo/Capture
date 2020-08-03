@@ -31,6 +31,11 @@ export default {
         color: color.tint,
       },
     },
+    color: {
+      optionSize: '19px',
+      size: '15px',
+      transparentBackground: '#ff4e44',
+    },
   },
   editor: {
     border: color.black,
