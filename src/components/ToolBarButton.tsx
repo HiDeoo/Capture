@@ -11,6 +11,8 @@ export { IconSymbol }
 const StyledButton = styled(Button)<StyledButtonProps>`
   ${tw`rounded px-2 py-1 mr-2`}
 
+  width: 40px;
+
   ${(props) =>
     props.active &&
     `
