@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { SketchField, Tools } from 'react-sketch2'
+import { SelectionCreatedEvent, SketchField, Tools } from 'react-sketch2'
 import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
@@ -107,7 +107,6 @@ export function useImageEditor(): ImageEditorHook {
 }
 
 const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorState, path, readonly, sketch }) => {
-  const isSketchInitialized = useRef(false)
   const [isEditingText, setIsEditingText] = useState(false)
   const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
   const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
@@ -120,17 +119,6 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
 
   function setSketchRef(ref: SketchField): void {
     sketch.current = ref
-
-    if (sketch.current && !isSketchInitialized.current) {
-      isSketchInitialized.current = true
-
-      // Update the Fabric.js selection handle colors.
-      ref._fc.on('selection:created', (event) => {
-        event.target.transparentCorners = true
-        event.target.borderColor = Theme.color.tint
-        event.target.cornerColor = Theme.color.tint
-      })
-    }
   }
 
   function onImageLoaded(): void {
@@ -192,13 +180,22 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
       discardSelections()
     }
 
+    function onSelectionCreated(event: SelectionCreatedEvent): void {
+      // Update the Fabric.js selection handle colors.
+      event.target.transparentCorners = true
+      event.target.borderColor = Theme.color.tint
+      event.target.cornerColor = Theme.color.tint
+    }
+
     if (sketch.current) {
+      sketch.current._fc.on('selection:created', onSelectionCreated)
       sketch.current._fc.on('text:editing:entered', onEnterTextEditing)
       sketch.current._fc.on('text:editing:exited', onExitTextEditing)
     }
 
     return () => {
       if (sketch.current) {
+        sketch.current._fc.off('selection:created', onSelectionCreated)
         sketch.current._fc.off('text:editing:entered', onEnterTextEditing)
         sketch.current._fc.off('text:editing:exited', onExitTextEditing)
       }

@@ -18,6 +18,15 @@ declare module 'react-sketch2' {
     DefaultTool = 'default-tool',
   }
 
+  export interface SelectionCreatedEvent {
+    e: MouseEvent
+    target: {
+      transparentCorners: boolean
+      borderColor: string
+      cornerColor: string
+    }
+  }
+
   export class SketchField extends React.PureComponent<{
     // the color of the line
     lineColor?: string
@@ -64,21 +73,12 @@ declare module 'react-sketch2' {
     _fc: {
       defaultCursor: string
       discardActiveObject(): void
+      off(name: 'selection:created', callback: (event: SelectionCreatedEvent) => void): void
       off(name: 'text:editing:entered', callback: (event: { e: MouseEvent }) => void): void
       off(name: 'text:editing:exited', callback: (event: { e: MouseEvent }) => void): void
+      on(name: 'selection:created', callback: (event: SelectionCreatedEvent) => void): void
       on(name: 'text:editing:entered', callback: (event: { e: MouseEvent }) => void): void
       on(name: 'text:editing:exited', callback: (event: { e: MouseEvent }) => void): void
-      on(
-        name: 'selection:created',
-        callback: (event: {
-          e: MouseEvent
-          target: {
-            transparentCorners: boolean
-            borderColor: string
-            cornerColor: string
-          }
-        }) => void
-      ): void
       renderAll(): void
       toCanvasElement(
         multiplieropt?: number,
