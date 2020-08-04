@@ -65,8 +65,11 @@ const EditorToolBar: React.FC<Props> = ({
   return (
     <ToolBar top>
       <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool} disabled={locked}>
-        <ToolBarButton symbol={IconSymbol.PencilTip} id={Tools.Pencil} />
+        <ToolBarButton symbol={IconSymbol.Scribble} id={Tools.Pencil} />
+        <ToolBarButton symbol={IconSymbol.ArrowUpRight} id={Tools.Arrow} />
         <ToolBarButton symbol={IconSymbol.Rectangle} id={Tools.Rectangle} />
+        <ToolBarButton symbol={IconSymbol.Circle} id={Tools.Circle} />
+        <ToolBarButton symbol={IconSymbol.Minus} id={Tools.Line} />
       </ToolBarButtonGroup>
       <Select
         items={LineWidths}

@@ -9,7 +9,7 @@ import Icon, { IconSymbol } from './Icon'
 export { IconSymbol }
 
 const StyledButton = styled(Button)<StyledButtonProps>`
-  ${tw`rounded px-2 py-1 mr-2`}
+  ${tw`rounded px-2 py-1 mr-2 relative`}
 
   width: 40px;
 
@@ -32,7 +32,10 @@ const StyledButton = styled(Button)<StyledButtonProps>`
 `
 
 const StyledIcon = styled(Icon)`
+  ${tw`absolute inset-0`}
+
   font-size: 15px;
+  top: 5px;
 `
 
 const Group = styled.div<GroupProps>`
