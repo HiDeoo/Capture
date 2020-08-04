@@ -46,6 +46,10 @@ const Group = styled.div<GroupProps>`
 
     &:first-child {
       ${tw`rounded-l`}
+
+      & .icon {
+        top: 7px;
+      }
     }
 
     &:last-child {
