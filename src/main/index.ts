@@ -58,7 +58,7 @@ async function createWindow(): Promise<void> {
   window = new BrowserWindow({
     backgroundColor: Theme.window.background,
     frame: false,
-    height: 600,
+    height: 768,
     show: false,
     webPreferences: {
       allowRunningInsecureContent: false,
@@ -68,7 +68,7 @@ async function createWindow(): Promise<void> {
       // This is not an issue in production as we are serving the renderer application from the filesystem in that case.
       webSecurity: !isDev,
     },
-    width: 800,
+    width: 1024,
   })
 
   // Sets the application as default handler for the `capture://` URI scheme.

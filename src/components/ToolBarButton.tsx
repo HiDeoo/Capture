@@ -11,6 +11,7 @@ export { IconSymbol }
 const StyledButton = styled(Button)<StyledButtonProps>`
   ${tw`rounded px-2 py-1 mr-2 relative`}
 
+  flex-shrink: 0;
   width: 40px;
 
   ${(props) =>
@@ -39,7 +40,7 @@ const StyledIcon = styled(Icon)`
 `
 
 const Group = styled.div<GroupProps>`
-  ${tw`mr-2`}
+  ${tw`mr-2 flex`}
 
   ${StyledButton} {
     ${tw`mr-0 rounded-none border-r-0`}
