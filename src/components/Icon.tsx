@@ -21,6 +21,7 @@ export enum IconSymbol {
   Pencil = '􀈊',
   Rectangle = '􀏃',
   Scribble = '􀓨',
+  TextCursor = '􀅫',
   XMark = '􀆄',
 }
 

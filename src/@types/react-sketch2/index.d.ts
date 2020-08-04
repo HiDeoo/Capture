@@ -64,6 +64,10 @@ declare module 'react-sketch2' {
     _fc: {
       defaultCursor: string
       discardActiveObject(): void
+      off(name: 'text:editing:entered', callback: (event: { e: MouseEvent }) => void): void
+      off(name: 'text:editing:exited', callback: (event: { e: MouseEvent }) => void): void
+      on(name: 'text:editing:entered', callback: (event: { e: MouseEvent }) => void): void
+      on(name: 'text:editing:exited', callback: (event: { e: MouseEvent }) => void): void
       on(
         name: 'selection:created',
         callback: (event: {
@@ -220,6 +224,6 @@ declare module 'react-sketch2' {
       }
     ): void
 
-    addText(text: string, options?: {}): void
+    addText(text: string, options?: { fill?: string; fontFamily?: string; fontSize?: number }): void
   }
 }

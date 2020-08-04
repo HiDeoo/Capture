@@ -31,6 +31,7 @@ function lineWidthRenderer(item: LineWidth, isOption: boolean): React.ReactNode 
 }
 
 const EditorToolBar: React.FC<Props> = ({
+  addText,
   destinationId,
   imageEditorDispatch,
   imageEditorState,
@@ -62,6 +63,11 @@ const EditorToolBar: React.FC<Props> = ({
     imageEditorDispatch({ type: 'set_fill_color', color: newFillColor })
   }
 
+  function onClickAddText(): void {
+    imageEditorDispatch({ type: 'set_tool', tool: undefined })
+    addText(imageEditorState.lineColor)
+  }
+
   return (
     <ToolBar top>
       <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool} disabled={locked}>
@@ -71,6 +77,7 @@ const EditorToolBar: React.FC<Props> = ({
         <ToolBarButton symbol={IconSymbol.Circle} id={Tools.Circle} />
         <ToolBarButton symbol={IconSymbol.Minus} id={Tools.Line} />
       </ToolBarButtonGroup>
+      <ToolBarButton symbol={IconSymbol.TextCursor} id={Tools.Pencil} onClick={onClickAddText} />
       <Select
         items={LineWidths}
         onChange={onChangeLineWidth}
@@ -106,6 +113,7 @@ const EditorToolBar: React.FC<Props> = ({
 export default observer(EditorToolBar)
 
 interface Props extends ToolbarLockedProps, ImageEditorStateProps {
+  addText: (color: Color) => void
   destinationId: DestinationId
   onChangeDestination: (destinationId: DestinationId) => void
   setShareOption: ShareOptionSetter

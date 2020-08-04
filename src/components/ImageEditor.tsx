@@ -73,6 +73,11 @@ export function useImageEditor(): ImageEditorHook {
 
   const imageEditorUtils = useMemo(
     () => ({
+      addText(color: Color): void {
+        if (imageEditorSketch.current) {
+          imageEditorSketch.current.addText('Text', { fill: color, fontFamily: 'BlinkMacSystemFont', fontSize: 35 })
+        }
+      },
       hasAnnotations(): boolean {
         if (!imageEditorSketch.current) {
           return false
@@ -103,6 +108,7 @@ export function useImageEditor(): ImageEditorHook {
 
 const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorState, path, readonly, sketch }) => {
   const isSketchInitialized = useRef(false)
+  const [isEditingText, setIsEditingText] = useState(false)
   const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
   const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
   const previous = usePrevious({
@@ -175,17 +181,44 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
   ])
 
   useEffect(() => {
+    function onEnterTextEditing(): void {
+      setIsEditingText(true)
+    }
+
+    function onExitTextEditing(): void {
+      setIsEditingText(false)
+
+      // Discard existing selections.
+      discardSelections()
+    }
+
+    if (sketch.current) {
+      sketch.current._fc.on('text:editing:entered', onEnterTextEditing)
+      sketch.current._fc.on('text:editing:exited', onExitTextEditing)
+    }
+
+    return () => {
+      if (sketch.current) {
+        sketch.current._fc.off('text:editing:entered', onEnterTextEditing)
+        sketch.current._fc.off('text:editing:exited', onExitTextEditing)
+      }
+    }
+  })
+
+  useEffect(() => {
     function onKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Escape') {
         // Disable the current tool.
         imageEditorDispatch({ type: 'set_tool', tool: undefined })
 
-        if (sketch.current) {
-          // Discard existing selections.
-          sketch.current._fc.discardActiveObject()
-          sketch.current._fc.renderAll()
-        }
+        // Discard existing selections.
+        discardSelections()
       } else if (event.key === 'Backspace' || event.key === 'Delete') {
+        // Backspace & delete should be usable when editing text.
+        if (isEditingText) {
+          return
+        }
+
         if (sketch.current) {
           // Remove the selections.
           sketch.current.removeSelected()
@@ -199,6 +232,13 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
       window.removeEventListener('keydown', onKeyDown)
     }
   })
+
+  function discardSelections(): void {
+    if (sketch.current) {
+      sketch.current._fc.discardActiveObject()
+      sketch.current._fc.renderAll()
+    }
+  }
 
   return (
     <Layers>
@@ -232,6 +272,7 @@ interface ImageEditorHook {
   imageEditorImage: React.RefObject<HTMLImageElement>
   imageEditorSketch: React.MutableRefObject<SketchField | undefined>
   imageEditorUtils: {
+    addText: (color: Color) => void
     getImages: () => Optional<CanvasImageSource[]>
     hasAnnotations: () => boolean
   }

@@ -8,6 +8,7 @@ import type { DestinationId, ShareOptions, ShareOptionValue } from '../destinati
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { mergeImages } from '../utils/image'
+import type { Color } from './ColorSelect'
 import { defaultDestinationId } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
@@ -93,6 +94,13 @@ const Editor: React.FC<{}> = () => {
     [setDestinationId]
   )
 
+  const addText = useCallback(
+    (color: Color) => {
+      imageEditorUtils.addText(color)
+    },
+    [imageEditorUtils]
+  )
+
   const setDestinationShareOption = useCallback(
     <DestinationShareOptions extends ShareOptions>(
       key: KnownKeys<DestinationShareOptions>,
@@ -120,6 +128,7 @@ const Editor: React.FC<{}> = () => {
     <>
       <LoadingBar enabled={isUiLocked} />
       <EditorToolBar
+        addText={addText}
         locked={isUiLocked}
         shareOptions={shareOptions}
         destinationId={destinationId}
