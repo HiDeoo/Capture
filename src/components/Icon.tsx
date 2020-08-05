@@ -10,7 +10,7 @@ const Wrapper = styled.span.attrs({ className: 'icon' })`
  */
 export enum IconSymbol {
   ArrowUpRight = '􀄯',
-  CameraViewFinder = '􀎼',
+  Camera = '􀌞',
   Checkmark = '􀆅',
   ChevronDown = '􀆈',
   Circle = '􀀀',

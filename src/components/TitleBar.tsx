@@ -8,6 +8,7 @@ import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'
 import Button from './Button'
 import Icon, { IconSymbol } from './Icon'
+import TitleBarButton from './TitleBarButton'
 
 /**
  * The context use to access & update the title bar content from a nested component.
@@ -90,6 +91,10 @@ const TitleBar: React.FC<{}> = () => {
     return getIpcRenderer().invoke('closeWindow')
   }
 
+  function onClickCaptureButton(): Promise<void> {
+    return getIpcRenderer().invoke('captureScreenshot')
+  }
+
   return (
     <Wrapper isFocused={isFocused}>
       <SideBar>
@@ -100,7 +105,7 @@ const TitleBar: React.FC<{}> = () => {
       <Main isFocused={isFocused}>
         Capture
         <div css={tw`flex-1`} />
-        {titleBarContent}
+        {titleBarContent ?? <TitleBarButton symbol={IconSymbol.Camera} onClick={onClickCaptureButton} />}
       </Main>
     </Wrapper>
   )

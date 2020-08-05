@@ -135,7 +135,7 @@ async function createWindow(): Promise<void> {
 function registerGlobalShortcuts(): void {
   try {
     // TODO Make shortcut customizable
-    const shortcut = globalShortcut.register('Cmd+B', onScreenshotShortcut)
+    const shortcut = globalShortcut.register('Cmd+B', captureScreenshot)
 
     if (!shortcut) {
       throw new Error('Unable to register global shortcut.')
@@ -152,6 +152,7 @@ function registerGlobalShortcuts(): void {
 function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
 
+  ipcMain.handle('captureScreenshot', captureScreenshot)
   ipcMain.handle('closeWindow', onWindowClose)
 
   ipcMain.handle('openUrl', (event: IpcMainInvokeEvent, url: string) => {
@@ -167,15 +168,16 @@ function registerIpcHandlers(): void {
  * Unregisters IPC handlers for messages from the renderer process.
  */
 function unregisterIpcHandlers(): void {
+  ipcMain.removeHandler('captureScreenshot')
   ipcMain.removeHandler('closeWindow')
   ipcMain.removeHandler('openUrl')
   ipcMain.removeHandler('saveImage')
 }
 
 /**
- * Triggered when the global screenshot shortcut is pressed.
+ * Captures a screenshot.
  */
-function onScreenshotShortcut(): void {
+function captureScreenshot(): void {
   // TODO Refactor & extract (maybe extract all shortcuts code)
   const now = new Date()
   const filename = `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss')}.png`
