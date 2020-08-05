@@ -54,7 +54,7 @@ function getGridRowCount(columnCount: number, numEntries: number): number {
   return Math.ceil(numEntries / columnCount)
 }
 
-const HistoryGrid: React.FC<Props> = React.memo(({ entries }) => {
+const LibraryGrid: React.FC<Props> = React.memo(({ entries }) => {
   const getItemKey: ItemKeySelector = ({ columnCount, columnIndex, data, rowIndex }) => {
     const index = rowIndex * columnCount + columnIndex
 
@@ -85,7 +85,7 @@ const HistoryGrid: React.FC<Props> = React.memo(({ entries }) => {
             itemKey={(infos) => getItemKey({ ...infos, columnCount: columnInfos.count })}
           >
             {({ columnIndex, data, rowIndex, style }) => (
-              <HistoryGridEntry
+              <LibraryGridEntry
                 data={data}
                 style={style}
                 rowIndex={rowIndex}
@@ -100,7 +100,7 @@ const HistoryGrid: React.FC<Props> = React.memo(({ entries }) => {
   )
 })
 
-const HistoryGridEntry: React.FC<HistoryGridEntryProps> = React.memo(
+const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
   ({ columnCount, columnIndex, data, rowIndex, style }) => {
     const index = rowIndex * columnCount + columnIndex
 
@@ -118,13 +118,13 @@ const HistoryGridEntry: React.FC<HistoryGridEntryProps> = React.memo(
   }
 )
 
-export default HistoryGrid
+export default LibraryGrid
 
 interface Props {
   entries: HistoryEntry[]
 }
 
-interface HistoryGridEntryProps extends GridChildComponentProps {
+interface LibraryGridEntryProps extends GridChildComponentProps {
   columnCount: number
   data: HistoryEntry[]
 }

@@ -5,14 +5,14 @@ import React from 'react'
 import tw from 'tailwind.macro'
 
 import { useHistory } from '../store'
-import HistoryGrid from './HistoryGrid'
+import LibraryGrid from './LibraryGrid'
 
 const Library: React.FC<{}> = () => {
   const { entries } = useHistory()
 
   return (
     <div css={tw`flex flex-1`}>
-      <HistoryGrid entries={entries} />
+      <LibraryGrid entries={entries} />
     </div>
   )
 }
