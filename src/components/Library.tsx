@@ -6,14 +6,18 @@ import tw from 'tailwind.macro'
 
 import { useHistory } from '../store'
 import LibraryGrid from './LibraryGrid'
+import LibraryPanel from './LibraryPanel'
+
+const Wrapper = tw.div`flex flex-1 relative`
 
 const Library: React.FC<{}> = () => {
-  const { entries } = useHistory()
+  const { entries, selectedEntry, selectEntry } = useHistory()
 
   return (
-    <div css={tw`flex flex-1`}>
-      <LibraryGrid entries={entries} />
-    </div>
+    <Wrapper>
+      <LibraryGrid entries={entries} selectEntry={selectEntry} selectedEntry={selectedEntry} />
+      <LibraryPanel entry={selectedEntry} />
+    </Wrapper>
   )
 }
 

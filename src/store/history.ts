@@ -13,6 +13,11 @@ export default class HistoryStore {
   @observable entries: HistoryEntry[] = []
 
   /**
+   * Selected history entry.
+   */
+  @observable selectedEntry: Optional<HistoryEntry>
+
+  /**
    * Adds an entry to the history based on a share response.
    * @param shareResponse - The share response.
    */
@@ -27,6 +32,15 @@ export default class HistoryStore {
   @action
   clearHistory = (): void => {
     this.entries = []
+  }
+
+  /**
+   * Sets the selected history entry.
+   * @param entry - The new selected history entry or `undefined` to remove the current selection.
+   */
+  @action
+  selectEntry = (entry: Optional<HistoryEntry>): void => {
+    this.selectedEntry = entry
   }
 }
 

@@ -43,6 +43,7 @@ export default {
   history: {
     border: '#848385',
     gap: '10px',
+    selected: color.tint,
     shadow: '#0f0f11',
     size: '120px',
   },

@@ -17,10 +17,19 @@ const GridGap = stripUnit(Theme.history.gap)
 const GridEntryHeight = stripUnit(Theme.history.size)
 const GridEntryWidth = stripUnit(Theme.history.size)
 
-const Entry = styled.div`
+const Entry = styled.div<EntryProps>`
   ${tw`flex items-center justify-center items-center w-full`}
 
   padding: ${Theme.history.gap};
+
+  & > img {
+    ${(props) =>
+      props.selected &&
+      `
+      border-color: ${theme('history.selected')(props)};
+      outline-color: ${theme('history.selected')(props)};
+    `}
+  }
 `
 
 const StyledImg = styled(Img)`
@@ -54,7 +63,7 @@ function getGridRowCount(columnCount: number, numEntries: number): number {
   return Math.ceil(numEntries / columnCount)
 }
 
-const LibraryGrid: React.FC<Props> = React.memo(({ entries }) => {
+const LibraryGrid: React.FC<Props> = React.memo(({ entries, selectedEntry, selectEntry }) => {
   const getItemKey: ItemKeySelector = ({ columnCount, columnIndex, data, rowIndex }) => {
     const index = rowIndex * columnCount + columnIndex
 
@@ -90,6 +99,8 @@ const LibraryGrid: React.FC<Props> = React.memo(({ entries }) => {
                 style={style}
                 rowIndex={rowIndex}
                 columnIndex={columnIndex}
+                selectEntry={selectEntry}
+                selectedEntry={selectedEntry}
                 columnCount={columnInfos.count}
               />
             )}
@@ -101,7 +112,7 @@ const LibraryGrid: React.FC<Props> = React.memo(({ entries }) => {
 })
 
 const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
-  ({ columnCount, columnIndex, data, rowIndex, style }) => {
+  ({ columnCount, columnIndex, data, rowIndex, selectedEntry, selectEntry, style }) => {
     const index = rowIndex * columnCount + columnIndex
 
     if (index > data.length - 1) {
@@ -109,9 +120,14 @@ const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
     }
 
     const entry = data[index]
+    const selected = selectedEntry?.id === entry.id
+
+    function onClick(): void {
+      selectEntry(selected ? undefined : entry)
+    }
 
     return (
-      <Entry style={style}>
+      <Entry style={style} onClick={onClick} selected={selected}>
         <StyledImg src={`file://${entry.path}`} />
       </Entry>
     )
@@ -122,11 +138,15 @@ export default LibraryGrid
 
 interface Props {
   entries: HistoryEntry[]
+  selectedEntry: Optional<HistoryEntry>
+  selectEntry: (entry: Optional<HistoryEntry>) => void
 }
 
 interface LibraryGridEntryProps extends GridChildComponentProps {
   columnCount: number
   data: HistoryEntry[]
+  selectedEntry: Optional<HistoryEntry>
+  selectEntry: (entry: Optional<HistoryEntry>) => void
 }
 
 type ItemKeySelector = (params: {
@@ -135,3 +155,7 @@ type ItemKeySelector = (params: {
   data: HistoryEntry[]
   rowIndex: number
 }) => React.Key
+
+interface EntryProps {
+  selected: boolean
+}
