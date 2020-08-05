@@ -1,4 +1,5 @@
 import { action, observable } from 'mobx'
+import { ignore } from 'mobx-sync'
 import { nanoid } from 'nanoid'
 
 import type { ShareResponse } from '../destinations/DestinationBase'
@@ -13,9 +14,17 @@ export default class HistoryStore {
   @observable entries: HistoryEntry[] = []
 
   /**
-   * Selected history entry.
+   * Defines if we have a selected history entry.
    */
-  @observable selectedEntry: Optional<HistoryEntry>
+  @ignore @observable hasSelectedEntry = false
+
+  /**
+   * Selected history entry.
+   * Note: when clearing the selected entry, we do not clear this variable. Use `hasSelectedEntry` to check if an entry
+   * is selected or not.
+   * @see hasSelectedEntry
+   */
+  @ignore @observable selectedEntry: Optional<HistoryEntry>
 
   /**
    * Adds an entry to the history based on a share response.
@@ -36,11 +45,22 @@ export default class HistoryStore {
 
   /**
    * Sets the selected history entry.
-   * @param entry - The new selected history entry or `undefined` to remove the current selection.
+   * @param entry - The new selected history entry.
    */
   @action
-  selectEntry = (entry: Optional<HistoryEntry>): void => {
+  selectEntry = (entry: HistoryEntry): void => {
+    this.hasSelectedEntry = true
     this.selectedEntry = entry
+  }
+
+  /**
+   * Clears the selected entry.
+   * Note: we don't clear the reference to the previous selected entry.
+   * @see hasSelectedEntry
+   */
+  @action
+  clearSelectedEntry = (): void => {
+    this.hasSelectedEntry = false
   }
 }
 
