@@ -60,6 +60,9 @@ export default {
   // Application sidebar.
   sideBar: {
     background: '#25242d',
+    blurred: {
+      color: '#d2d1d3',
+    },
     border: '#1f1e26',
     color: color.white,
     selected: {
