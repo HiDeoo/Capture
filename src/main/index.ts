@@ -59,6 +59,8 @@ async function createWindow(): Promise<void> {
     backgroundColor: Theme.window.background,
     frame: false,
     height: 768,
+    minHeight: 768,
+    minWidth: 1024,
     show: false,
     webPreferences: {
       allowRunningInsecureContent: false,
