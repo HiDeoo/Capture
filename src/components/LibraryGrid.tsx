@@ -40,8 +40,8 @@ const StyledImg = styled(Img)`
 `
 
 /**
- * Returns the history grid column count & width.
- * @param  gridWidth - The history grid width.
+ * Returns the library grid column count & width.
+ * @param  gridWidth - The library grid width.
  * @return The column count and size.
  */
 function getGridColumnInfos(gridWidth: number): { count: number; width: number } {
@@ -54,9 +54,9 @@ function getGridColumnInfos(gridWidth: number): { count: number; width: number }
 }
 
 /**
- * Returns the history grid row count.
- * @param  columnCount - The history grid column count.
- * @param  numEntries - The number of entries in the history.
+ * Returns the library grid row count.
+ * @param  columnCount - The library grid column count.
+ * @param  numEntries - The number of entries in the library.
  * @return The row count.
  */
 function getGridRowCount(columnCount: number, numEntries: number): number {
