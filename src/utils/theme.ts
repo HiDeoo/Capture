@@ -4,6 +4,7 @@
 const color = {
   black: '#000000',
   black1: '#0e0e0e',
+  black2: '#2b282b',
   tint: '#2e91e8',
   white: '#ffffff',
   gray: '#848385',
@@ -83,7 +84,7 @@ export default {
     background: '#141314',
     border: color.black,
     button: {
-      background: '#2b282b',
+      background: color.black2,
       color: color.tint,
     },
     color: color.white,

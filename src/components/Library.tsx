@@ -32,7 +32,7 @@ const Library: React.FC<{}> = () => {
   return (
     <Wrapper>
       <LibraryGrid entries={entries} selectedEntryId={selection.current?.id} selectEntry={selectEntry} />
-      <LibraryPanel selection={selection} />
+      <LibraryPanel selection={selection} selectEntry={selectEntry} />
     </Wrapper>
   )
 }
