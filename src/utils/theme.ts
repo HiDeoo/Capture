@@ -6,6 +6,7 @@ const color = {
   black1: '#0e0e0e',
   tint: '#2e91e8',
   white: '#ffffff',
+  gray: '#848385',
 }
 
 /**
@@ -41,8 +42,14 @@ export default {
     border: color.black,
   },
   history: {
-    border: '#848385',
+    border: color.gray,
     gap: '10px',
+    panel: {
+      preview: {
+        border: color.gray,
+        outline: color.black,
+      },
+    },
     selected: color.tint,
     shadow: '#0f0f11',
     size: '120px',

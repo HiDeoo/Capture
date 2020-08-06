@@ -5,15 +5,16 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import type { HistorySelection } from '../store/history'
+import Img from './Img'
 
 const transitionName = 'panelAnimation'
 
 const Wrapper = styled.div`
-  ${tw`absolute inset-y-0 right-0 border-solid border-l`}
+  ${tw`absolute inset-y-0 right-0 border-solid border-l p-4`}
 
   background-color: ${theme('bar.background')};
   border-color: ${theme('bar.border')};
-  width: 500px;
+  width: 450px;
 
   &.${transitionName}-enter {
     transform: translateX(100%);
@@ -34,6 +35,16 @@ const Wrapper = styled.div`
   }
 `
 
+const PreviewWrapper = tw.div`flex justify-center`
+
+const Preview = styled(Img)`
+  ${tw`border-4 border-solid`}
+
+  border-color: ${theme('history.panel.preview.border')};
+  outline: 2px solid ${theme('history.panel.preview.outline')};
+  max-height: 400px;
+`
+
 const LibraryPanel: React.FC<Props> = ({ selection }) => {
   const nodeRef = React.useRef(null)
   const visible = typeof selection.current !== 'undefined'
@@ -41,7 +52,15 @@ const LibraryPanel: React.FC<Props> = ({ selection }) => {
 
   return (
     <CSSTransition unmountOnExit nodeRef={nodeRef} in={visible} timeout={2000} classNames={transitionName}>
-      <Wrapper ref={nodeRef}>{JSON.stringify(entry)}</Wrapper>
+      <Wrapper ref={nodeRef}>
+        {entry && (
+          <>
+            <PreviewWrapper>
+              <Preview src={`file://${entry.path}`} />
+            </PreviewWrapper>
+          </>
+        )}
+      </Wrapper>
     </CSSTransition>
   )
 }
