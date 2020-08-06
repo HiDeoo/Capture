@@ -11,18 +11,12 @@ import LibraryPanel from './LibraryPanel'
 const Wrapper = tw.div`flex flex-1 relative`
 
 const Library: React.FC<{}> = () => {
-  const { clearSelectedEntry, entries, hasSelectedEntry, selectedEntry, selectEntry } = useHistory()
+  const { entries, selectEntry, selection } = useHistory()
 
   return (
     <Wrapper>
-      <LibraryGrid
-        entries={entries}
-        selectEntry={selectEntry}
-        selectedEntry={selectedEntry}
-        hasSelectedEntry={hasSelectedEntry}
-        clearSelectedEntry={clearSelectedEntry}
-      />
-      <LibraryPanel entry={selectedEntry} visible={hasSelectedEntry} />
+      <LibraryGrid entries={entries} selectedEntryId={selection.current?.id} selectEntry={selectEntry} />
+      <LibraryPanel selection={selection} />
     </Wrapper>
   )
 }

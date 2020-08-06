@@ -14,17 +14,9 @@ export default class HistoryStore {
   @observable entries: HistoryEntry[] = []
 
   /**
-   * Defines if we have a selected history entry.
+   * History selection.
    */
-  @ignore @observable hasSelectedEntry = false
-
-  /**
-   * Selected history entry.
-   * Note: when clearing the selected entry, we do not clear this variable. Use `hasSelectedEntry` to check if an entry
-   * is selected or not.
-   * @see hasSelectedEntry
-   */
-  @ignore @observable selectedEntry: Optional<HistoryEntry>
+  @ignore @observable selection: HistorySelection = { current: undefined, previous: undefined }
 
   /**
    * Adds an entry to the history based on a share response.
@@ -45,25 +37,20 @@ export default class HistoryStore {
 
   /**
    * Sets the selected history entry.
-   * @param entry - The new selected history entry.
+   * @param entry - The new selected history entry or `undefined` to clear the current selection.
    */
   @action
-  selectEntry = (entry: HistoryEntry): void => {
-    this.hasSelectedEntry = true
-    this.selectedEntry = entry
-  }
-
-  /**
-   * Clears the selected entry.
-   * Note: we don't clear the reference to the previous selected entry.
-   * @see hasSelectedEntry
-   */
-  @action
-  clearSelectedEntry = (): void => {
-    this.hasSelectedEntry = false
+  selectEntry = (entry: Optional<HistoryEntry>): void => {
+    this.selection.previous = this.selection.current
+    this.selection.current = entry
   }
 }
 
 export interface HistoryEntry extends ShareResponse {
   id: string
+}
+
+export interface HistorySelection {
+  current: Optional<HistoryEntry>
+  previous: Optional<HistoryEntry>
 }

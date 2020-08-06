@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import { HistoryEntry } from '../store/history'
+import type { HistoryEntry } from '../store/history'
 import Theme from '../utils/theme'
 import Img from './Img'
 
@@ -63,70 +63,56 @@ function getGridRowCount(columnCount: number, numEntries: number): number {
   return Math.ceil(numEntries / columnCount)
 }
 
-const LibraryGrid: React.FC<Props> = React.memo(
-  ({ clearSelectedEntry, entries, hasSelectedEntry, selectedEntry, selectEntry }) => {
-    const getItemKey: ItemKeySelector = ({ columnCount, columnIndex, data, rowIndex }) => {
-      const index = rowIndex * columnCount + columnIndex
+const LibraryGrid: React.FC<Props> = React.memo(({ entries, selectedEntryId, selectEntry }) => {
+  const getItemKey: ItemKeySelector = ({ columnCount, columnIndex, data, rowIndex }) => {
+    const index = rowIndex * columnCount + columnIndex
 
-      if (index > data.length - 1) {
-        return `${rowIndex}-${columnIndex}`
-      }
-
-      const entry = data[index]
-
-      return `${entry.id}-${columnIndex}`
+    if (index > data.length - 1) {
+      return `${rowIndex}-${columnIndex}`
     }
 
-    return (
-      <AutoSizer>
-        {({ height, width }) => {
-          const columnInfos = getGridColumnInfos(width)
-          const rowCount = getGridRowCount(columnInfos.count, entries.length)
+    const entry = data[index]
 
-          return (
-            <FixedSizeGrid
-              width={width}
-              height={height}
-              itemData={entries}
-              rowCount={rowCount}
-              columnCount={columnInfos.count}
-              columnWidth={columnInfos.width}
-              rowHeight={GridEntryHeight + GridGap}
-              itemKey={(infos) => getItemKey({ ...infos, columnCount: columnInfos.count })}
-            >
-              {({ columnIndex, data, rowIndex, style }) => (
-                <LibraryGridEntry
-                  data={data}
-                  style={style}
-                  rowIndex={rowIndex}
-                  columnIndex={columnIndex}
-                  selectEntry={selectEntry}
-                  selectedEntry={selectedEntry}
-                  columnCount={columnInfos.count}
-                  hasSelectedEntry={hasSelectedEntry}
-                  clearSelectedEntry={clearSelectedEntry}
-                />
-              )}
-            </FixedSizeGrid>
-          )
-        }}
-      </AutoSizer>
-    )
+    return `${entry.id}-${columnIndex}`
   }
-)
+
+  return (
+    <AutoSizer>
+      {({ height, width }) => {
+        const columnInfos = getGridColumnInfos(width)
+        const rowCount = getGridRowCount(columnInfos.count, entries.length)
+
+        return (
+          <FixedSizeGrid
+            width={width}
+            height={height}
+            itemData={entries}
+            rowCount={rowCount}
+            columnCount={columnInfos.count}
+            columnWidth={columnInfos.width}
+            rowHeight={GridEntryHeight + GridGap}
+            itemKey={(infos) => getItemKey({ ...infos, columnCount: columnInfos.count })}
+          >
+            {({ columnIndex, data, rowIndex, style }) => (
+              <LibraryGridEntry
+                data={data}
+                style={style}
+                rowIndex={rowIndex}
+                columnIndex={columnIndex}
+                selectEntry={selectEntry}
+                columnCount={columnInfos.count}
+                selectedEntryId={selectedEntryId}
+              />
+            )}
+          </FixedSizeGrid>
+        )
+      }}
+    </AutoSizer>
+  )
+})
 
 const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
-  ({
-    clearSelectedEntry,
-    columnCount,
-    columnIndex,
-    data,
-    hasSelectedEntry,
-    rowIndex,
-    selectedEntry,
-    selectEntry,
-    style,
-  }) => {
+  ({ columnCount, columnIndex, data, rowIndex, selectedEntryId, selectEntry, style }) => {
     const index = rowIndex * columnCount + columnIndex
 
     if (index > data.length - 1) {
@@ -134,14 +120,10 @@ const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
     }
 
     const entry = data[index]
-    const selected = hasSelectedEntry && selectedEntry?.id === entry.id
+    const selected = selectedEntryId === entry.id
 
     function onClick(): void {
-      if (selected) {
-        clearSelectedEntry()
-      } else {
-        selectEntry(entry)
-      }
+      selectEntry(selected ? undefined : entry)
     }
 
     return (
@@ -154,11 +136,11 @@ const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
 
 export default LibraryGrid
 
-interface Props extends EntrySelectionProps {
+interface Props extends SelectionProps {
   entries: HistoryEntry[]
 }
 
-interface LibraryGridEntryProps extends GridChildComponentProps, EntrySelectionProps {
+interface LibraryGridEntryProps extends GridChildComponentProps, SelectionProps {
   columnCount: number
   data: HistoryEntry[]
 }
@@ -174,9 +156,7 @@ interface EntryProps {
   selected: boolean
 }
 
-interface EntrySelectionProps {
-  clearSelectedEntry: () => void
-  hasSelectedEntry: boolean
-  selectedEntry: Optional<HistoryEntry>
-  selectEntry: (entry: HistoryEntry) => void
+interface SelectionProps {
+  selectedEntryId: Optional<string>
+  selectEntry: (entry: Optional<HistoryEntry>) => void
 }

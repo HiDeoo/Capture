@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import { HistoryEntry } from '../store/history'
+import type { HistorySelection } from '../store/history'
 
 const transitionName = 'panelAnimation'
 
@@ -34,8 +34,10 @@ const Wrapper = styled.div`
   }
 `
 
-const LibraryPanel: React.FC<Props> = ({ entry, visible }) => {
+const LibraryPanel: React.FC<Props> = ({ selection }) => {
   const nodeRef = React.useRef(null)
+  const visible = typeof selection.current !== 'undefined'
+  const entry = visible ? selection.current : selection.previous
 
   return (
     <CSSTransition unmountOnExit nodeRef={nodeRef} in={visible} timeout={2000} classNames={transitionName}>
@@ -47,6 +49,5 @@ const LibraryPanel: React.FC<Props> = ({ entry, visible }) => {
 export default LibraryPanel
 
 interface Props {
-  entry?: HistoryEntry
-  visible: boolean
+  selection: HistorySelection
 }
