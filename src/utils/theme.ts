@@ -41,7 +41,7 @@ export default {
   editor: {
     border: color.black,
   },
-  history: {
+  library: {
     border: color.gray,
     gap: '10px',
     panel: {

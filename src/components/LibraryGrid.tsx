@@ -13,21 +13,21 @@ import Img from './Img'
 /**
  * Various sizes defining the grid layout.
  */
-const GridGap = stripUnit(Theme.history.gap)
-const GridEntryHeight = stripUnit(Theme.history.size)
-const GridEntryWidth = stripUnit(Theme.history.size)
+const GridGap = stripUnit(Theme.library.gap)
+const GridEntryHeight = stripUnit(Theme.library.size)
+const GridEntryWidth = stripUnit(Theme.library.size)
 
 const Entry = styled.div<EntryProps>`
   ${tw`flex items-center justify-center items-center w-full`}
 
-  padding: ${Theme.history.gap};
+  padding: ${Theme.library.gap};
 
   & > img {
     ${(props) =>
       props.selected &&
       `
-      border-color: ${theme('history.selected')(props)};
-      outline-color: ${theme('history.selected')(props)};
+      border-color: ${theme('library.selected')(props)};
+      outline-color: ${theme('library.selected')(props)};
     `}
   }
 `
@@ -35,8 +35,8 @@ const Entry = styled.div<EntryProps>`
 const StyledImg = styled(Img)`
   ${tw`block max-h-full max-w-full border-2 border-solid`}
 
-  border-color: ${theme('history.border')};
-  outline: 1px solid ${theme('history.shadow')};
+  border-color: ${theme('library.border')};
+  outline: 1px solid ${theme('library.shadow')};
 `
 
 /**

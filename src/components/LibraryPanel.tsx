@@ -40,8 +40,8 @@ const PreviewWrapper = tw.div`flex justify-center`
 const Preview = styled(Img)`
   ${tw`border-4 border-solid`}
 
-  border-color: ${theme('history.panel.preview.border')};
-  outline: 2px solid ${theme('history.panel.preview.outline')};
+  border-color: ${theme('library.panel.preview.border')};
+  outline: 2px solid ${theme('library.panel.preview.outline')};
   max-height: 400px;
 `
 
