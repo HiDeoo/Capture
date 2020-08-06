@@ -40,8 +40,9 @@ const Wrapper = styled.div`
 const CloseButton = styled(Button)`
   ${tw`rounded-full`}
 
-  height: 27px;
-  width: 27px;
+  font-size: 14px;
+  height: 25px;
+  width: 25px;
 
   &:hover {
     background-color: ${theme('color.black2')};
