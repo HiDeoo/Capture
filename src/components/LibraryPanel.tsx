@@ -12,7 +12,7 @@ import Img from './Img'
 const transitionName = 'panelAnimation'
 
 const Wrapper = styled.div`
-  ${tw`absolute inset-y-0 right-0 border-solid border-l p-3`}
+  ${tw`absolute inset-y-0 right-0 border-solid border-l p-3 text-sm`}
 
   background-color: ${theme('bar.background')};
   border-color: ${theme('bar.border')};
@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 const CloseButton = styled(Button)`
   ${tw`rounded-full`}
 
-  font-size: 14px;
+  font-size: 13px;
   height: 25px;
   width: 25px;
 
@@ -50,10 +50,10 @@ const CloseButton = styled(Button)`
   }
 `
 
-const PreviewWrapper = tw.div`flex justify-center`
+const FileName = tw.div`font-bold text-lg mb-3`
 
 const Preview = styled(Img)`
-  ${tw`border-4 border-solid my-3`}
+  ${tw`border-4 border-solid mt-3`}
 
   border-color: ${theme('library.panel.preview.border')};
   outline: 2px solid ${theme('library.panel.preview.outline')};
@@ -77,9 +77,14 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
             <CloseButton onClick={onClickCloseButton}>
               <Icon symbol={IconSymbol.XMark} />
             </CloseButton>
-            <PreviewWrapper>
-              <Preview src={`file://${entry.path}`} />
-            </PreviewWrapper>
+            <div css={tw`px-2`}>
+              <div css={tw`flex justify-center mb-5`}>
+                <Preview src={`file://${entry.path}`} />
+              </div>
+              <FileName>title</FileName>
+              <Box title="Informations">test</Box>
+              <Box>test</Box>
+            </div>
           </>
         )}
       </Wrapper>
@@ -89,7 +94,28 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
 
 export default LibraryPanel
 
+const BoxWrapper = styled.div`
+  ${tw`border-t border-solid my-3 pt-3`}
+
+  border-color: red;
+`
+
+const BoxTitle = tw.div`font-bold -mt-1 mb-2`
+
+const Box: React.FC<BoxProps> = ({ children, title }) => {
+  return (
+    <BoxWrapper>
+      {title && <BoxTitle>{title}</BoxTitle>}
+      {children}
+    </BoxWrapper>
+  )
+}
+
 interface Props {
   selectEntry: (entry: Optional<HistoryEntry>) => void
   selection: HistorySelection
+}
+
+interface BoxProps {
+  title?: string
 }
