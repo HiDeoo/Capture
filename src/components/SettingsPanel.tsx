@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   overflow-wrap: break-word;
 `
 
-const SettingsPanel: React.FC<{}> = ({ children }) => {
+const SettingsPanel: React.FC = ({ children }) => {
   return <Wrapper>{children}</Wrapper>
 }
 

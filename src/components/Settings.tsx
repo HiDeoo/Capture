@@ -42,7 +42,7 @@ const SettingsPanelMap = SidebarEntries.reduce<Record<SettingsPanelId, React.FC<
   return acc
 }, {})
 
-const Settings: React.FC<{}> = () => {
+const Settings: React.FC = () => {
   const { currentSettingsPanel } = useApp()
   const { getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
 

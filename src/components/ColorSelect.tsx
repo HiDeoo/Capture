@@ -119,7 +119,7 @@ const ColorSelect: React.FC<Props> = ({ allowTransparent = false, onChangeColor,
 
 export default ColorSelect
 
-const TransparentBackground: React.FC<{}> = () => {
+const TransparentBackground: React.FC = () => {
   return (
     <TransparentPreview className="colorSelectBackgroundPreview">
       <Svg icon="diagonal" />

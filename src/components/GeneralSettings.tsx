@@ -12,7 +12,7 @@ export const GeneralSettingConfiguration = {
   name: 'General',
 } as const
 
-const GeneralSettings: React.FC<{}> = () => {
+const GeneralSettings: React.FC = () => {
   const { clearHistory, entries } = useHistory()
   const { debugGeneralOption, setDebugGeneralOption } = useSettings()
 

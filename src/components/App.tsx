@@ -37,7 +37,7 @@ const Main = styled.div`
 
 const Content = tw.div`h-full flex-1 overflow-y-auto flex flex-col`
 
-const App: React.FC<{}> = (props) => {
+const App: React.FC = () => {
   const ipcRenderer = getIpcRenderer()
   const { getDestinationSettingsSetter } = useSettings()
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()

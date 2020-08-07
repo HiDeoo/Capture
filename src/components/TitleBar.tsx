@@ -23,7 +23,7 @@ export const useTitleBar = (): TitleBarContext => React.useContext(TitleBarConte
 /**
  * TitleBar context provider component.
  */
-export const TitleBarProvider: React.FC<{}> = ({ children }) => {
+export const TitleBarProvider: React.FC = ({ children }) => {
   const [titleBarContent, setTitleBarContent] = useState<React.ReactNode>(null)
 
   return <TitleBarContext.Provider value={{ titleBarContent, setTitleBarContent }}>{children}</TitleBarContext.Provider>
@@ -83,7 +83,7 @@ const Main = styled.div<IsFocusedProps>`
   border-color: ${ifProp('isFocused', theme('titleBar.border'), theme('titleBar.blurred.border'))};
 `
 
-const TitleBar: React.FC<{}> = () => {
+const TitleBar: React.FC = () => {
   const { isFocused } = useApp()
   const { titleBarContent } = useTitleBar()
 

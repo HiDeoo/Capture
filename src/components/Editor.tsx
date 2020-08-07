@@ -23,7 +23,7 @@ const Content = styled.div`
   padding: 14px;
 `
 
-const Editor: React.FC<{}> = () => {
+const Editor: React.FC = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshotPath, shiftFromQueue } = useApp()

@@ -10,7 +10,7 @@ import LibraryPanel from './LibraryPanel'
 
 const Wrapper = tw.div`flex flex-1 relative`
 
-const Library: React.FC<{}> = () => {
+const Library: React.FC = () => {
   const { entries, selectEntry, selection } = useHistory()
 
   useEffect(() => {

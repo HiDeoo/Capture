@@ -52,7 +52,7 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)<SideB
   }
 `
 
-const AppSideBar: React.FC<{}> = () => {
+const AppSideBar: React.FC = () => {
   const { currentPanel, hasPendingScreenshots, isFocused, setCurrentPanel } = useApp()
 
   function getEntryProps(entry: AppSideBarEntry): SideBarEntryProps {
