@@ -4,6 +4,7 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { getDestination } from '../destinations'
 import type { HistoryEntry, HistorySelection } from '../store/history'
 import { splitFilePath } from '../utils/string'
 import Button from './Button'
@@ -71,7 +72,8 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
   }
 
   function renderEntry(theEntry: HistoryEntry): React.ReactNode {
-    const [parentPath, filename] = splitFilePath(entry?.path ?? '')
+    const [parentPath, filename] = splitFilePath(theEntry.path)
+    const destination = getDestination(theEntry.destinationId)
 
     return (
       <>
@@ -84,6 +86,7 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
           </div>
           <FileName>{filename}</FileName>
           <Box title="Informations">
+            <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
             <BoxEntry label="Path" value={parentPath} />
           </Box>
         </div>
