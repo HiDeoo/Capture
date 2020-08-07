@@ -5,6 +5,7 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import type { HistoryEntry, HistorySelection } from '../store/history'
+import { splitFilePath } from '../utils/string'
 import Button from './Button'
 import Icon, { IconSymbol } from './Icon'
 import Img from './Img'
@@ -69,30 +70,30 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
     selectEntry(undefined)
   }
 
+  function renderEntry(theEntry: HistoryEntry): React.ReactNode {
+    const [parentPath, filename] = splitFilePath(entry?.path ?? '')
+
+    return (
+      <>
+        <CloseButton onClick={onClickCloseButton}>
+          <Icon symbol={IconSymbol.XMark} />
+        </CloseButton>
+        <div css={tw`px-2`}>
+          <div css={tw`flex justify-center mb-5`}>
+            <Preview src={`file://${theEntry.path}`} />
+          </div>
+          <FileName>{filename}</FileName>
+          <Box title="Informations">
+            <BoxEntry label="Path" value={parentPath} />
+          </Box>
+        </div>
+      </>
+    )
+  }
+
   return (
     <CSSTransition unmountOnExit nodeRef={nodeRef} in={visible} timeout={2000} classNames={transitionName}>
-      <Wrapper ref={nodeRef}>
-        {entry && (
-          <>
-            <CloseButton onClick={onClickCloseButton}>
-              <Icon symbol={IconSymbol.XMark} />
-            </CloseButton>
-            <div css={tw`px-2`}>
-              <div css={tw`flex justify-center mb-5`}>
-                <Preview src={`file://${entry.path}`} />
-              </div>
-              <FileName>title</FileName>
-              <Box title="Informations">
-                <BoxEntry label="Lable" value="Value" />
-                <BoxEntry label="Lable" value="Value" />
-                <BoxEntry label="Lable" value="Value" />
-                <BoxEntry label="Lable" value="Value" />
-              </Box>
-              <Box>test</Box>
-            </div>
-          </>
-        )}
-      </Wrapper>
+      <Wrapper ref={nodeRef}>{entry && renderEntry(entry)}</Wrapper>
     </CSSTransition>
   )
 }
