@@ -82,7 +82,12 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
                 <Preview src={`file://${entry.path}`} />
               </div>
               <FileName>title</FileName>
-              <Box title="Informations">test</Box>
+              <Box title="Informations">
+                <BoxEntry label="Lable" value="Value" />
+                <BoxEntry label="Lable" value="Value" />
+                <BoxEntry label="Lable" value="Value" />
+                <BoxEntry label="Lable" value="Value" />
+              </Box>
               <Box>test</Box>
             </div>
           </>
@@ -95,12 +100,16 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
 export default LibraryPanel
 
 const BoxWrapper = styled.div`
-  ${tw`border-t border-solid my-3 pt-3`}
+  ${tw`border-t border-solid mt-3 mb-4 pt-3`}
 
-  border-color: red;
+  border-color: ${theme('library.panel.box.border')};
 `
 
-const BoxTitle = tw.div`font-bold -mt-1 mb-2`
+const BoxTitle = styled.div`
+  ${tw`font-bold -mt-1 mb-2`}
+
+  color: ${theme('library.panel.box.title')};
+`
 
 const Box: React.FC<BoxProps> = ({ children, title }) => {
   return (
@@ -111,6 +120,32 @@ const Box: React.FC<BoxProps> = ({ children, title }) => {
   )
 }
 
+const BoxEntryWrapper = styled.div`
+  ${tw`border-b border-solid flex`}
+
+  border-color: ${theme('library.panel.entry.border')};
+  font-size: 0.79rem;
+  padding: 3px 0;
+
+  &:last-of-type {
+    ${tw`border-0`}
+  }
+`
+
+const BoxEntryLabel = styled.div`
+  color: ${theme('library.panel.entry.label')};
+`
+
+const BoxEntry: React.FC<BoxEntryProps> = ({ children, label, value }) => {
+  return (
+    <BoxEntryWrapper>
+      <BoxEntryLabel>{label}</BoxEntryLabel>
+      <div css={tw`flex-1`} />
+      {value}
+    </BoxEntryWrapper>
+  )
+}
+
 interface Props {
   selectEntry: (entry: Optional<HistoryEntry>) => void
   selection: HistorySelection
@@ -118,4 +153,9 @@ interface Props {
 
 interface BoxProps {
   title?: string
+}
+
+interface BoxEntryProps {
+  label: string
+  value: string | number
 }

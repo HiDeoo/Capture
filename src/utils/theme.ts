@@ -46,6 +46,14 @@ export default {
     border: color.gray,
     gap: '10px',
     panel: {
+      box: {
+        border: '#565656',
+        title: '#dddddd',
+      },
+      entry: {
+        border: '#343434',
+        label: '#999999',
+      },
       preview: {
         border: color.gray,
         outline: color.black,
