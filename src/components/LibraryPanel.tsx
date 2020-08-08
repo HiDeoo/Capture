@@ -86,6 +86,13 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
           </div>
           <FileName>{filename}</FileName>
           <Box title="Informations">
+            <BoxEntry
+              label="Ceated"
+              value={`${theEntry.date.toLocaleDateString()} at ${theEntry.date.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`}
+            />
             <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
             <BoxEntry label="Path" value={parentPath} />
           </Box>
