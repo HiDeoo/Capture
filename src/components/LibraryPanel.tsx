@@ -151,8 +151,8 @@ const BoxEntry: React.FC<BoxEntryProps> = ({ children, label, value }) => {
   return (
     <BoxEntryWrapper>
       <BoxEntryLabel>{label}</BoxEntryLabel>
-      <div css={tw`flex-1`} />
-      {value}
+      <div css={tw`flex-1 mx-3`} />
+      <div css={tw`truncate`}>{value}</div>
     </BoxEntryWrapper>
   )
 }
