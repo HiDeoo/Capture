@@ -7,6 +7,7 @@ const color = {
   black2: '#2b282b',
   tint: '#2e91e8',
   white: '#ffffff',
+  white1: '#dddddd',
   gray: '#848385',
 }
 
@@ -48,7 +49,13 @@ export default {
     panel: {
       box: {
         border: '#565656',
-        title: '#dddddd',
+        title: color.white1,
+      },
+      button: {
+        color: color.white1,
+        hover: {
+          color: color.tint,
+        },
       },
       entry: {
         border: '#343434',

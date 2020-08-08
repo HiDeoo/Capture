@@ -15,7 +15,7 @@ import Img from './Img'
 const transitionName = 'panelAnimation'
 
 const Wrapper = styled.div`
-  ${tw`absolute inset-y-0 right-0 border-solid border-l p-3 text-sm`}
+  ${tw`absolute inset-y-0 right-0 border-solid border-l p-3 pb-4 text-sm`}
 
   background-color: ${theme('bar.background')};
   border-color: ${theme('bar.border')};
@@ -40,8 +40,16 @@ const Wrapper = styled.div`
   }
 `
 
+const Content = styled.div`
+  ${tw`flex flex-col h-full px-2`}
+
+  & > div:last-child {
+    ${tw`flex-1 min-h-0 pt-6 text-center`}
+  }
+`
+
 const CloseButton = styled(Button)`
-  ${tw`rounded-full`}
+  ${tw`rounded-full -mx-2`}
 
   font-size: 13px;
   height: 25px;
@@ -53,15 +61,16 @@ const CloseButton = styled(Button)`
   }
 `
 
-const FileName = tw.div`font-bold text-lg mb-3`
+const FileName = tw.div`font-bold text-lg`
 
 const Preview = styled(Img)`
-  ${tw`border-4 border-solid mt-3`}
+  ${tw`border-4 border-solid self-stretch max-w-full max-h-full inline-block`}
 
   border-color: ${theme('library.panel.preview.border')};
   outline: 2px solid ${theme('library.panel.preview.outline')};
-  max-height: 400px;
 `
+
+const Buttons = tw.div`flex flex-wrap justify-center mt-4 mb-1`
 
 const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
   const nodeRef = React.useRef(null)
@@ -77,30 +86,45 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
     const destination = getDestination(theEntry.destinationId)
 
     return (
-      <>
-        <CloseButton onClick={onClickCloseButton}>
-          <Icon symbol={IconSymbol.XMark} />
-        </CloseButton>
-        <div css={tw`px-2`}>
-          <div css={tw`flex justify-center mb-5`}>
-            <Preview src={`file://${theEntry.path}`} />
-          </div>
-          <FileName>{filename}</FileName>
-          <Box title="Informations">
-            <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
-            <BoxEntry label="Dimensions" value={`${theEntry.dimensions.width} x ${theEntry.dimensions.height}`} />
-            <BoxEntry label="Size" value={filesize(theEntry.size, { round: 0 })} />
-            <BoxEntry
-              label="Created"
-              value={`${theEntry.date.toLocaleDateString()} at ${theEntry.date.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}`}
-            />
-            <BoxEntry label="Path" value={parentPath} />
-          </Box>
+      <Content>
+        <div>
+          <CloseButton onClick={onClickCloseButton}>
+            <Icon symbol={IconSymbol.XMark} />
+          </CloseButton>
         </div>
-      </>
+        <Buttons>
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+        </Buttons>
+        <FileName>{filename}</FileName>
+        <Box title="Informations">
+          <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
+          <BoxEntry label="Dimensions" value={`${theEntry.dimensions.width} x ${theEntry.dimensions.height}`} />
+          <BoxEntry label="Size" value={filesize(theEntry.size, { round: 0 })} />
+          <BoxEntry
+            label="Created"
+            value={`${theEntry.date.toLocaleDateString()} at ${theEntry.date.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}`}
+          />
+          <BoxEntry label="Path" value={parentPath} />
+        </Box>
+        <Box>
+          <Preview src={`file://${theEntry.path}`} />
+        </Box>
+      </Content>
     )
   }
 
@@ -114,7 +138,7 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
 export default LibraryPanel
 
 const BoxWrapper = styled.div`
-  ${tw`border-t border-solid mt-3 mb-4 pt-3`}
+  ${tw`border-t border-solid mt-3 mb-1 pt-3`}
 
   border-color: ${theme('library.panel.box.border')};
 `
@@ -150,13 +174,33 @@ const BoxEntryLabel = styled.div`
   color: ${theme('library.panel.entry.label')};
 `
 
-const BoxEntry: React.FC<BoxEntryProps> = ({ children, label, value }) => {
+const BoxEntry: React.FC<BoxEntryProps> = ({ label, value }) => {
   return (
     <BoxEntryWrapper>
       <BoxEntryLabel>{label}</BoxEntryLabel>
       <div css={tw`flex-1 mx-3`} />
       <div css={tw`truncate`}>{value}</div>
     </BoxEntryWrapper>
+  )
+}
+
+const StyledButton = styled(Button)`
+  ${tw`mb-5 mx-3`}
+
+  color: ${theme('library.panel.button.color')};
+  font-size: 13px;
+
+  &:hover:not(:disabled) {
+    color: ${theme('library.panel.button.hover.color')};
+  }
+`
+
+const PanelButton: React.FC<PanelButtonProps> = ({ label, symbol }) => {
+  return (
+    <StyledButton>
+      <Icon symbol={symbol} />
+      <div>{label}</div>
+    </StyledButton>
   )
 }
 
@@ -172,4 +216,9 @@ interface BoxProps {
 interface BoxEntryProps {
   label: string
   value: string | number
+}
+
+interface PanelButtonProps {
+  symbol: IconSymbol
+  label: string
 }
