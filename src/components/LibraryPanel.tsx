@@ -87,7 +87,7 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
           <FileName>{filename}</FileName>
           <Box title="Informations">
             <BoxEntry
-              label="Ceated"
+              label="Created"
               value={`${theEntry.date.toLocaleDateString()} at ${theEntry.date.toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit',
