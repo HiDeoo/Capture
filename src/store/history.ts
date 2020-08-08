@@ -1,5 +1,6 @@
+import { formatISO, parseISO } from 'date-fns'
 import { action, observable } from 'mobx'
-import { ignore } from 'mobx-sync'
+import { format, ignore } from 'mobx-sync'
 import { nanoid } from 'nanoid'
 
 import type { ShareResponse } from '../destinations/DestinationBase'
@@ -11,7 +12,12 @@ export default class HistoryStore {
   /**
    * History entries in reverse-chronological order.
    */
-  @observable entries: HistoryEntry[] = []
+  @format<HistoryEntry[], SerializedHistoryEntry[]>(
+    (data) => data.map((serializedEntry) => ({ ...serializedEntry, date: parseISO(serializedEntry.date) })),
+    (value) => value.map((entry) => ({ ...entry, date: formatISO(entry.date) }))
+  )
+  @observable
+  entries: HistoryEntry[] = []
 
   /**
    * History selection.
@@ -53,4 +59,8 @@ export interface HistoryEntry extends ShareResponse {
 export interface HistorySelection {
   current: Optional<HistoryEntry>
   previous: Optional<HistoryEntry>
+}
+
+interface SerializedHistoryEntry extends Omit<HistoryEntry, 'date'> {
+  date: string
 }
