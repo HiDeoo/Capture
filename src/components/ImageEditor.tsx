@@ -7,7 +7,7 @@ import tw from 'tailwind.macro'
 import { usePrevious } from '../utils/react'
 import Theme from '../utils/theme'
 import { Color, Colors } from './ColorSelect'
-import Img, { ImageSize } from './Img'
+import Img, { ImageDimensions } from './Img'
 import type { SvgIconName } from './Svg'
 
 const Layers = styled.div`
@@ -108,7 +108,7 @@ export function useImageEditor(): ImageEditorHook {
 
 const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorState, path, readonly, sketch }) => {
   const [isEditingText, setIsEditingText] = useState(false)
-  const [imageSize, setImageSize] = useState<Optional<ImageSize>>()
+  const [imageDimensions, setImageDimensions] = useState<Optional<ImageDimensions>>()
   const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
   const previous = usePrevious({
     fillColor: imageEditorState.fillColor,
@@ -123,7 +123,7 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
 
   function onImageLoaded(): void {
     if (image.current) {
-      setImageSize({ height: image.current.height, width: image.current.width })
+      setImageDimensions({ height: image.current.height, width: image.current.width })
     }
   }
 
@@ -243,8 +243,8 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
       <div css={tw`absolute inset-0`}>
         <SketchField
           ref={setSketchRef}
-          width={imageSize?.width}
-          height={imageSize?.height}
+          width={imageDimensions?.width}
+          height={imageDimensions?.height}
           tool={imageEditorState.tool}
           fillColor={imageEditorState.fillColor}
           lineColor={imageEditorState.lineColor}

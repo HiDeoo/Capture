@@ -1,5 +1,6 @@
 import wretch, { Wretcher } from 'wretch'
 
+import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
 
@@ -24,6 +25,7 @@ export default abstract class Destination {
   /**
    * Share a file to the destination.
    * @param  path - The path of the file to share.
+   * @param  dimensions - The shared image dimensions.
    * @param  shareOptions - The options related to this specific share.
    * @param  getSettings - A destination settings getter.
    * @param  setSettings - A destination settings setter.
@@ -31,6 +33,7 @@ export default abstract class Destination {
    */
   abstract share(
     path: string,
+    dimensions: ImageDimensions,
     shareOptions: ShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
@@ -97,16 +100,22 @@ export default abstract class Destination {
   /**
    * Returns a share response based on informations provided by a destination after a share.
    * @param  path - The path of the shared file.
+   * @param  dimensions - The shared image dimensions.
    * @param  destinationShareResponse - The share response from the destination.
    * @return The share response.
    */
-  getShareResponse(path: string, destinationShareResponse: DestinationShareResponse): ShareResponse {
+  getShareResponse(
+    path: string,
+    dimensions: ImageDimensions,
+    destinationShareResponse: DestinationShareResponse
+  ): ShareResponse {
     const { id, deleteLink, link } = destinationShareResponse
 
     return {
       date: new Date(),
       deleteLink,
       destinationId: this.getConfiguration().id,
+      dimensions,
       link,
       shareId: id,
       path,
@@ -125,6 +134,7 @@ export interface ShareResponse {
   date: Date
   deleteLink?: string
   destinationId: string
+  dimensions: ImageDimensions
   link: string
   path: string
   shareId: string | number

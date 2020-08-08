@@ -7,7 +7,7 @@ export default forwardRef<
   return <img ref={ref} {...restProps} alt={alt} draggable={draggable} />
 })
 
-export interface ImageSize {
+export interface ImageDimensions {
   height: number
   width: number
 }

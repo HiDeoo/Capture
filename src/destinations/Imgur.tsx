@@ -1,6 +1,7 @@
 import { addMonths, formatISO, isAfter, parseISO } from 'date-fns'
 import React from 'react'
 
+import type { ImageDimensions } from '../components/Img'
 import Destination, {
   DestinationConfiguration,
   DestinationSettings,
@@ -52,12 +53,14 @@ class Imgur extends Destination {
   /**
    * Share a file to Imgur.
    * @param path - The path of the file to share.
+   * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
    * @param getSettings - A destination settings getter.
    * @param setSettings - A destination settings setter.
    */
   async share(
     path: string,
+    dimensions: ImageDimensions,
     shareOptions: ImgurShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
@@ -99,7 +102,7 @@ class Imgur extends Destination {
     const { id, deletehash, link } = response.data
     const request = this.api.url(`/3/image/${deletehash}`)
 
-    return this.getShareResponse(path, {
+    return this.getShareResponse(path, dimensions, {
       id,
       deleteLink: request._url,
       link,

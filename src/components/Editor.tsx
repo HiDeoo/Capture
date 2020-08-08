@@ -13,6 +13,7 @@ import { defaultDestinationId } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
 import ImageEditor, { useImageEditor } from './ImageEditor'
+import type { ImageDimensions } from './Img'
 import LoadingBar from './LoadingBar'
 import { useTitleBar } from './TitleBar'
 import TitleBarButton, { IconSymbol } from './TitleBarButton'
@@ -45,11 +46,20 @@ const Editor: React.FC = () => {
     try {
       lockUi()
 
+      if (!imageEditorImage.current) {
+        throw new Error('Missing reference to image editor.')
+      }
+
+      const dimensions: ImageDimensions = {
+        height: imageEditorImage.current.height,
+        width: imageEditorImage.current.width,
+      }
+
       if (imageEditorUtils.hasAnnotations()) {
         const images = imageEditorUtils.getImages()
 
-        if (images && imageEditorImage.current) {
-          const imageData = mergeImages(images, imageEditorImage.current.width, imageEditorImage.current.height)
+        if (images) {
+          const imageData = mergeImages(images, dimensions.width, dimensions.height)
 
           await getIpcRenderer().invoke('saveImage', pendingScreenshotPath, imageData)
         }
@@ -57,6 +67,7 @@ const Editor: React.FC = () => {
 
       const response = await destination.share(
         pendingScreenshotPath,
+        dimensions,
         shareOptions,
         getDestinationSettingsGetter(destinationId),
         getDestinationSettingsSetter(destinationId)
