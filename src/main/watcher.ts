@@ -1,4 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar'
+import type { Stats } from 'fs'
 
 /**
  * Installs a created file watcher in a specific directory.
@@ -9,18 +10,19 @@ import chokidar, { FSWatcher } from 'chokidar'
  */
 export function installCreatedFileWatcher(
   directoryPath: string,
-  callback: (createdFilePath: string) => void,
+  callback: (createdFilePath: string, size: number) => void,
   extension = 'png'
 ): FSWatcher {
   const watcher = chokidar.watch(`${directoryPath}/*.${extension}`, {
+    alwaysStat: true,
     depth: 0,
     // Ignore dotfiles (looks like screencapture can create a temporary hidden file).
     ignored: /(^|[/\\])\../,
     ignoreInitial: true,
   })
 
-  watcher.on('add', (path: string) => {
-    callback(path)
+  watcher.on('add', (path: string, stats: Stats) => {
+    callback(path, stats.size)
   })
 
   return watcher

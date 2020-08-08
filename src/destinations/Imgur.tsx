@@ -53,6 +53,7 @@ class Imgur extends Destination {
   /**
    * Share a file to Imgur.
    * @param path - The path of the file to share.
+   * @param  size - The shared image file size.
    * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
    * @param getSettings - A destination settings getter.
@@ -60,6 +61,7 @@ class Imgur extends Destination {
    */
   async share(
     path: string,
+    size: number,
     dimensions: ImageDimensions,
     shareOptions: ImgurShareOptions,
     getSettings: DestinationSettingsGetter,
@@ -102,7 +104,7 @@ class Imgur extends Destination {
     const { id, deletehash, link } = response.data
     const request = this.api.url(`/3/image/${deletehash}`)
 
-    return this.getShareResponse(path, dimensions, {
+    return this.getShareResponse(path, size, dimensions, {
       id,
       deleteLink: request._url,
       link,

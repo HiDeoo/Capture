@@ -112,12 +112,12 @@ async function createWindow(): Promise<void> {
   appTray = createTray(window)
 
   // Add a file watcher to detect new screenshots.
-  watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath) => {
+  watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath, size) => {
     // TODO Extract fn
     console.log('Created file: ', createdFilePath)
 
     if (window) {
-      sendToRenderer(window, 'newScreenshot', createdFilePath)
+      sendToRenderer(window, 'newScreenshot', createdFilePath, size)
 
       window.show()
       window.focus()
@@ -161,8 +161,12 @@ function registerIpcHandlers(): void {
     return shell.openExternal(url)
   })
 
-  ipcMain.handle('saveImage', (event: IpcMainInvokeEvent, filePath: string, data: string) => {
-    return fs.writeFile(filePath, data, { encoding: 'base64' })
+  ipcMain.handle('saveImage', async (event: IpcMainInvokeEvent, filePath: string, data: string) => {
+    await fs.writeFile(filePath, data, { encoding: 'base64' })
+
+    const stat = await fs.stat(filePath)
+
+    return stat.size
   })
 }
 

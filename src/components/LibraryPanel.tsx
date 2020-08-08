@@ -1,3 +1,4 @@
+import filesize from 'filesize'
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 import styled from 'styled-components/macro'
@@ -86,7 +87,9 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
           </div>
           <FileName>{filename}</FileName>
           <Box title="Informations">
+            <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
             <BoxEntry label="Dimensions" value={`${theEntry.dimensions.width} x ${theEntry.dimensions.height}`} />
+            <BoxEntry label="Size" value={filesize(theEntry.size, { round: 0 })} />
             <BoxEntry
               label="Created"
               value={`${theEntry.date.toLocaleDateString()} at ${theEntry.date.toLocaleTimeString([], {
@@ -94,7 +97,6 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
                 minute: '2-digit',
               })}`}
             />
-            <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
             <BoxEntry label="Path" value={parentPath} />
           </Box>
         </div>

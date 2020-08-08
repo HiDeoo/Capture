@@ -27,7 +27,7 @@ const Content = styled.div`
 const Editor: React.FC = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
-  const { isUiLocked, lockUi, pendingScreenshotPath, shiftFromQueue } = useApp()
+  const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
   const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
@@ -50,6 +50,8 @@ const Editor: React.FC = () => {
         throw new Error('Missing reference to image editor.')
       }
 
+      let size = pendingScreenshot.size
+
       const dimensions: ImageDimensions = {
         height: imageEditorImage.current.height,
         width: imageEditorImage.current.width,
@@ -61,12 +63,13 @@ const Editor: React.FC = () => {
         if (images) {
           const imageData = mergeImages(images, dimensions.width, dimensions.height)
 
-          await getIpcRenderer().invoke('saveImage', pendingScreenshotPath, imageData)
+          size = await getIpcRenderer().invoke('saveImage', pendingScreenshot.path, imageData)
         }
       }
 
       const response = await destination.share(
-        pendingScreenshotPath,
+        pendingScreenshot.path,
+        size,
         dimensions,
         shareOptions,
         getDestinationSettingsGetter(destinationId),
@@ -93,7 +96,7 @@ const Editor: React.FC = () => {
     getDestinationSettingsGetter,
     getDestinationSettingsSetter,
     lockUi,
-    pendingScreenshotPath,
+    pendingScreenshot,
     shareOptions,
     shiftFromQueue,
   ])
@@ -153,10 +156,10 @@ const Editor: React.FC = () => {
           image={imageEditorImage}
           sketch={imageEditorSketch}
           {...getImageEditorStateProps()}
-          path={`file://${pendingScreenshotPath}`}
+          path={`file://${pendingScreenshot.path}`}
         />
       </Content>
-      <EditorInfoBar locked={isUiLocked} path={pendingScreenshotPath} />
+      <EditorInfoBar locked={isUiLocked} path={pendingScreenshot.path} />
     </>
   )
 }

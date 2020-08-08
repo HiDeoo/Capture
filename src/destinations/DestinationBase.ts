@@ -25,6 +25,7 @@ export default abstract class Destination {
   /**
    * Share a file to the destination.
    * @param  path - The path of the file to share.
+   * @param  size - The shared image file size.
    * @param  dimensions - The shared image dimensions.
    * @param  shareOptions - The options related to this specific share.
    * @param  getSettings - A destination settings getter.
@@ -33,6 +34,7 @@ export default abstract class Destination {
    */
   abstract share(
     path: string,
+    size: number,
     dimensions: ImageDimensions,
     shareOptions: ShareOptions,
     getSettings: DestinationSettingsGetter,
@@ -100,12 +102,14 @@ export default abstract class Destination {
   /**
    * Returns a share response based on informations provided by a destination after a share.
    * @param  path - The path of the shared file.
+   * @param  size - The shared image file size.
    * @param  dimensions - The shared image dimensions.
    * @param  destinationShareResponse - The share response from the destination.
    * @return The share response.
    */
   getShareResponse(
     path: string,
+    size: number,
     dimensions: ImageDimensions,
     destinationShareResponse: DestinationShareResponse
   ): ShareResponse {
@@ -117,8 +121,9 @@ export default abstract class Destination {
       destinationId: this.getConfiguration().id,
       dimensions,
       link,
-      shareId: id,
       path,
+      shareId: id,
+      size,
     }
   }
 }
@@ -138,6 +143,7 @@ export interface ShareResponse {
   link: string
   path: string
   shareId: string | number
+  size: number
 }
 
 interface DestinationShareResponse extends Pick<ShareResponse, 'link' | 'deleteLink'> {

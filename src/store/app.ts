@@ -43,9 +43,9 @@ export default class AppStore {
   }
 
   /**
-   * The pending screenshot path queue.
+   * The pending screenshot queue.
    */
-  @ignore @observable private queue: string[] = []
+  @ignore @observable private queue: PendingScreenshot[] = []
 
   /**
    * Defines if there are pending screenshots in the queue.
@@ -56,11 +56,11 @@ export default class AppStore {
   }
 
   /**
-   * Returns the first path in the queue.
-   * @return The current pending screenshot path.
+   * Returns the first pending screenshot in the queue.
+   * @return The current pending screenshot.
    */
   @computed
-  get pendingScreenshotPath(): string {
+  get pendingScreenshot(): PendingScreenshot {
     if (this.queue.length > 0) {
       return this.queue[0]
     }
@@ -71,10 +71,11 @@ export default class AppStore {
   /**
    * Adds a new screenshot at the end of the queue.
    * @param path - The new screenshot file path.
+   * @param size - The new screenshot file size.
    */
   @action
-  pushToQueue = (path: string): void => {
-    this.queue.push(path)
+  pushToQueue = (path: string, size: number): void => {
+    this.queue.push({ path, size })
 
     this.setCurrentPanel(Panel.Editor)
   }
@@ -124,3 +125,8 @@ export default class AppStore {
  * The type representing a settings panel ID.
  */
 export type SettingsPanelId = string
+
+interface PendingScreenshot {
+  path: string
+  size: number
+}
