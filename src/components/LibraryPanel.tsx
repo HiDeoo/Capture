@@ -7,7 +7,7 @@ import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
-import type { HistoryEntry, HistorySelection } from '../store/history'
+import type { HistoryEntry, HistorySelection, SelectEntry } from '../store/history'
 import { splitFilePath } from '../utils/string'
 import Button from './Button'
 import Icon, { IconSymbol } from './Icon'
@@ -98,7 +98,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
   const destination = getDestination(entry.destinationId)
 
   function onClickCloseButton(): void {
-    selectEntry(undefined)
+    selectEntry()
   }
 
   function openUrl(): Promise<void> {
@@ -228,13 +228,13 @@ const PanelButton: React.FC<PanelButtonProps> = ({ label, symbol, ...restProps }
 }
 
 interface Props {
-  selectEntry: (entry: Optional<HistoryEntry>) => void
+  selectEntry: SelectEntry
   selection: HistorySelection
 }
 
 interface PanelProps {
   entry: HistoryEntry
-  selectEntry: (entry: Optional<HistoryEntry>) => void
+  selectEntry: SelectEntry
 }
 
 interface BoxProps {

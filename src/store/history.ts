@@ -43,10 +43,10 @@ export default class HistoryStore {
 
   /**
    * Sets the selected history entry.
-   * @param entry - The new selected history entry or `undefined` to clear the current selection.
+   * @param entry - The new selected history entry or none to clear the current selection.
    */
   @action
-  selectEntry = (entry: Optional<HistoryEntry>): void => {
+  selectEntry: SelectEntry = (entry) => {
     this.selection.previous = this.selection.current
     this.selection.current = entry
   }
@@ -64,3 +64,5 @@ export interface HistorySelection {
 interface SerializedHistoryEntry extends Omit<HistoryEntry, 'date'> {
   date: string
 }
+
+export type SelectEntry = (entry?: HistoryEntry) => void

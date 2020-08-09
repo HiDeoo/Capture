@@ -17,7 +17,7 @@ const Library: React.FC = () => {
     function onKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Escape') {
         if (selection.current) {
-          selectEntry(undefined)
+          selectEntry()
         }
       }
     }

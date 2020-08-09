@@ -60,7 +60,7 @@ const App: React.FC = () => {
     }
 
     function onNewScreenshot(event: IpcRendererEvent, path: string, size: number): void {
-      selectEntry(undefined)
+      selectEntry()
       pushToQueue(path, size)
     }
 

@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
-import type { HistoryEntry } from '../store/history'
+import type { HistoryEntry, SelectEntry } from '../store/history'
 import Theme from '../utils/theme'
 import Img from './Img'
 
@@ -158,5 +158,5 @@ interface EntryProps {
 
 interface SelectionProps {
   selectedEntryId: Optional<string>
-  selectEntry: (entry: Optional<HistoryEntry>) => void
+  selectEntry: SelectEntry
 }
