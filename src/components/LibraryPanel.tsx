@@ -70,7 +70,13 @@ const Preview = styled(Img)`
   outline: 2px solid ${theme('library.panel.preview.outline')};
 `
 
-const Buttons = tw.div`flex flex-wrap justify-center mt-4 mb-1`
+const Buttons = styled.div`
+  ${tw`flex flex-wrap justify-center mt-4 mb-1`}
+
+  & > button {
+    ${tw`flex-1`}
+  }
+`
 
 const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
   const nodeRef = React.useRef(null)
@@ -93,19 +99,11 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
           </CloseButton>
         </div>
         <Buttons>
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
-          <PanelButton label="Test" symbol={IconSymbol.Camera} />
+          <PanelButton label="Open URL" symbol={IconSymbol.Link} />
+          <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} />
+          <PanelButton label="Open file" symbol={IconSymbol.Doc} />
+          <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} />
+          <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} />
         </Buttons>
         <FileName>{filename}</FileName>
         <Box title="Informations">
@@ -185,7 +183,7 @@ const BoxEntry: React.FC<BoxEntryProps> = ({ label, value }) => {
 }
 
 const StyledButton = styled(Button)`
-  ${tw`mb-5 mx-3`}
+  ${tw`mb-5 mx-2`}
 
   color: ${theme('library.panel.button.color')};
   font-size: 13px;
@@ -193,13 +191,17 @@ const StyledButton = styled(Button)`
   &:hover:not(:disabled) {
     color: ${theme('library.panel.button.hover.color')};
   }
+
+  & > span {
+    font-size: 22px;
+  }
 `
 
 const PanelButton: React.FC<PanelButtonProps> = ({ label, symbol }) => {
   return (
     <StyledButton>
       <Icon symbol={symbol} />
-      <div>{label}</div>
+      <div css={tw`mt-2`}>{label}</div>
     </StyledButton>
   )
 }
