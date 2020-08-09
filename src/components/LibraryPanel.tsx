@@ -6,6 +6,7 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
+import { getIpcRenderer } from '../main/ipc'
 import type { HistoryEntry, HistorySelection } from '../store/history'
 import { splitFilePath } from '../utils/string'
 import Button from './Button'
@@ -83,57 +84,61 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
   const visible = typeof selection.current !== 'undefined'
   const entry = visible ? selection.current : selection.previous
 
-  function onClickCloseButton(): void {
-    selectEntry(undefined)
-  }
-
-  function renderEntry(theEntry: HistoryEntry): React.ReactNode {
-    const [parentPath, filename] = splitFilePath(theEntry.path)
-    const destination = getDestination(theEntry.destinationId)
-
-    return (
-      <Content>
-        <div>
-          <CloseButton onClick={onClickCloseButton}>
-            <Icon symbol={IconSymbol.XMark} />
-          </CloseButton>
-        </div>
-        <Buttons>
-          <PanelButton label="Open URL" symbol={IconSymbol.Link} />
-          <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} />
-          <PanelButton label="Open file" symbol={IconSymbol.Doc} />
-          <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} />
-          <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} />
-        </Buttons>
-        <FileName>{filename}</FileName>
-        <Box title="Informations">
-          <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
-          <BoxEntry label="Dimensions" value={`${theEntry.dimensions.width} x ${theEntry.dimensions.height}`} />
-          <BoxEntry label="Size" value={filesize(theEntry.size, { round: 0 })} />
-          <BoxEntry
-            label="Created"
-            value={`${theEntry.date.toLocaleDateString()} at ${theEntry.date.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}`}
-          />
-          <BoxEntry label="Path" value={parentPath} />
-        </Box>
-        <Box>
-          <Preview src={`file://${theEntry.path}`} />
-        </Box>
-      </Content>
-    )
-  }
-
   return (
     <CSSTransition unmountOnExit nodeRef={nodeRef} in={visible} timeout={2000} classNames={transitionName}>
-      <Wrapper ref={nodeRef}>{entry && renderEntry(entry)}</Wrapper>
+      <Wrapper ref={nodeRef}>{entry && <Panel entry={entry} selectEntry={selectEntry} />}</Wrapper>
     </CSSTransition>
   )
 }
 
 export default LibraryPanel
+
+const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
+  const [parentPath, filename] = splitFilePath(entry.path)
+  const destination = getDestination(entry.destinationId)
+
+  function onClickCloseButton(): void {
+    selectEntry(undefined)
+  }
+
+  function openUrl(): Promise<void> {
+    return getIpcRenderer().invoke('openUrl', entry.link)
+  }
+
+  return (
+    <Content>
+      <div>
+        <CloseButton onClick={onClickCloseButton}>
+          <Icon symbol={IconSymbol.XMark} />
+        </CloseButton>
+      </div>
+      <Buttons>
+        <PanelButton label="Open URL" symbol={IconSymbol.Link} onClick={openUrl} />
+        <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} />
+        <PanelButton label="Open file" symbol={IconSymbol.Doc} />
+        <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} />
+        <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} />
+      </Buttons>
+      <FileName>{filename}</FileName>
+      <Box title="Informations">
+        <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
+        <BoxEntry label="Dimensions" value={`${entry.dimensions.width} x ${entry.dimensions.height}`} />
+        <BoxEntry label="Size" value={filesize(entry.size, { round: 0 })} />
+        <BoxEntry
+          label="Created"
+          value={`${entry.date.toLocaleDateString()} at ${entry.date.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`}
+        />
+        <BoxEntry label="Path" value={parentPath} />
+      </Box>
+      <Box>
+        <Preview src={`file://${entry.path}`} />
+      </Box>
+    </Content>
+  )
+}
 
 const BoxWrapper = styled.div`
   ${tw`border-t border-solid mt-3 mb-1 pt-3`}
@@ -197,9 +202,9 @@ const StyledButton = styled(Button)`
   }
 `
 
-const PanelButton: React.FC<PanelButtonProps> = ({ label, symbol }) => {
+const PanelButton: React.FC<PanelButtonProps> = ({ label, symbol, ...restProps }) => {
   return (
-    <StyledButton>
+    <StyledButton {...restProps}>
       <Icon symbol={symbol} />
       <div css={tw`mt-2`}>{label}</div>
     </StyledButton>
@@ -211,6 +216,11 @@ interface Props {
   selection: HistorySelection
 }
 
+interface PanelProps {
+  entry: HistoryEntry
+  selectEntry: (entry: Optional<HistoryEntry>) => void
+}
+
 interface BoxProps {
   title?: string
 }
@@ -220,7 +230,7 @@ interface BoxEntryProps {
   value: string | number
 }
 
-interface PanelButtonProps {
+interface PanelButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   symbol: IconSymbol
   label: string
 }
