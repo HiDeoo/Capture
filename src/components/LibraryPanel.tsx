@@ -105,8 +105,16 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
     return getIpcRenderer().invoke('openUrl', entry.link)
   }
 
+  function copyUrl(): Promise<void> {
+    return getIpcRenderer().invoke('copyTextToClipboard', entry.link)
+  }
+
   function openFile(): Promise<string> {
     return getIpcRenderer().invoke('openFile', entry.path)
+  }
+
+  function copyPath(): Promise<void> {
+    return getIpcRenderer().invoke('copyTextToClipboard', entry.path)
   }
 
   return (
@@ -118,9 +126,9 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
       </div>
       <Buttons>
         <PanelButton label="Open URL" symbol={IconSymbol.Link} onClick={openUrl} />
-        <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} />
+        <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} onClick={copyUrl} />
         <PanelButton label="Open file" symbol={IconSymbol.Doc} onClick={openFile} />
-        <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} />
+        <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} onClick={copyPath} />
         <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} />
       </Buttons>
       <FileName>{filename}</FileName>

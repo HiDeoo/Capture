@@ -4,6 +4,7 @@ import dateFormat from 'date-fns/format'
 import {
   app,
   BrowserWindow,
+  clipboard,
   globalShortcut,
   ipcMain as unsafeIpcMain,
   IpcMainInvokeEvent,
@@ -157,6 +158,10 @@ function registerIpcHandlers(): void {
   ipcMain.handle('captureScreenshot', captureScreenshot)
   ipcMain.handle('closeWindow', onWindowClose)
 
+  ipcMain.handle('copyTextToClipboard', (event: IpcMainInvokeEvent, text: string) => {
+    return clipboard.writeText(text)
+  })
+
   ipcMain.handle('openFile', (event: IpcMainInvokeEvent, filePath: string) => {
     return shell.openPath(filePath)
   })
@@ -180,6 +185,7 @@ function registerIpcHandlers(): void {
 function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('captureScreenshot')
   ipcMain.removeHandler('closeWindow')
+  ipcMain.removeHandler('copyTextToClipboard')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
   ipcMain.removeHandler('saveImage')
