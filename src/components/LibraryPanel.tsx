@@ -129,7 +129,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
         <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} onClick={copyUrl} />
         <PanelButton label="Open file" symbol={IconSymbol.Doc} onClick={openFile} />
         <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} onClick={copyPath} />
-        <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} />
+        <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} disabled />
       </Buttons>
       <FileName>{filename}</FileName>
       <Box title="Informations">
@@ -207,6 +207,10 @@ const StyledButton = styled(Button)`
 
   &:hover:not(:disabled) {
     color: ${theme('library.panel.button.hover.color')};
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 
   & > span {
