@@ -6,7 +6,7 @@ import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
-import { useApp, useSettings } from '../store'
+import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
 import Theme from '../utils/theme'
 import AppSideBar from './AppSideBar'
@@ -41,6 +41,7 @@ const App: React.FC = () => {
   const ipcRenderer = getIpcRenderer()
   const { getDestinationSettingsSetter } = useSettings()
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()
+  const { selectEntry } = useHistory()
 
   useEffect(() => {
     function onOAuthRequest(
@@ -59,6 +60,7 @@ const App: React.FC = () => {
     }
 
     function onNewScreenshot(event: IpcRendererEvent, path: string, size: number): void {
+      selectEntry(undefined)
       pushToQueue(path, size)
     }
 
