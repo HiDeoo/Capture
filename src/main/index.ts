@@ -157,6 +157,10 @@ function registerIpcHandlers(): void {
   ipcMain.handle('captureScreenshot', captureScreenshot)
   ipcMain.handle('closeWindow', onWindowClose)
 
+  ipcMain.handle('openFile', (event: IpcMainInvokeEvent, filePath: string) => {
+    return shell.openPath(filePath)
+  })
+
   ipcMain.handle('openUrl', (event: IpcMainInvokeEvent, url: string) => {
     return shell.openExternal(url)
   })
@@ -176,6 +180,7 @@ function registerIpcHandlers(): void {
 function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('captureScreenshot')
   ipcMain.removeHandler('closeWindow')
+  ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
   ipcMain.removeHandler('saveImage')
 }

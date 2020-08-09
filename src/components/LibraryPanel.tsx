@@ -105,6 +105,10 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
     return getIpcRenderer().invoke('openUrl', entry.link)
   }
 
+  function openFile(): Promise<string> {
+    return getIpcRenderer().invoke('openFile', entry.path)
+  }
+
   return (
     <Content>
       <div>
@@ -115,7 +119,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
       <Buttons>
         <PanelButton label="Open URL" symbol={IconSymbol.Link} onClick={openUrl} />
         <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} />
-        <PanelButton label="Open file" symbol={IconSymbol.Doc} />
+        <PanelButton label="Open file" symbol={IconSymbol.Doc} onClick={openFile} />
         <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} />
         <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} />
       </Buttons>
