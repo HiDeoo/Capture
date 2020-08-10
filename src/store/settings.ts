@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 
-import type { DestinationsSettings } from '../destinations'
+import { DestinationsSettings, getDestination } from '../destinations'
 import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../destinations/DestinationBase'
 
 /**
@@ -37,7 +37,11 @@ export default class SettingsStore {
   getDestinationSettings = <Settings extends DestinationSettings>(id: DestinationId): Settings => {
     const settings = this.destinations[id] as Optional<Settings>
 
-    return settings ?? ({} as Settings)
+    if (settings) {
+      return settings
+    }
+
+    return getDestination(id).getDefaultSettings() as Settings
   }
 
   /**
