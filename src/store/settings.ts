@@ -35,7 +35,9 @@ export default class SettingsStore {
    * @return The destination settings.
    */
   getDestinationSettings = <Settings extends DestinationSettings>(id: DestinationId): Settings => {
-    return this.destinations[id] as Settings
+    const settings = this.destinations[id] as Optional<Settings>
+
+    return settings ?? ({} as Settings)
   }
 
   /**
