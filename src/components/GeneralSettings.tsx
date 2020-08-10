@@ -24,9 +24,9 @@ const GeneralSettings: React.FC = () => {
     <>
       <Group title="History">
         <P>
-          Size: {entries.length} {pluralize(entries.length, 'screenshot', 'screenshots')} so far.
+          Size: {entries.allIds.length} {pluralize(entries.allIds.length, 'screenshot', 'screenshots')} so far.
         </P>
-        <Button onClick={clearHistory} disabled={entries.length === 0}>
+        <Button onClick={clearHistory} disabled={entries.allIds.length === 0}>
           Clear history
         </Button>
       </Group>

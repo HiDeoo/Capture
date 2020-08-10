@@ -10,14 +10,32 @@ import type { ShareResponse } from '../destinations/DestinationBase'
  */
 export default class HistoryStore {
   /**
-   * History entries in reverse-chronological order.
+   * History entries with IDs in reverse-chronological order.
    */
-  @format<HistoryEntry[], SerializedHistoryEntry[]>(
-    (data) => data.map((serializedEntry) => ({ ...serializedEntry, date: parseISO(serializedEntry.date) })),
-    (value) => value.map((entry) => ({ ...entry, date: formatISO(entry.date) }))
+  @format<HistoryEntries, SerializedHistoryEntries>(
+    (data) => {
+      return {
+        allIds: data.allIds,
+        byId: Object.entries(data.byId).reduce((acc, [id, entry]) => {
+          acc[id] = { ...entry, date: parseISO(entry.date) }
+
+          return acc
+        }, {} as HistoryEntries['byId']),
+      }
+    },
+    (value) => {
+      return {
+        allIds: value.allIds,
+        byId: Object.entries(value.byId).reduce((acc, [id, entry]) => {
+          acc[id] = { ...entry, date: formatISO(entry.date) }
+
+          return acc
+        }, {} as SerializedHistoryEntries['byId']),
+      }
+    }
   )
   @observable
-  entries: HistoryEntry[] = []
+  entries: HistoryEntries = { allIds: [], byId: {} }
 
   /**
    * History selection.
@@ -30,7 +48,17 @@ export default class HistoryStore {
    */
   @action
   addToHistory = (shareResponse: ShareResponse): void => {
-    this.entries.unshift({ ...shareResponse, id: nanoid() })
+    const id = nanoid()
+
+    this.entries.allIds.unshift(id)
+    this.entries.byId[id] = {
+      ...shareResponse,
+      deleted: {
+        destination: false,
+        disk: false,
+      },
+      id,
+    }
   }
 
   /**
@@ -38,7 +66,7 @@ export default class HistoryStore {
    */
   @action
   clearHistory = (): void => {
-    this.entries = []
+    this.entries = { allIds: [], byId: {} }
   }
 
   /**
@@ -50,9 +78,22 @@ export default class HistoryStore {
     this.selection.previous = this.selection.current
     this.selection.current = entry
   }
+
+  /**
+   * Marks an history entry as deleted on disk.
+   * @param entry - The deleted entry.
+   */
+  @action
+  markAsDeletedOnDisk = (entry: HistoryEntry): void => {
+    this.entries.byId[entry.id].deleted.disk = true
+  }
 }
 
 export interface HistoryEntry extends ShareResponse {
+  deleted: {
+    destination: boolean
+    disk: boolean
+  }
   id: string
 }
 
@@ -63,6 +104,15 @@ export interface HistorySelection {
 
 interface SerializedHistoryEntry extends Omit<HistoryEntry, 'date'> {
   date: string
+}
+
+interface HistoryEntries {
+  allIds: string[]
+  byId: Record<string, HistoryEntry>
+}
+
+interface SerializedHistoryEntries extends Omit<HistoryEntries, 'byId'> {
+  byId: Record<string, SerializedHistoryEntry>
 }
 
 export type SelectEntry = (entry?: HistoryEntry) => void

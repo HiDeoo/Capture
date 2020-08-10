@@ -8,6 +8,7 @@ const color = {
   tint: '#2e91e8',
   white: '#ffffff',
   white1: '#dddddd',
+  white2: '#cecfd1',
   gray: '#848385',
 }
 
@@ -53,6 +54,9 @@ export default {
       },
       button: {
         color: color.white1,
+        disabled: {
+          color: '#737273',
+        },
         hover: {
           color: color.tint,
         },

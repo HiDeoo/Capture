@@ -44,7 +44,7 @@ const Wrapper = styled.div`
 const Content = styled.div`
   ${tw`flex flex-col h-full px-2`}
 
-  & > div:last-child {
+  & > div.previewBox {
     ${tw`flex-1 min-h-0 pt-6 text-center`}
   }
 `
@@ -127,8 +127,13 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
       <Buttons>
         <PanelButton label="Open URL" symbol={IconSymbol.Link} onClick={openUrl} />
         <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} onClick={copyUrl} />
-        <PanelButton label="Open file" symbol={IconSymbol.Doc} onClick={openFile} />
-        <PanelButton label="Copy path" symbol={IconSymbol.RectangleAndPaperclip} onClick={copyPath} />
+        <PanelButton label="Open file" symbol={IconSymbol.Doc} onClick={openFile} disabled={entry.deleted.disk} />
+        <PanelButton
+          label="Copy path"
+          onClick={copyPath}
+          disabled={entry.deleted.disk}
+          symbol={IconSymbol.RectangleAndPaperclip}
+        />
         <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} disabled />
       </Buttons>
       <FileName>{filename}</FileName>
@@ -143,9 +148,9 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
             minute: '2-digit',
           })}`}
         />
-        <BoxEntry label="Path" value={parentPath} />
+        <BoxEntry label="Path" value={!entry.deleted.disk ? parentPath : 'Deleted from disk'} />
       </Box>
-      <Box>
+      <Box visible={!entry.deleted.disk} className="previewBox">
         <Preview src={`file://${entry.path}`} />
       </Box>
     </Content>
@@ -164,9 +169,13 @@ const BoxTitle = styled.div`
   color: ${theme('library.panel.box.title')};
 `
 
-const Box: React.FC<BoxProps> = ({ children, title }) => {
+const Box: React.FC<BoxProps> = ({ children, className, title, visible = true }) => {
+  if (!visible) {
+    return null
+  }
+
   return (
-    <BoxWrapper>
+    <BoxWrapper className={className}>
       {title && <BoxTitle>{title}</BoxTitle>}
       {children}
     </BoxWrapper>
@@ -210,7 +219,7 @@ const StyledButton = styled(Button)`
   }
 
   &:disabled {
-    opacity: 0.6;
+    color: ${theme('library.panel.button.disabled.color')};
   }
 
   & > span {
@@ -238,7 +247,9 @@ interface PanelProps {
 }
 
 interface BoxProps {
+  className?: string
   title?: string
+  visible?: boolean
 }
 
 interface BoxEntryProps {

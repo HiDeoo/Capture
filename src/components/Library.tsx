@@ -11,7 +11,7 @@ import LibraryPanel from './LibraryPanel'
 const Wrapper = tw.div`flex flex-1 relative`
 
 const Library: React.FC = () => {
-  const { entries, selectEntry, selection } = useHistory()
+  const { entries, markAsDeletedOnDisk, selectEntry, selection } = useHistory()
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent): void {
@@ -31,7 +31,12 @@ const Library: React.FC = () => {
 
   return (
     <Wrapper>
-      <LibraryGrid entries={entries} selectedEntryId={selection.current?.id} selectEntry={selectEntry} />
+      <LibraryGrid
+        ids={entries.allIds}
+        selectEntry={selectEntry}
+        selectedEntryId={selection.current?.id}
+        markAsDeletedOnDisk={markAsDeletedOnDisk}
+      />
       <LibraryPanel selection={selection} selectEntry={selectEntry} />
     </Wrapper>
   )

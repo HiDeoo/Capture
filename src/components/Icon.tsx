@@ -15,6 +15,7 @@ export enum IconSymbol {
   ChevronDown = '􀆈',
   Circle = '􀀀',
   Doc = '􀈷',
+  ExclamationMarkCircle = '􀁞',
   Gear = '􀍟',
   Link = '􀉣',
   ListDash = '􀋱',

@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite'
 import { stripUnit } from 'polished'
 import React from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -6,8 +7,10 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { useHistory } from '../store'
 import type { HistoryEntry, SelectEntry } from '../store/history'
 import Theme from '../utils/theme'
+import Icon, { IconSymbol } from './Icon'
 import Img from './Img'
 
 /**
@@ -17,12 +20,24 @@ const GridGap = stripUnit(Theme.library.gap)
 const GridEntryHeight = stripUnit(Theme.library.size)
 const GridEntryWidth = stripUnit(Theme.library.size)
 
+const Deleted = styled.div`
+  ${tw`border-2 border-solid flex justify-center items-center text-3xl`}
+
+  background-color: ${theme('color.white2')};
+  border-color: ${theme('library.border')};
+  color: ${theme('color.gray')};
+  height: 70px;
+  outline: 1px solid ${theme('library.shadow')};
+  width: 90px;
+`
+
 const Entry = styled.div<EntryProps>`
   ${tw`flex items-center justify-center items-center w-full`}
 
   padding: ${Theme.library.gap};
 
-  & > img {
+  & > img,
+  & > ${Deleted} {
     ${(props) =>
       props.selected &&
       `
@@ -63,7 +78,7 @@ function getGridRowCount(columnCount: number, numEntries: number): number {
   return Math.ceil(numEntries / columnCount)
 }
 
-const LibraryGrid: React.FC<Props> = React.memo(({ entries, selectedEntryId, selectEntry }) => {
+const LibraryGrid: React.FC<Props> = React.memo(({ ids, markAsDeletedOnDisk, selectedEntryId, selectEntry }) => {
   const getItemKey: ItemKeySelector = ({ columnCount, columnIndex, data, rowIndex }) => {
     const index = rowIndex * columnCount + columnIndex
 
@@ -71,22 +86,22 @@ const LibraryGrid: React.FC<Props> = React.memo(({ entries, selectedEntryId, sel
       return `${rowIndex}-${columnIndex}`
     }
 
-    const entry = data[index]
+    const id = data[index]
 
-    return `${entry.id}-${columnIndex}`
+    return `${id}-${columnIndex}`
   }
 
   return (
     <AutoSizer>
       {({ height, width }) => {
         const columnInfos = getGridColumnInfos(width)
-        const rowCount = getGridRowCount(columnInfos.count, entries.length)
+        const rowCount = getGridRowCount(columnInfos.count, ids.length)
 
         return (
           <FixedSizeGrid
             width={width}
             height={height}
-            itemData={entries}
+            itemData={ids}
             rowCount={rowCount}
             columnCount={columnInfos.count}
             columnWidth={columnInfos.width}
@@ -102,6 +117,7 @@ const LibraryGrid: React.FC<Props> = React.memo(({ entries, selectedEntryId, sel
                 selectEntry={selectEntry}
                 columnCount={columnInfos.count}
                 selectedEntryId={selectedEntryId}
+                markAsDeletedOnDisk={markAsDeletedOnDisk}
               />
             )}
           </FixedSizeGrid>
@@ -111,24 +127,37 @@ const LibraryGrid: React.FC<Props> = React.memo(({ entries, selectedEntryId, sel
   )
 })
 
-const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
-  ({ columnCount, columnIndex, data, rowIndex, selectedEntryId, selectEntry, style }) => {
+const LibraryGridEntry: React.FC<LibraryGridEntryProps> = observer(
+  ({ columnCount, columnIndex, data, markAsDeletedOnDisk, rowIndex, selectedEntryId, selectEntry, style }) => {
+    const { entries } = useHistory()
+
     const index = rowIndex * columnCount + columnIndex
 
     if (index > data.length - 1) {
       return null
     }
 
-    const entry = data[index]
+    const id = data[index]
+    const entry = entries.byId[id]
     const selected = selectedEntryId === entry.id
 
     function onClick(): void {
       selectEntry(selected ? undefined : entry)
     }
 
+    function onError(): void {
+      markAsDeletedOnDisk(entry)
+    }
+
     return (
       <Entry style={style} onClick={onClick} selected={selected}>
-        <StyledImg src={`file://${entry.path}`} />
+        {entry.deleted.disk ? (
+          <Deleted>
+            <Icon symbol={IconSymbol.ExclamationMarkCircle} />
+          </Deleted>
+        ) : (
+          <StyledImg src={`file://${entry.path}`} onError={onError} />
+        )}
       </Entry>
     )
   }
@@ -136,19 +165,19 @@ const LibraryGridEntry: React.FC<LibraryGridEntryProps> = React.memo(
 
 export default LibraryGrid
 
-interface Props extends SelectionProps {
-  entries: HistoryEntry[]
+interface Props extends CommonProps {
+  ids: string[]
 }
 
-interface LibraryGridEntryProps extends GridChildComponentProps, SelectionProps {
+interface LibraryGridEntryProps extends GridChildComponentProps, CommonProps {
   columnCount: number
-  data: HistoryEntry[]
+  data: string[]
 }
 
 type ItemKeySelector = (params: {
   columnCount: number
   columnIndex: number
-  data: HistoryEntry[]
+  data: string[]
   rowIndex: number
 }) => React.Key
 
@@ -156,7 +185,8 @@ interface EntryProps {
   selected: boolean
 }
 
-interface SelectionProps {
+interface CommonProps {
+  markAsDeletedOnDisk: (entry: HistoryEntry) => void
   selectedEntryId: Optional<string>
   selectEntry: SelectEntry
 }
