@@ -68,3 +68,26 @@ function createDivElementWithId(id: string): HTMLDivElement {
 
   return parentElement
 }
+
+/**
+ * Triggers a callback when a click is detected outside of an element.
+ * @param element - The element to monitor.
+ * @param callback - The callback to trigger on click outside of the element.
+ */
+export function useOnClickOutside(element: React.RefObject<Element>, callback: () => void): void {
+  useEffect(() => {
+    const listener = (event: MouseEvent): void => {
+      if (!element.current || (event.target instanceof Element && element.current.contains(event.target))) {
+        return
+      }
+
+      callback()
+    }
+
+    document.addEventListener('mousedown', listener)
+
+    return () => {
+      document.removeEventListener('mousedown', listener)
+    }
+  }, [element, callback])
+}
