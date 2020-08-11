@@ -59,7 +59,7 @@ const CloseButton = styled(Button)`
   width: 25px;
 
   &:hover {
-    background-color: ${theme('color.black2')};
+    background-color: ${theme('color.black3')};
     color: ${theme('color.tint')};
   }
 `

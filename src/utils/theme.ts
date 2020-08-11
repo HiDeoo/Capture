@@ -4,11 +4,13 @@
 const color = {
   black: '#000000',
   black1: '#0e0e0e',
-  black2: '#2b282b',
+  black2: '#070709',
+  black3: '#2b282b',
   tint: '#2e91e8',
   white: '#ffffff',
-  white1: '#dddddd',
-  white2: '#cecfd1',
+  white1: '#e3e3e3',
+  white2: '#dddddd',
+  white3: '#cecfd1',
   gray: '#848385',
 }
 
@@ -60,10 +62,10 @@ export default {
     panel: {
       box: {
         border: '#565656',
-        title: color.white1,
+        title: color.white2,
       },
       button: {
-        color: color.white1,
+        color: color.white2,
         disabled: {
           color: '#737273',
         },
@@ -83,6 +85,28 @@ export default {
     selected: color.tint,
     shadow: '#0f0f11',
     size: '120px',
+  },
+  modal: {
+    background: '#19181e',
+    border: color.black2,
+    button: {
+      background: '#302f3c',
+      border: color.black2,
+      color: color.white,
+      hover: {
+        background: '#343342',
+        color: color.tint,
+      },
+      primary: {
+        background: '#267bc5',
+        hover: {
+          background: color.tint,
+          color: color.white,
+        },
+      },
+    },
+    color: color.white,
+    content: '#222129',
   },
   settings: {
     button: {
@@ -113,7 +137,7 @@ export default {
     background: '#141314',
     border: color.black,
     button: {
-      background: color.black2,
+      background: color.black3,
       color: color.tint,
     },
     color: color.white,
@@ -125,7 +149,7 @@ export default {
     blurred: {
       background: '#161516',
       border: '#080808',
-      color: '#e3e3e3',
+      color: color.white1,
       control: {
         background: '#3d3b3f',
       },

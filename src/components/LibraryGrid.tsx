@@ -23,7 +23,7 @@ const GridEntryWidth = stripUnit(Theme.library.size)
 const Deleted = styled.div`
   ${tw`border-2 border-solid flex justify-center items-center text-3xl`}
 
-  background-color: ${theme('color.white2')};
+  background-color: ${theme('color.white3')};
   border-color: ${theme('library.border')};
   color: ${theme('color.gray')};
   height: 70px;
