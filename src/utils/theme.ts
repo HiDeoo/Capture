@@ -13,10 +13,20 @@ const color = {
 }
 
 /**
+ * Custom easing functions.
+ * @see https://easings.net
+ */
+const easing = {
+  easeInCubic: 'cubic-bezier(0.32, 0, 0.67, 0)',
+  easeOutCubic: 'cubic-bezier(0.33, 1, 0.68, 1)',
+}
+
+/**
  * Application theme.
  */
 export default {
   color,
+  easing,
   // Toolbars or nested sidebars.
   bar: {
     background: '#181718',

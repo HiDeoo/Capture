@@ -14,6 +14,8 @@ import Icon, { IconSymbol } from './Icon'
 import Img from './Img'
 
 const transitionName = 'panelAnimation'
+const transitionEnterDuration = 350
+const transitionExitDuration = 250
 
 const Wrapper = styled.div`
   ${tw`absolute inset-y-0 right-0 border-solid border-l p-3 pb-4 text-sm`}
@@ -28,7 +30,7 @@ const Wrapper = styled.div`
 
   &.${transitionName}-enter-active {
     transform: translateX(0%);
-    transition: transform 350ms cubic-bezier(0.33, 1, 0.68, 1);
+    transition: transform ${transitionEnterDuration}ms ${theme('easing.easeOutCubic')};
   }
 
   &.${transitionName}-exit {
@@ -37,7 +39,7 @@ const Wrapper = styled.div`
 
   &.${transitionName}-exit-active {
     transform: translateX(100%);
-    transition: transform 250ms cubic-bezier(0.32, 0, 0.67, 0);
+    transition: transform ${transitionExitDuration}ms ${theme('easing.easeInCubic')};
   }
 `
 
@@ -90,7 +92,7 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
       unmountOnExit
       nodeRef={nodeRef}
       classNames={transitionName}
-      timeout={visible ? 350 : 250}
+      timeout={visible ? transitionEnterDuration : transitionExitDuration}
     >
       <Wrapper ref={nodeRef}>{entry && <Panel entry={entry} selectEntry={selectEntry} />}</Wrapper>
     </CSSTransition>
