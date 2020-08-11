@@ -85,7 +85,13 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
   const entry = visible ? selection.current : selection.previous
 
   return (
-    <CSSTransition unmountOnExit nodeRef={nodeRef} in={visible} timeout={2000} classNames={transitionName}>
+    <CSSTransition
+      in={visible}
+      unmountOnExit
+      nodeRef={nodeRef}
+      classNames={transitionName}
+      timeout={visible ? 350 : 250}
+    >
       <Wrapper ref={nodeRef}>{entry && <Panel entry={entry} selectEntry={selectEntry} />}</Wrapper>
     </CSSTransition>
   )
