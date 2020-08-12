@@ -68,13 +68,13 @@ const Overlay = styled.div`
 `
 
 const Header = styled.div`
-  ${tw`py-2 px-3 border-solid border-b text-base font-bold flex items-center`}
+  ${tw`py-2 px-4 border-solid border-b text-base font-bold flex items-center`}
 
   border-color: ${theme('modal.border')};
 `
 
 const Content = styled.div`
-  ${tw`overflow-auto py-2 px-3`}
+  ${tw`overflow-auto py-3 px-4`}
 
   background-color: ${theme('modal.content')};
 
@@ -92,7 +92,7 @@ const Content = styled.div`
 `
 
 const Footer = styled(Header)`
-  ${tw`border-b-0 justify-end pt-0`}
+  ${tw`border-b-0 justify-end pt-1 pb-3`}
 
   background-color: ${theme('modal.content')};
 `
