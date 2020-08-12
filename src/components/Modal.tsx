@@ -85,7 +85,7 @@ const Footer = styled(Header)`
   background-color: ${theme('modal.content')};
 `
 
-const StyledButton = styled(Button)<StyledButtonProps>`
+export const ModalButton = styled(Button)<ModalButtonProps>`
   ${tw`border border-solid px-4 py-1 rounded mr-2 mb-1 text-sm font-medium`}
 
   background-color: ${ifProp('primary', theme('modal.button.primary.background'), theme('modal.button.background'))};
@@ -117,7 +117,7 @@ export function useModal(): ModalHook {
   return { isModalOpened: opened, openModal: setOpened, toggleModal: toggle }
 }
 
-const Modal: React.FC<Props> = ({ children, open, opened, title }) => {
+const Modal: React.FC<Props> = ({ buttons = [], children, closeButtonLabel, open, opened, title }) => {
   const target = usePortal('modal')
   const overlay = useRef<HTMLDivElement>(null)
   const wrapper = useRef<HTMLDivElement>(null)
@@ -136,6 +136,10 @@ const Modal: React.FC<Props> = ({ children, open, opened, title }) => {
     }
   }
 
+  function onClickCloseButton(): void {
+    open(false)
+  }
+
   return createPortal(
     <CSSTransition
       in={opened}
@@ -149,14 +153,16 @@ const Modal: React.FC<Props> = ({ children, open, opened, title }) => {
           <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
-            <StyledButton>Cancel</StyledButton>
-            <StyledButton>Ok</StyledButton>
-            <StyledButton primary>Cancel</StyledButton>
-            <StyledButton primary>Ok</StyledButton>
-            <StyledButton disabled>Cancel</StyledButton>
-            <StyledButton disabled primary>
-              Ok
-            </StyledButton>
+            <ModalButton onClick={onClickCloseButton} primary={buttons.length === 0}>
+              {closeButtonLabel ?? 'Close'}
+            </ModalButton>
+            {React.Children.map(buttons, (button, index) => {
+              if (isModalButton(button)) {
+                return React.cloneElement(button, { primary: index === buttons.length - 1 })
+              }
+
+              return null
+            })}
           </Footer>
         </Wrapper>
       </Overlay>
@@ -167,7 +173,13 @@ const Modal: React.FC<Props> = ({ children, open, opened, title }) => {
 
 export default Modal
 
+function isModalButton(element: {} | null | undefined): element is React.ReactElement<ModalButtonProps> {
+  return React.isValidElement<ModalButtonProps>(element) && element.type === ModalButton
+}
+
 export interface Props {
+  buttons?: React.ReactNode[]
+  closeButtonLabel?: string
   open: React.Dispatch<React.SetStateAction<boolean>>
   opened: boolean
   title: string
@@ -179,6 +191,6 @@ interface ModalHook {
   toggleModal: () => void
 }
 
-interface StyledButtonProps {
+interface ModalButtonProps {
   primary?: boolean
 }
