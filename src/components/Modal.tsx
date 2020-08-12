@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
 import styled from 'styled-components/macro'
@@ -108,6 +108,10 @@ export const ModalButton = styled(Button)<ModalButtonProps>`
   &:last-of-type {
     ${tw`mr-0`}
   }
+
+  &:focus {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3)
+  }
 `
 
 export function useModal(): ModalHook {
@@ -143,7 +147,7 @@ const Modal: React.FC<Props> = ({ buttons = [], children, closeButtonLabel, open
       timeout={opened ? transitionEnterDuration : transitionExitDuration}
     >
       <Overlay ref={overlay}>
-        <Wrapper ref={wrapper} onKeyDown={onKeyDown} tabIndex={-1}>
+        <Wrapper ref={wrapper} onKeyDown={onKeyDown} tabIndex={-1} role="dialog">
           <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
