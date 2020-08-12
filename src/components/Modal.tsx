@@ -6,7 +6,7 @@ import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import { useOnClickOutside, usePortal } from '../utils/react'
-import Button from './Button'
+import Button, { ButtonProps } from './Button'
 
 const transitionName = 'modalAnimation'
 const transitionEnterDuration = 350
@@ -124,12 +124,6 @@ const Modal: React.FC<Props> = ({ buttons = [], children, closeButtonLabel, open
 
   useOnClickOutside(wrapper, () => open(false))
 
-  useEffect(() => {
-    if (wrapper.current) {
-      wrapper.current.focus()
-    }
-  })
-
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
     if (event.key === 'Escape') {
       open(false)
@@ -153,12 +147,14 @@ const Modal: React.FC<Props> = ({ buttons = [], children, closeButtonLabel, open
           <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
-            <ModalButton onClick={onClickCloseButton} primary={buttons.length === 0}>
+            <ModalButton onClick={onClickCloseButton} primary={buttons.length === 0} autoFocus={buttons.length === 0}>
               {closeButtonLabel ?? 'Close'}
             </ModalButton>
             {React.Children.map(buttons, (button, index) => {
+              const primary = index === buttons.length - 1
+
               if (isModalButton(button)) {
-                return React.cloneElement(button, { primary: index === buttons.length - 1 })
+                return React.cloneElement(button, { autoFocus: primary, primary })
               }
 
               return null
@@ -191,6 +187,6 @@ interface ModalHook {
   toggleModal: () => void
 }
 
-interface ModalButtonProps {
+interface ModalButtonProps extends ButtonProps {
   primary?: boolean
 }
