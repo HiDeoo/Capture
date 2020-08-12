@@ -10,8 +10,10 @@ import { getIpcRenderer } from '../main/ipc'
 import type { HistoryEntry, HistorySelection, SelectEntry } from '../store/history'
 import { splitFilePath } from '../utils/string'
 import Button from './Button'
+import DeleteModal from './DeleteModal'
 import Icon, { IconSymbol } from './Icon'
 import Img from './Img'
+import { useModal } from './Modal'
 
 const transitionName = 'panelAnimation'
 const transitionEnterDuration = 350
@@ -102,6 +104,8 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
 export default LibraryPanel
 
 const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
+  const { isModalOpened, openModal } = useModal()
+
   const [parentPath, filename] = splitFilePath(entry.path)
   const destination = getDestination(entry.destinationId)
 
@@ -125,6 +129,10 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
     return getIpcRenderer().invoke('copyTextToClipboard', entry.path)
   }
 
+  function openDeleteModal(): void {
+    openModal(true)
+  }
+
   return (
     <Content>
       <div>
@@ -142,7 +150,12 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
           disabled={entry.deleted.disk}
           symbol={IconSymbol.RectangleAndPaperclip}
         />
-        <PanelButton label="Delete" symbol={IconSymbol.MinusCircle} disabled />
+        <PanelButton
+          label="Delete"
+          onClick={openDeleteModal}
+          symbol={IconSymbol.MinusCircle}
+          disabled={entry.deleted.disk && entry.deleted.destination}
+        />
       </Buttons>
       <FileName>{filename}</FileName>
       <Box title="Informations">
@@ -161,6 +174,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
       <Box visible={!entry.deleted.disk} className="previewBox">
         <Preview src={`file://${entry.path}`} />
       </Box>
+      <DeleteModal key={entry.id} opened={isModalOpened} open={openModal} entry={entry} />
     </Content>
   )
 }
