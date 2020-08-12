@@ -143,6 +143,8 @@ const Modal: React.FC<Props> = ({ buttons = [], children, closeButtonLabel, open
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
     if (event.key === 'Escape') {
       open(false)
+
+      event.stopPropagation()
     }
   }
 
