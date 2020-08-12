@@ -77,6 +77,18 @@ const Content = styled.div`
   ${tw`overflow-auto py-2 px-3`}
 
   background-color: ${theme('modal.content')};
+
+  & label input[type='checkbox'] {
+    & + span {
+      background-color: ${theme('modal.button.background')};
+    }
+  }
+
+  & label:hover input[type='checkbox']:not(:disabled):not(:checked) {
+    & + span {
+      background-color: ${theme('modal.button.hover.background')};
+    }
+  }
 `
 
 const Footer = styled(Header)`
