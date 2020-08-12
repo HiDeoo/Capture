@@ -4,8 +4,9 @@ import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 const Wrapper = styled.label<WrapperProps>`
-  ${tw`block mb-1 flex items-center relative`}
+  ${tw`block flex items-center relative`}
 
+  margin-bottom: 0.35rem;
   opacity: ${ifProp('disabled', 0.6, 1)};
 
   &:last-child {
@@ -25,7 +26,7 @@ const Input = tw.input`mr-3 invisible`
 const Label = tw.span`cursor-pointer`
 
 const CheckMark = styled.span`
-  ${tw`absolute inset-0 rounded-sm cursor-pointer border-solid border`}
+  ${tw`absolute inset-0 rounded cursor-pointer border-solid border`}
 
   background-color: ${theme('color.black3')};
   border-color: ${theme('color.black2')};
