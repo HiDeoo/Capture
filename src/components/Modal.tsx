@@ -117,7 +117,7 @@ export function useModal(): ModalHook {
   return { isModalOpened: opened, openModal: setOpened, toggleModal: toggle }
 }
 
-const Modal: React.FC<Props> = ({ children, open, opened }) => {
+const Modal: React.FC<Props> = ({ children, open, opened, title }) => {
   const target = usePortal('modal')
   const overlay = useRef<HTMLDivElement>(null)
   const wrapper = useRef<HTMLDivElement>(null)
@@ -146,7 +146,7 @@ const Modal: React.FC<Props> = ({ children, open, opened }) => {
     >
       <Overlay ref={overlay}>
         <Wrapper ref={wrapper} onKeyDown={onKeyDown} tabIndex={-1}>
-          <Header>Title</Header>
+          <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
             <StyledButton>Cancel</StyledButton>
@@ -170,6 +170,7 @@ export default Modal
 export interface Props {
   open: React.Dispatch<React.SetStateAction<boolean>>
   opened: boolean
+  title: string
 }
 
 interface ModalHook {
