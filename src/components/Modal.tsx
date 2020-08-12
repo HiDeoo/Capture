@@ -133,7 +133,7 @@ export function useModal(): ModalHook {
   return { isModalOpened: opened, openModal: setOpened, toggleModal: toggle }
 }
 
-const Modal: React.FC<Props> = ({ buttons = [], children, closeButtonLabel, open, opened, title }) => {
+const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel, open, opened, title }) => {
   const target = usePortal('modal')
   const overlay = useRef<HTMLDivElement>(null)
   const wrapper = useRef<HTMLDivElement>(null)
@@ -191,7 +191,7 @@ function isModalButton(element: {} | null | undefined): element is React.ReactEl
   return React.isValidElement<ModalButtonProps>(element) && element.type === ModalButton
 }
 
-export interface Props {
+export interface ModalProps {
   buttons?: React.ReactNode[]
   closeButtonLabel?: string
   open: React.Dispatch<React.SetStateAction<boolean>>
