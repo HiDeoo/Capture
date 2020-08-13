@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
+import { getIpcRenderer } from '../main/ipc'
+import { useHistory } from '../store'
 import { HistoryEntry } from '../store/history'
 import Checkbox from './Checkbox'
 import LoadingBar from './LoadingBar'
@@ -12,6 +14,8 @@ import Modal, { ModalButton, ModalProps } from './Modal'
 const initialOptions = { destination: false, disk: false }
 
 const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
+  const { markAsDeletedOnDisk } = useHistory()
+
   const [locked, setLocked] = useState(false)
   const [options, setOptions] = useState(initialOptions)
   const destination = getDestination(entry.destinationId)
@@ -30,7 +34,7 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
     setOptions((prevOptions) => ({ ...prevOptions, destination: checked }))
   }
 
-  function onClickOk(): void {
+  async function onClickOk(): Promise<void> {
     if (!options.destination && !options.disk) {
       open(false)
 
@@ -38,6 +42,19 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
     }
 
     setLocked(true)
+
+    try {
+      if (options.disk) {
+        await getIpcRenderer().invoke('deleteFile', entry.path)
+        markAsDeletedOnDisk(entry)
+      }
+    } catch (error) {
+      // TODO Handle errors
+      console.log('error ', error)
+    } finally {
+      setLocked(false)
+      open(false)
+    }
   }
 
   return (

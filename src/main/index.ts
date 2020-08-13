@@ -162,6 +162,10 @@ function registerIpcHandlers(): void {
     return clipboard.writeText(text)
   })
 
+  ipcMain.handle('deleteFile', (event: IpcMainInvokeEvent, filePath: string) => {
+    return fs.unlink(filePath)
+  })
+
   ipcMain.handle('openFile', (event: IpcMainInvokeEvent, filePath: string) => {
     return shell.openPath(filePath)
   })
@@ -186,6 +190,7 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('captureScreenshot')
   ipcMain.removeHandler('closeWindow')
   ipcMain.removeHandler('copyTextToClipboard')
+  ipcMain.removeHandler('deleteFile')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
   ipcMain.removeHandler('saveImage')

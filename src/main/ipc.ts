@@ -19,6 +19,7 @@ type CaptureRendererToMainEvents = {
   captureScreenshot: () => void
   closeWindow: () => void
   copyTextToClipboard: (text: string) => void
+  deleteFile: (path: string) => void
   openFile: (path: string) => string
   openUrl: (url: string) => void
   saveImage: (path: string, data: string) => number
