@@ -6,6 +6,7 @@ import tw from 'tailwind.macro'
 import { getDestination } from '../destinations'
 import { HistoryEntry } from '../store/history'
 import Checkbox from './Checkbox'
+import LoadingBar from './LoadingBar'
 import Modal, { ModalButton, ModalProps } from './Modal'
 
 const initialOptions = { destination: false, disk: false }
@@ -48,6 +49,7 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
       closeButtonLabel="Cancel"
       buttons={[<ModalButton disabled={locked} children="Ok" onClick={onClickOk} />]}
     >
+      <LoadingBar enabled={locked} relative />
       <div css={tw`mb-2`}>Pick where to delete the screenshot:</div>
       <Checkbox
         checked={options.disk}

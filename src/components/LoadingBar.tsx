@@ -18,7 +18,7 @@ const LoadingBarAnimation = keyframes`
 `
 
 const LoadingBar = styled.div<Props>`
-  ${tw`fixed inset-0`}
+  ${tw`inset-0`}
 
   animation-duration: 2s;
   animation-iteration-count: infinite;
@@ -27,6 +27,7 @@ const LoadingBar = styled.div<Props>`
   animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
   background-color: ${ifProp('enabled', theme('color.tint'), 'transparent')};
   height: 4px;
+  position: ${ifProp('relative', 'absolute', 'fixed')};
   will-change: margin-left, width;
 `
 
@@ -34,4 +35,5 @@ export default LoadingBar
 
 interface Props {
   enabled: boolean
+  relative?: boolean
 }
