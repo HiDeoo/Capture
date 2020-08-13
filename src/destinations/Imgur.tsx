@@ -102,15 +102,7 @@ class Imgur extends Destination {
   ): Promise<void> {
     const headers = await this.getHeaders(deleteOptions.anon, getSettings, setSettings)
 
-    const response = await this.api
-      .url(`/3/image/${deleteOptions.deleteId}`)
-      .headers(headers)
-      .delete()
-      .json<UploadApiResponse>()
-
-    console.log('response ', response)
-
-    return Promise.resolve()
+    return this.api.url(`/3/image/${deleteOptions.deleteId}`).headers(headers).delete()
   }
 
   /**
