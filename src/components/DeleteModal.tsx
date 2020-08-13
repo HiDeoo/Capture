@@ -14,7 +14,7 @@ import Modal, { ModalButton, ModalProps } from './Modal'
 const initialOptions = { destination: false, disk: false }
 
 const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
-  const { markAsDeletedOnDestination, markAsDeletedOnDisk } = useHistory()
+  const { markAsDeletedOnDestination, markAsDeletedOnDisk, selectEntry } = useHistory()
   const { getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
 
   const [locked, setLocked] = useState(false)
@@ -57,6 +57,10 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
           getDestinationSettingsSetter(entry.destinationId)
         )
         markAsDeletedOnDestination(entry)
+      }
+
+      if (options.disk && options.destination) {
+        selectEntry()
       }
     } catch (error) {
       // TODO Handle errors
