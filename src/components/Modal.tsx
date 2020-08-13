@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
 import styled from 'styled-components/macro'
@@ -13,7 +13,7 @@ const transitionEnterDuration = 350
 const transitionExitDuration = 250
 
 const Wrapper = styled.div`
-  ${tw`flex flex-col outline-none rounded overflow-hidden text-sm`}
+  ${tw`flex flex-col outline-none rounded overflow-hidden text-sm relative`}
 
   background-color: ${theme('modal.background')};
   box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.8);
@@ -144,15 +144,27 @@ const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel,
     }
   })
 
-  function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
-    if (event.key === 'Escape') {
-      if (!locked) {
-        open(false)
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent): void {
+      if (!opened) {
+        return
       }
 
-      event.stopPropagation()
+      if (event.key === 'Escape') {
+        if (!locked) {
+          open(false)
+        }
+
+        event.stopImmediatePropagation()
+      }
     }
-  }
+
+    window.addEventListener('keydown', onKeyDown, true)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown, true)
+    }
+  }, [locked, open, opened])
 
   function onClickCloseButton(): void {
     open(false)
@@ -161,13 +173,14 @@ const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel,
   return createPortal(
     <CSSTransition
       in={opened}
+      mountOnEnter
       unmountOnExit
       nodeRef={overlay}
       classNames={transitionName}
       timeout={opened ? transitionEnterDuration : transitionExitDuration}
     >
       <Overlay ref={overlay}>
-        <Wrapper ref={wrapper} onKeyDown={onKeyDown} tabIndex={-1} role="dialog">
+        <Wrapper ref={wrapper} tabIndex={-1} role="dialog">
           <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
