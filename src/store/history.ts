@@ -1,5 +1,5 @@
 import { formatISO, parseISO } from 'date-fns'
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { format, ignore } from 'mobx-sync'
 import { nanoid } from 'nanoid'
 
@@ -10,7 +10,7 @@ import type { ShareResponse } from '../destinations/DestinationBase'
  */
 export default class HistoryStore {
   /**
-   * History entries with IDs in reverse-chronological order.
+   * Internal store of history entries with IDs in reverse-chronological order.
    */
   @format<HistoryEntries, SerializedHistoryEntries>(
     (data) => {
@@ -35,7 +35,26 @@ export default class HistoryStore {
     }
   )
   @observable
-  entries: HistoryEntries = { allIds: [], byId: {} }
+  private _entries: HistoryEntries = { allIds: [], byId: {} }
+
+  /**
+   * History entries with IDs in reverse-chronological order.
+   */
+  @computed
+  get entries(): HistoryEntries {
+    return this._entries.allIds.reduce(
+      (acc, id) => {
+        const entry = this._entries.byId[id]
+
+        if (!(entry.deleted.destination && entry.deleted.disk)) {
+          acc.allIds.push(id)
+        }
+
+        return acc
+      },
+      { allIds: [], byId: this._entries.byId } as HistoryEntries
+    )
+  }
 
   /**
    * History selection.
@@ -50,8 +69,8 @@ export default class HistoryStore {
   addToHistory = (shareResponse: ShareResponse): void => {
     const id = nanoid()
 
-    this.entries.allIds.unshift(id)
-    this.entries.byId[id] = {
+    this._entries.allIds.unshift(id)
+    this._entries.byId[id] = {
       ...shareResponse,
       deleted: {
         destination: false,
@@ -66,7 +85,7 @@ export default class HistoryStore {
    */
   @action
   clearHistory = (): void => {
-    this.entries = { allIds: [], byId: {} }
+    this._entries = { allIds: [], byId: {} }
   }
 
   /**
@@ -85,7 +104,7 @@ export default class HistoryStore {
    */
   @action
   markAsDeletedOnDisk = (entry: HistoryEntry): void => {
-    this.entries.byId[entry.id].deleted.disk = true
+    this._entries.byId[entry.id].deleted.disk = true
   }
 
   /**
@@ -94,7 +113,7 @@ export default class HistoryStore {
    */
   @action
   markAsDeletedOnDestination = (entry: HistoryEntry): void => {
-    this.entries.byId[entry.id].deleted.destination = true
+    this._entries.byId[entry.id].deleted.destination = true
   }
 }
 
