@@ -133,16 +133,22 @@ export function useModal(): ModalHook {
   return { isModalOpened: opened, openModal: setOpened, toggleModal: toggle }
 }
 
-const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel, open, opened, title }) => {
+const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel, locked, open, opened, title }) => {
   const target = usePortal('modal')
   const overlay = useRef<HTMLDivElement>(null)
   const wrapper = useRef<HTMLDivElement>(null)
 
-  useOnClickOutside(wrapper, () => open(false))
+  useOnClickOutside(wrapper, () => {
+    if (!locked) {
+      open(false)
+    }
+  })
 
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
     if (event.key === 'Escape') {
-      open(false)
+      if (!locked) {
+        open(false)
+      }
 
       event.stopPropagation()
     }
@@ -165,7 +171,12 @@ const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel,
           <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
-            <ModalButton onClick={onClickCloseButton} primary={buttons.length === 0} autoFocus={buttons.length === 0}>
+            <ModalButton
+              disabled={locked}
+              onClick={onClickCloseButton}
+              primary={buttons.length === 0}
+              autoFocus={buttons.length === 0}
+            >
               {closeButtonLabel ?? 'Close'}
             </ModalButton>
             {React.Children.map(buttons, (button, index) => {
@@ -194,6 +205,7 @@ function isModalButton(element: {} | null | undefined): element is React.ReactEl
 export interface ModalProps {
   buttons?: React.ReactNode[]
   closeButtonLabel?: string
+  locked?: boolean
   open: React.Dispatch<React.SetStateAction<boolean>>
   opened: boolean
   title: string

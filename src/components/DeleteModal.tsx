@@ -11,6 +11,7 @@ import Modal, { ModalButton, ModalProps } from './Modal'
 const initialOptions = { destination: false, disk: false }
 
 const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
+  const [locked, setLocked] = useState(false)
   const [options, setOptions] = useState(initialOptions)
   const destination = getDestination(entry.destinationId)
 
@@ -29,28 +30,35 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
   }
 
   function onClickOk(): void {
-    open(false)
+    if (!options.destination && !options.disk) {
+      open(false)
+
+      return
+    }
+
+    setLocked(true)
   }
 
   return (
     <Modal
       open={open}
       title="Delete"
+      locked={locked}
       opened={opened}
       closeButtonLabel="Cancel"
-      buttons={[<ModalButton children="Ok" onClick={onClickOk} />]}
+      buttons={[<ModalButton disabled={locked} children="Ok" onClick={onClickOk} />]}
     >
       <div css={tw`mb-2`}>Pick where to delete the screenshot:</div>
       <Checkbox
         checked={options.disk}
         onChange={onChangeDisk}
-        disabled={entry.deleted.disk}
+        disabled={locked || entry.deleted.disk}
         label={entry.deleted.disk ? 'Already deleted from disk' : 'Delete from disk'}
       />
       <Checkbox
         checked={options.destination}
         onChange={onChangeDestination}
-        disabled={entry.deleted.destination}
+        disabled={locked || entry.deleted.destination}
         label={
           entry.deleted.destination
             ? `Already deleted from ${destination.getConfiguration().name}`
