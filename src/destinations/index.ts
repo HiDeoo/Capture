@@ -42,9 +42,7 @@ export function getDestinationsDefaultSettings(): DestinationsSettings {
   return Object.entries(getDestinations()).reduce((acc, [id, destination]) => {
     const defaultSettings = destination.getDefaultSettings()
 
-    if (Object.keys(defaultSettings).length > 0) {
-      acc[id] = defaultSettings
-    }
+    acc[id] = defaultSettings
 
     return acc
   }, {} as DestinationsSettings)
