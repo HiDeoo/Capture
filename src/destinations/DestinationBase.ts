@@ -23,7 +23,7 @@ export default abstract class Destination {
   abstract getDefaultSettings(): DestinationSettings
 
   /**
-   * Share a file to the destination.
+   * Shares a file to the destination.
    * @param  path - The path of the file to share.
    * @param  size - The shared image file size.
    * @param  dimensions - The shared image dimensions.
@@ -40,6 +40,18 @@ export default abstract class Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<ShareResponse>
+
+  /**
+   * Deletes a file from the destination.
+   * @param deleteOptions - The options related to this specific deletion.
+   * @param getSettings - A destination settings getter.
+   * @param setSettings - A destination settings setter.
+   */
+  abstract delete(
+    deleteOptions: DeleteOptions,
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter
+  ): Promise<void>
 
   /**
    * Returns the destination settings panel if any.
@@ -113,11 +125,12 @@ export default abstract class Destination {
     dimensions: ImageDimensions,
     destinationShareResponse: DestinationShareResponse
   ): ShareResponse {
-    const { id, deleteLink, link } = destinationShareResponse
+    const { anon, id, deleteId, link } = destinationShareResponse
 
     return {
+      anon,
       date: new Date(),
-      deleteLink,
+      deleteId,
       destinationId: this.getConfiguration().id,
       dimensions,
       link,
@@ -136,8 +149,9 @@ export interface DestinationConfiguration {
 }
 
 export interface ShareResponse {
+  anon: boolean
   date: Date
-  deleteLink?: string
+  deleteId?: string
   destinationId: string
   dimensions: ImageDimensions
   link: string
@@ -146,7 +160,7 @@ export interface ShareResponse {
   size: number
 }
 
-interface DestinationShareResponse extends Pick<ShareResponse, 'link' | 'deleteLink'> {
+interface DestinationShareResponse extends Pick<ShareResponse, 'anon' | 'link' | 'deleteId'> {
   id: ShareResponse['shareId']
 }
 
@@ -163,10 +177,11 @@ export type DestinationSettingSetter = <Settings extends DestinationSettings>(
 ) => void
 
 /**
- * Share options that can be customized by a destination before sharing an image.
+ * Options that can be customized by a destination before sharing or deleting an image.
  */
 export type ShareOptionValue = Optional<string | number | boolean>
 export type ShareOptions = Record<string, ShareOptionValue>
+export type DeleteOptions = Record<string, ShareOptionValue>
 
 export type ShareOptionSetter = <DestinationShareOptions extends ShareOptions>(
   key: KnownKeys<DestinationShareOptions>,

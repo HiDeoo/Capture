@@ -87,6 +87,15 @@ export default class HistoryStore {
   markAsDeletedOnDisk = (entry: HistoryEntry): void => {
     this.entries.byId[entry.id].deleted.disk = true
   }
+
+  /**
+   * Marks an history entry as deleted on its destination.
+   * @param entry - The deleted entry.
+   */
+  @action
+  markAsDeletedOnDestination = (entry: HistoryEntry): void => {
+    this.entries.byId[entry.id].deleted.destination = true
+  }
 }
 
 export interface HistoryEntry extends ShareResponse {

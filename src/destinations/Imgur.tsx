@@ -3,6 +3,7 @@ import React from 'react'
 
 import type { ImageDimensions } from '../components/Img'
 import Destination, {
+  DeleteOptions,
   DestinationConfiguration,
   DestinationSettings,
   DestinationSettingSetter,
@@ -67,10 +68,66 @@ class Imgur extends Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<ShareResponse> {
+    const anon = shareOptions.account === AccountShareOption.Anon
+    const headers = await this.getHeaders(anon, getSettings, setSettings)
+    const blob = await this.getFileBlob(path)
+
+    const response = await this.api
+      .url('/3/upload')
+      .headers(headers)
+      .formData({ image: blob })
+      .post()
+      .json<UploadApiResponse>()
+
+    const { id, deletehash, link } = response.data
+
+    return this.getShareResponse(path, size, dimensions, {
+      anon,
+      id,
+      deleteId: deletehash,
+      link,
+    })
+  }
+
+  /**
+   * Deletes a file from Imgur.
+   * @param deleteOptions - The options related to this specific deletion.
+   * @param getSettings - A destination settings getter.
+   * @param setSettings - A destination settings setter.
+   */
+  async delete(
+    deleteOptions: ImgurDeleteOptions,
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter
+  ): Promise<void> {
+    const headers = await this.getHeaders(deleteOptions.anon, getSettings, setSettings)
+
+    const response = await this.api
+      .url(`/3/image/${deleteOptions.deleteId}`)
+      .headers(headers)
+      .delete()
+      .json<UploadApiResponse>()
+
+    console.log('response ', response)
+
+    return Promise.resolve()
+  }
+
+  /**
+   * Returns the headers to use while communicating with Imgur.
+   * @param anon - Defines if the request should be anonymous or not.
+   * @param getSettings - A destination settings getter.
+   * @param setSettings - A destination settings setter.
+   */
+  async getHeaders(
+    anon: boolean,
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter
+  ): Promise<Record<string, string>> {
     let settings = getSettings<ImgurSettings>()
     let headers: Record<string, string>
 
-    if (shareOptions.account === AccountShareOption.User) {
+    if (!anon) {
       if (!settings.accessToken || !settings.expiry || !settings.refreshToken) {
         throw new Error('Missing access token, refresh token or expiry to share file.')
       }
@@ -92,23 +149,7 @@ class Imgur extends Destination {
       headers = { Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}` }
     }
 
-    const blob = await this.getFileBlob(path)
-
-    const response = await this.api
-      .url('/3/upload')
-      .headers(headers)
-      .formData({ image: blob })
-      .post()
-      .json<UploadApiResponse>()
-
-    const { id, deletehash, link } = response.data
-    const request = this.api.url(`/3/image/${deletehash}`)
-
-    return this.getShareResponse(path, size, dimensions, {
-      id,
-      deleteLink: request._url,
-      link,
-    })
+    return headers
   }
 
   /**
@@ -246,6 +287,11 @@ export interface ImgurSettings extends DestinationSettings {
 
 export interface ImgurShareOptions extends ShareOptions {
   account?: AccountShareOption
+}
+
+export interface ImgurDeleteOptions extends DeleteOptions {
+  anon: boolean
+  deleteId: string
 }
 
 interface RefreshTokenApiResponse {

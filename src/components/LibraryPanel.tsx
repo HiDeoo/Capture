@@ -142,8 +142,13 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
         </CloseButton>
       </div>
       <Buttons>
-        <PanelButton label="Open URL" symbol={IconSymbol.Link} onClick={openUrl} />
-        <PanelButton label="Copy URL" symbol={IconSymbol.Paperclip} onClick={copyUrl} />
+        <PanelButton disabled={entry.deleted.destination} label="Open URL" symbol={IconSymbol.Link} onClick={openUrl} />
+        <PanelButton
+          label="Copy URL"
+          onClick={copyUrl}
+          symbol={IconSymbol.Paperclip}
+          disabled={entry.deleted.destination}
+        />
         <PanelButton label="Open file" symbol={IconSymbol.Doc} onClick={openFile} disabled={entry.deleted.disk} />
         <PanelButton
           label="Copy path"
@@ -160,7 +165,10 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
       </Buttons>
       <FileName>{filename}</FileName>
       <Box title="Informations">
-        <BoxEntry label="Shared on" value={destination.getConfiguration().name} />
+        <BoxEntry
+          label="Shared on"
+          value={`${entry.deleted.destination ? 'Deleted from ' : ''} ${destination.getConfiguration().name}`}
+        />
         <BoxEntry label="Dimensions" value={`${entry.dimensions.width} x ${entry.dimensions.height}`} />
         <BoxEntry label="Size" value={filesize(entry.size, { round: 0 })} />
         <BoxEntry

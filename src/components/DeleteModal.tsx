@@ -5,7 +5,7 @@ import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
-import { useHistory } from '../store'
+import { useHistory, useSettings } from '../store'
 import { HistoryEntry } from '../store/history'
 import Checkbox from './Checkbox'
 import LoadingBar from './LoadingBar'
@@ -14,7 +14,8 @@ import Modal, { ModalButton, ModalProps } from './Modal'
 const initialOptions = { destination: false, disk: false }
 
 const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
-  const { markAsDeletedOnDisk } = useHistory()
+  const { markAsDeletedOnDestination, markAsDeletedOnDisk } = useHistory()
+  const { getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
 
   const [locked, setLocked] = useState(false)
   const [options, setOptions] = useState(initialOptions)
@@ -47,6 +48,15 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
       if (options.disk) {
         await getIpcRenderer().invoke('deleteFile', entry.path)
         markAsDeletedOnDisk(entry)
+      }
+
+      if (options.destination) {
+        await destination.delete(
+          { anon: entry.anon, deleteId: entry.deleteId },
+          getDestinationSettingsGetter(entry.destinationId),
+          getDestinationSettingsSetter(entry.destinationId)
+        )
+        markAsDeletedOnDestination(entry)
       }
     } catch (error) {
       // TODO Handle errors
