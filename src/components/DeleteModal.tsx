@@ -1,6 +1,6 @@
 import 'styled-components/macro'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from 'tailwind.macro'
 
 import { getDestination } from '../destinations'
@@ -8,9 +8,17 @@ import { HistoryEntry } from '../store/history'
 import Checkbox from './Checkbox'
 import Modal, { ModalButton, ModalProps } from './Modal'
 
+const initialOptions = { destination: false, disk: false }
+
 const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
-  const [options, setOptions] = useState({ destination: false, disk: false })
+  const [options, setOptions] = useState(initialOptions)
   const destination = getDestination(entry.destinationId)
+
+  useEffect(() => {
+    if (!opened) {
+      setOptions(initialOptions)
+    }
+  }, [opened])
 
   function onChangeDisk(checked: boolean): void {
     setOptions((prevOptions) => ({ ...prevOptions, disk: checked }))
