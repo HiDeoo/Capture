@@ -91,6 +91,7 @@ const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
   return (
     <CSSTransition
       in={visible}
+      mountOnEnter
       unmountOnExit
       nodeRef={nodeRef}
       classNames={transitionName}
