@@ -19,6 +19,19 @@ export class AppError extends Error {
   }
 }
 
+/**
+ * Custom error class that should be used for errors from the main process with a user facing message.
+ */
+export class MainProcessError extends Error {
+  constructor(message: string, public internalError?: string) {
+    super()
+
+    this.message = message
+
+    Object.setPrototypeOf(this, MainProcessError.prototype)
+  }
+}
+
 const ErrorBoundary: React.FC<Props> = ({ children, primaryButtonHandler, primaryButtonLabel }) => {
   function renderFallback(props: FallbackProps): React.ReactElement {
     return (
@@ -38,7 +51,8 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
 }) => {
   const { isModalOpened, openModal } = useModal()
 
-  const message = error instanceof AppError ? error.message : 'Something went wrong!'
+  const message =
+    error instanceof AppError || error instanceof MainProcessError ? error.message : 'Something went wrong!'
 
   useEffect(() => {
     if (error) {
@@ -69,18 +83,17 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
     }
   }
 
+  const buttons = [
+    <ModalButton children="Quit" onClick={onClickQuit} />,
+    <ModalButton children="Report" onClick={onClickReport} />,
+  ]
+
+  if (!(error instanceof MainProcessError)) {
+    buttons.push(<ModalButton children={primaryButtonLabel ?? 'Reload'} onClick={onClickPrimaryButton} />)
+  }
+
   return (
-    <Modal
-      title="Error"
-      closable={false}
-      open={openModal}
-      opened={isModalOpened}
-      buttons={[
-        <ModalButton children="Quit" onClick={onClickQuit} />,
-        <ModalButton children="Report" onClick={onClickReport} />,
-        <ModalButton children={primaryButtonLabel ?? 'Reload'} onClick={onClickPrimaryButton} />,
-      ]}
-    >
+    <Modal title="Error" buttons={buttons} closable={false} open={openModal} opened={isModalOpened}>
       {message}
     </Modal>
   )
@@ -96,7 +109,12 @@ export default ErrorBoundary
  * @param  componentStack - The component stack associated to the error.
  * @return The formatted bug report.
  */
-function formatBugReport(version: string, os: string, error?: Error | AppError, componentStack?: string): string {
+function formatBugReport(
+  version: string,
+  os: string,
+  error?: Error | AppError | MainProcessError,
+  componentStack?: string
+): string {
   return encodeURIComponent(`<!---
 Thanks for filing an issue 😄 !
 Please provide as much details as possible, including screenshots if necessary.
@@ -127,12 +145,12 @@ If applicable, add screenshots to help explain your problem.
 
 \`\`\`
 ${error}${
-    error instanceof AppError && error.internalError
+    (error instanceof AppError || error instanceof MainProcessError) && error.internalError
       ? `
 Internal ${error.internalError}`
       : ''
   }
-${componentStack}
+${error instanceof MainProcessError ? '' : componentStack}
 \`\`\`
 
 **Environment**

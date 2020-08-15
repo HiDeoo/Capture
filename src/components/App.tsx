@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import styled, { ThemeProvider } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
@@ -8,11 +8,9 @@ import { getDestination } from '../destinations'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
-import Theme from '../utils/theme'
 import AppSideBar from './AppSideBar'
 import Editor from './Editor'
-import ErrorBoundary from './ErrorBoundary'
-import GlobalStyle from './GlobalStyle'
+import { MainProcessError, useErrorHandler } from './ErrorBoundary'
 import Library from './Library'
 import Settings from './Settings'
 import TitleBar, { TitleBarProvider } from './TitleBar'
@@ -40,11 +38,17 @@ const Content = tw.div`h-full flex-1 overflow-y-auto flex flex-col`
 
 const App: React.FC = () => {
   const ipcRenderer = getIpcRenderer()
+
+  const { selectEntry } = useHistory()
+  const handlerError = useErrorHandler()
   const { getDestinationSettingsSetter } = useSettings()
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()
-  const { selectEntry } = useHistory()
 
   useEffect(() => {
+    function onNewError(event: IpcRendererEvent, message: string, internalError: string): void {
+      handlerError(new MainProcessError(message, internalError))
+    }
+
     function onOAuthRequest(
       event: IpcRendererEvent,
       destinationId: string,
@@ -73,12 +77,14 @@ const App: React.FC = () => {
       setWindowFocus(true)
     }
 
+    ipcRenderer.on('newError', onNewError)
     ipcRenderer.on('newOAuthRequest', onOAuthRequest)
     ipcRenderer.on('newScreenshot', onNewScreenshot)
     ipcRenderer.on('windowBlur', onWindowBlur)
     ipcRenderer.on('windowFocus', onWindowFocus)
 
     return () => {
+      ipcRenderer.removeListener('newError', onNewError)
       ipcRenderer.removeListener('newOAuthRequest', onOAuthRequest)
       ipcRenderer.removeListener('newScreenshot', onNewScreenshot)
       ipcRenderer.removeListener('windowBlur', onWindowBlur)
@@ -87,22 +93,15 @@ const App: React.FC = () => {
   })
 
   return (
-    <>
-      <GlobalStyle />
-      <ThemeProvider theme={Theme}>
-        <Wrapper>
-          <ErrorBoundary>
-            <TitleBarProvider>
-              <TitleBar />
-              <Main>
-                <AppSideBar />
-                <Content>{AppPanelMap[currentPanel]}</Content>
-              </Main>
-            </TitleBarProvider>
-          </ErrorBoundary>
-        </Wrapper>
-      </ThemeProvider>
-    </>
+    <Wrapper>
+      <TitleBarProvider>
+        <TitleBar />
+        <Main>
+          <AppSideBar />
+          <Content>{AppPanelMap[currentPanel]}</Content>
+        </Main>
+      </TitleBarProvider>
+    </Wrapper>
   )
 }
 
