@@ -14,6 +14,7 @@ import {
 } from 'electron'
 import isDev from 'electron-is-dev'
 import { promises as fs } from 'fs'
+import os from 'os'
 import path from 'path'
 import querystring from 'querystring'
 
@@ -166,12 +167,20 @@ function registerIpcHandlers(): void {
     return fs.unlink(filePath)
   })
 
+  ipcMain.handle('getBugReportInfos', () => {
+    return { os: `${os.type()} ${os.release()}` }
+  })
+
   ipcMain.handle('openFile', (event: IpcMainInvokeEvent, filePath: string) => {
     return shell.openPath(filePath)
   })
 
   ipcMain.handle('openUrl', (event: IpcMainInvokeEvent, url: string) => {
     return shell.openExternal(url)
+  })
+
+  ipcMain.handle('quit', () => {
+    return app.quit()
   })
 
   ipcMain.handle('saveImage', async (event: IpcMainInvokeEvent, filePath: string, data: string) => {
@@ -191,8 +200,10 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('closeWindow')
   ipcMain.removeHandler('copyTextToClipboard')
   ipcMain.removeHandler('deleteFile')
+  ipcMain.removeHandler('getBugReportInfos')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
+  ipcMain.removeHandler('quit')
   ipcMain.removeHandler('saveImage')
 }
 

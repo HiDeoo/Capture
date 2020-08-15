@@ -11,6 +11,7 @@ import { Panel } from '../store/app'
 import Theme from '../utils/theme'
 import AppSideBar from './AppSideBar'
 import Editor from './Editor'
+import ErrorBoundary from './ErrorBoundary'
 import GlobalStyle from './GlobalStyle'
 import Library from './Library'
 import Settings from './Settings'
@@ -90,13 +91,15 @@ const App: React.FC = () => {
       <GlobalStyle />
       <ThemeProvider theme={Theme}>
         <Wrapper>
-          <TitleBarProvider>
-            <TitleBar />
-            <Main>
-              <AppSideBar />
-              <Content>{AppPanelMap[currentPanel]}</Content>
-            </Main>
-          </TitleBarProvider>
+          <ErrorBoundary>
+            <TitleBarProvider>
+              <TitleBar />
+              <Main>
+                <AppSideBar />
+                <Content>{AppPanelMap[currentPanel]}</Content>
+              </Main>
+            </TitleBarProvider>
+          </ErrorBoundary>
         </Wrapper>
       </ThemeProvider>
     </>
