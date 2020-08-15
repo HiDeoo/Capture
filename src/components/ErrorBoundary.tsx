@@ -19,11 +19,23 @@ export class AppError extends Error {
   }
 }
 
-const ErrorBoundary: React.FC = ({ children }) => {
-  return <Boundary FallbackComponent={ErrorFallback}>{children}</Boundary>
+const ErrorBoundary: React.FC<Props> = ({ children, primaryButtonHandler, primaryButtonLabel }) => {
+  function renderFallback(props: FallbackProps): React.ReactElement {
+    return (
+      <ErrorFallback {...props} primaryButtonLabel={primaryButtonLabel} primaryButtonHandler={primaryButtonHandler} />
+    )
+  }
+
+  return <Boundary fallbackRender={renderFallback}>{children}</Boundary>
 }
 
-const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetErrorBoundary }) => {
+const ErrorFallback: React.FC<FallbackProps & Props> = ({
+  error,
+  componentStack,
+  primaryButtonHandler,
+  primaryButtonLabel,
+  resetErrorBoundary,
+}) => {
   const { isModalOpened, openModal } = useModal()
 
   const message = error instanceof AppError ? error.message : 'Something went wrong!'
@@ -49,8 +61,12 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetEr
     return getIpcRenderer().invoke('openUrl', url)
   }
 
-  function onClickReload(): void {
-    window.location.reload()
+  function onClickPrimaryButton(): void {
+    if (primaryButtonHandler) {
+      primaryButtonHandler(resetErrorBoundary)
+    } else {
+      window.location.reload()
+    }
   }
 
   return (
@@ -62,7 +78,7 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetEr
       buttons={[
         <ModalButton children="Quit" onClick={onClickQuit} />,
         <ModalButton children="Report" onClick={onClickReport} />,
-        <ModalButton children="Reload" onClick={onClickReload} />,
+        <ModalButton children={primaryButtonLabel ?? 'Reload'} onClick={onClickPrimaryButton} />,
       ]}
     >
       {message}
@@ -126,4 +142,9 @@ ${componentStack}
 | Capture          | ${version}            |
 | Operating System | ${os}                 |
 `)
+}
+
+interface Props {
+  primaryButtonHandler?: (resetErrorBoundary: () => void) => void
+  primaryButtonLabel?: string
 }
