@@ -71,6 +71,7 @@ const Header = styled.div`
   ${tw`py-2 px-4 border-solid border-b text-base font-bold flex items-center`}
 
   border-color: ${theme('modal.border')};
+  -webkit-app-region: drag;
 `
 
 const Content = styled.div`
@@ -95,6 +96,7 @@ const Footer = styled(Header)`
   ${tw`border-b-0 justify-end pt-1 pb-3`}
 
   background-color: ${theme('modal.content')};
+  -webkit-app-region: no-drag;
 `
 
 export const ModalButton = styled(Button)<ModalButtonProps>`
