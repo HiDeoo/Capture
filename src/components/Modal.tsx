@@ -135,13 +135,22 @@ export function useModal(): ModalHook {
   return { isModalOpened: opened, openModal: setOpened, toggleModal: toggle }
 }
 
-const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel, locked, open, opened, title }) => {
+const Modal: React.FC<ModalProps> = ({
+  buttons = [],
+  children,
+  closable = true,
+  closeButtonLabel,
+  locked,
+  open,
+  opened,
+  title,
+}) => {
   const target = usePortal('modal')
   const overlay = useRef<HTMLDivElement>(null)
   const wrapper = useRef<HTMLDivElement>(null)
 
   useOnClickOutside(wrapper, () => {
-    if (!locked) {
+    if (closable && !locked) {
       open(false)
     }
   })
@@ -153,7 +162,7 @@ const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel,
       }
 
       if (event.key === 'Escape') {
-        if (!locked) {
+        if (closable && !locked) {
           open(false)
         }
 
@@ -166,7 +175,7 @@ const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel,
     return () => {
       window.removeEventListener('keydown', onKeyDown, true)
     }
-  }, [locked, open, opened])
+  }, [closable, locked, open, opened])
 
   function onClickCloseButton(): void {
     open(false)
@@ -186,14 +195,16 @@ const Modal: React.FC<ModalProps> = ({ buttons = [], children, closeButtonLabel,
           <Header>{title}</Header>
           <Content>{children}</Content>
           <Footer>
-            <ModalButton
-              disabled={locked}
-              onClick={onClickCloseButton}
-              primary={buttons.length === 0}
-              autoFocus={buttons.length === 0}
-            >
-              {closeButtonLabel ?? 'Close'}
-            </ModalButton>
+            {closable && (
+              <ModalButton
+                disabled={locked}
+                onClick={onClickCloseButton}
+                primary={buttons.length === 0}
+                autoFocus={buttons.length === 0}
+              >
+                {closeButtonLabel ?? 'Close'}
+              </ModalButton>
+            )}
             {React.Children.map(buttons, (button, index) => {
               const primary = index === buttons.length - 1
 
@@ -219,6 +230,7 @@ function isModalButton(element: {} | null | undefined): element is React.ReactEl
 
 export interface ModalProps {
   buttons?: React.ReactNode[]
+  closable?: boolean
   closeButtonLabel?: string
   locked?: boolean
   open: React.Dispatch<React.SetStateAction<boolean>>
