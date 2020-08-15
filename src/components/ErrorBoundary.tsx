@@ -6,6 +6,9 @@ import Modal, { ModalButton, useModal } from './Modal'
 
 export { useErrorHandler }
 
+/**
+ * Custom error class that should be used for errors with a user facing message.
+ */
 export class AppError extends Error {
   constructor(message: string, public internalError?: Error) {
     super()
@@ -69,6 +72,14 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetEr
 
 export default ErrorBoundary
 
+/**
+ * Formats a bug reports.
+ * @param  version - The application version.
+ * @param  os - The OS name & version.
+ * @param  error - The error that triggered the bug report.
+ * @param  componentStack - The component stack associated to the error.
+ * @return The formatted bug report.
+ */
 function formatBugReport(version: string, os: string, error?: Error | AppError, componentStack?: string): string {
   return encodeURIComponent(`<!---
 Thanks for filing an issue 😄 !
