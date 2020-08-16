@@ -19,6 +19,7 @@ import path from 'path'
 import querystring from 'querystring'
 
 import Theme from '../utils/theme'
+import { handleFatalError } from './errors'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
@@ -93,8 +94,7 @@ async function createWindow(): Promise<void> {
   try {
     await window.loadURL(getRendererUri())
   } catch (error) {
-    // TODO Handle errors
-    console.log('error ', error)
+    handleFatalError('Could not load application.', error, window)
   }
 
   if (isDev) {
