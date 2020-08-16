@@ -45,7 +45,7 @@ const App: React.FC = () => {
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()
 
   useEffect(() => {
-    function onNewError(event: IpcRendererEvent, message: string, internalError: string): void {
+    function onNewError(event: IpcRendererEvent, message: string, internalError?: string): void {
       handlerError(new MainProcessError(message, internalError))
     }
 
