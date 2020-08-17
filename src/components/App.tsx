@@ -110,7 +110,3 @@ const App: React.FC = () => {
 }
 
 export default observer(App)
-
-function onEditorError(resetErrorBoundary: () => void): void {
-  resetErrorBoundary()
-}
