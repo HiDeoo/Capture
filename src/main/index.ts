@@ -19,7 +19,7 @@ import path from 'path'
 import querystring from 'querystring'
 
 import Theme from '../utils/theme'
-import { handleFatalError } from './errors'
+import { handleError, handleFatalError } from './errors'
 import { getIpcMain, sendToRenderer } from './ipc'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { createTray } from './tray'
@@ -145,8 +145,7 @@ function registerGlobalShortcuts(): void {
       throw new Error('Unable to register global shortcut.')
     }
   } catch (error) {
-    // TODO Handle errors
-    console.log('error ', error)
+    handleError(error.message, error, window)
   }
 }
 
