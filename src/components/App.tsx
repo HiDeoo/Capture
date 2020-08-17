@@ -45,7 +45,7 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handlerError = useErrorHandler()
-  const { getDestinationSettingsSetter } = useSettings()
+  const { getDestinationSettingsSetter, screenshotDirectory, setScreenshotDirectory } = useSettings()
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()
 
   useEffect(() => {
@@ -95,6 +95,20 @@ const App: React.FC = () => {
       ipcRenderer.removeListener('windowFocus', onWindowFocus)
     }
   })
+
+  useEffect(() => {
+    async function getDefaultScreenshotDirectory(): Promise<void> {
+      const defaultScreenshotDirectory = await getIpcRenderer().invoke('getDefaultScreenshotDirectory')
+
+      setScreenshotDirectory(defaultScreenshotDirectory)
+    }
+
+    if (screenshotDirectory.length > 0) {
+      void getIpcRenderer().invoke('newScreenshotDirectory', screenshotDirectory)
+    } else {
+      void getDefaultScreenshotDirectory()
+    }
+  }, [screenshotDirectory, setScreenshotDirectory])
 
   return (
     <Wrapper>

@@ -5,6 +5,7 @@ import {
   app,
   BrowserWindow,
   clipboard,
+  dialog,
   globalShortcut,
   ipcMain as unsafeIpcMain,
   IpcMainInvokeEvent,
@@ -13,7 +14,7 @@ import {
   Tray,
 } from 'electron'
 import isDev from 'electron-is-dev'
-import { promises as fs } from 'fs'
+import { constants, promises as fs } from 'fs'
 import os from 'os'
 import path from 'path'
 import querystring from 'querystring'
@@ -30,9 +31,6 @@ import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
  */
 const ipcMain = getIpcMain(unsafeIpcMain)
 
-// TODO Remove
-const TMP_WORKING_DIRECTORY = '/Users/hideo/tmp/capture'
-
 /**
  * Application browser window instance.
  */
@@ -42,6 +40,11 @@ let window: BrowserWindow | null = null
  * Application tray instance.
  */
 let appTray: Tray | null = null
+
+/**
+ * Path of the directory used to save screenshots.
+ */
+let screenshotDirectory: Optional<string>
 
 /**
  * File watcher instance.
@@ -90,6 +93,9 @@ async function createWindow(): Promise<void> {
     callback(decodeURIComponent(request.url.replace('file:///', '')))
   })
 
+  // Handle IPC messages from the renderer process.
+  registerIpcHandlers()
+
   // Load the renderer application for the application window.
   try {
     await window.loadURL(getRendererUri())
@@ -113,24 +119,8 @@ async function createWindow(): Promise<void> {
   // Create the application tray.
   appTray = createTray(window)
 
-  // Add a file watcher to detect new screenshots.
-  watcher = installCreatedFileWatcher(TMP_WORKING_DIRECTORY, (createdFilePath, size) => {
-    // TODO Extract fn
-    console.log('Created file: ', createdFilePath)
-
-    if (window) {
-      sendToRenderer(window, 'newScreenshot', createdFilePath, size)
-
-      window.show()
-      window.focus()
-    }
-  })
-
   // Register global shrotcuts.
   registerGlobalShortcuts()
-
-  // Handle IPC messages from the renderer process.
-  registerIpcHandlers()
 }
 
 /**
@@ -156,6 +146,21 @@ function registerIpcHandlers(): void {
   // TODO Clean, refactor & extract maybe
 
   ipcMain.handle('captureScreenshot', captureScreenshot)
+
+  ipcMain.handle('chooseDirectory', async (event: IpcMainInvokeEvent, message?: string) => {
+    const result = await dialog.showOpenDialog({
+      defaultPath: app.getPath('home'),
+      properties: ['openDirectory', 'createDirectory', 'promptToCreate', 'dontAddToRecent'],
+      message,
+    })
+
+    if (result.filePaths.length === 1) {
+      return result.filePaths[0]
+    }
+
+    return
+  })
+
   ipcMain.handle('closeWindow', onWindowClose)
 
   ipcMain.handle('copyTextToClipboard', (event: IpcMainInvokeEvent, text: string) => {
@@ -168,6 +173,53 @@ function registerIpcHandlers(): void {
 
   ipcMain.handle('getBugReportInfos', () => {
     return { os: `${os.type()} ${os.release()}` }
+  })
+
+  ipcMain.handle('getDefaultScreenshotDirectory', async () => {
+    const documentsPath = app.getPath('documents')
+    const defaultScreenshotDirectory = path.join(documentsPath, 'Capture')
+
+    try {
+      await fs.access(defaultScreenshotDirectory, constants.W_OK)
+    } catch {
+      try {
+        await fs.mkdir(defaultScreenshotDirectory)
+      } catch (error) {
+        handleError(
+          `The default screenshot directory (${defaultScreenshotDirectory}) could not be created.`,
+          error,
+          window
+        )
+      }
+    }
+
+    return defaultScreenshotDirectory
+  })
+
+  ipcMain.handle('newScreenshotDirectory', async (event: IpcMainInvokeEvent, directoryPath: string) => {
+    screenshotDirectory = directoryPath
+
+    if (watcher) {
+      await uninstallFileWatcher(watcher)
+      watcher = undefined
+    }
+
+    try {
+      // Add a file watcher to detect new screenshots.
+      watcher = await installCreatedFileWatcher(screenshotDirectory, (createdFilePath, size) => {
+        // TODO Extract fn
+        console.log('----- Created file: ', createdFilePath)
+
+        if (window) {
+          sendToRenderer(window, 'newScreenshot', createdFilePath, size)
+
+          window.show()
+          window.focus()
+        }
+      })
+    } catch (error) {
+      handleError(`The screenshot directory (${screenshotDirectory}) does not exist or is not readable.`, error, window)
+    }
   })
 
   ipcMain.handle('openFile', (event: IpcMainInvokeEvent, filePath: string) => {
@@ -196,10 +248,13 @@ function registerIpcHandlers(): void {
  */
 function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('captureScreenshot')
+  ipcMain.removeHandler('chooseDirectory')
   ipcMain.removeHandler('closeWindow')
   ipcMain.removeHandler('copyTextToClipboard')
   ipcMain.removeHandler('deleteFile')
   ipcMain.removeHandler('getBugReportInfos')
+  ipcMain.removeHandler('getDefaultScreenshotDirectory')
+  ipcMain.removeHandler('newScreenshotDirectory')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
   ipcMain.removeHandler('quit')
@@ -210,11 +265,21 @@ function unregisterIpcHandlers(): void {
  * Captures a screenshot.
  */
 function captureScreenshot(): void {
+  if (!screenshotDirectory) {
+    handleError(
+      'Something went wrong while capturing a screenshot.',
+      new Error('No screenshot directory provided'),
+      window
+    )
+
+    return
+  }
+
   // TODO Refactor & extract (maybe extract all shortcuts code)
   const now = new Date()
   const filename = `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss')}.png`
 
-  const child = spawn('screencapture', ['-i', '-o', path.join(TMP_WORKING_DIRECTORY, filename)])
+  const child = spawn('screencapture', ['-i', '-o', path.join(screenshotDirectory, filename)])
 
   child.stdout.setEncoding('utf8')
   child.stdout.on('data', (data) => {

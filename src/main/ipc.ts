@@ -18,10 +18,13 @@ type CaptureMainToRendererEvents = {
  */
 type CaptureRendererToMainEvents = {
   captureScreenshot: () => void
+  chooseDirectory: (message?: string) => Optional<string>
   closeWindow: () => void
   copyTextToClipboard: (text: string) => void
   deleteFile: (path: string) => void
   getBugReportInfos: () => { os: string }
+  getDefaultScreenshotDirectory: () => string
+  newScreenshotDirectory: (path: string) => void
   openFile: (path: string) => string
   openUrl: (url: string) => void
   quit: () => void

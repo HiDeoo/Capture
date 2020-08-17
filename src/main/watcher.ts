@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar'
-import type { Stats } from 'fs'
+import { constants, promises as fs, Stats } from 'fs'
 
 /**
  * Installs a created file watcher in a specific directory.
@@ -8,11 +8,13 @@ import type { Stats } from 'fs'
  * @param  extension - The file extension.
  * @return The file watcher.
  */
-export function installCreatedFileWatcher(
+export async function installCreatedFileWatcher(
   directoryPath: string,
   callback: (createdFilePath: string, size: number) => void,
   extension = 'png'
-): FSWatcher {
+): Promise<FSWatcher> {
+  await fs.access(directoryPath, constants.R_OK)
+
   const watcher = chokidar.watch(`${directoryPath}/*.${extension}`, {
     alwaysStat: true,
     depth: 0,

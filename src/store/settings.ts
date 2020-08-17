@@ -15,13 +15,18 @@ export default class SettingsStore {
     this.destinations = destinationsSettings
   }
 
-  // TODO Remove
-  @observable debugGeneralOption = ''
+  /**
+   * The path of the directory used to save screenshots.
+   */
+  @observable screenshotDirectory = ''
 
-  // TODO Remove
+  /**
+   * Updates the screenshot directory path.
+   * @param newPath - The new path.
+   */
   @action
-  setDebugGeneralOption = (newValue: string): void => {
-    this.debugGeneralOption = newValue
+  setScreenshotDirectory = (newPath: string): void => {
+    this.screenshotDirectory = newPath
   }
 
   /**
