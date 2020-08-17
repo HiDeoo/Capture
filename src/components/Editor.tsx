@@ -12,6 +12,7 @@ import type { Color } from './ColorSelect'
 import { defaultDestinationId } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
+import { AppError, useErrorHandler } from './ErrorBoundary'
 import ImageEditor, { useImageEditor } from './ImageEditor'
 import type { ImageDimensions } from './Img'
 import LoadingBar from './LoadingBar'
@@ -25,6 +26,7 @@ const Content = styled.div`
 `
 
 const Editor: React.FC = () => {
+  const handleError = useErrorHandler()
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
@@ -82,8 +84,7 @@ const Editor: React.FC = () => {
 
       await getIpcRenderer().invoke('closeWindow')
     } catch (error) {
-      // TODO Handle errors
-      console.log('error ', error)
+      handleError(new AppError('Something went wrong while sharing the image.', error))
     } finally {
       lockUi(false)
     }
@@ -91,6 +92,7 @@ const Editor: React.FC = () => {
     addToHistory,
     destination,
     destinationId,
+    handleError,
     imageEditorImage,
     imageEditorUtils,
     getDestinationSettingsGetter,

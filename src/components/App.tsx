@@ -10,7 +10,7 @@ import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
 import AppSideBar from './AppSideBar'
 import Editor from './Editor'
-import { MainProcessError, useErrorHandler } from './ErrorBoundary'
+import ErrorBoundary, { MainProcessError, useErrorHandler } from './ErrorBoundary'
 import Library from './Library'
 import Settings from './Settings'
 import TitleBar, { TitleBarProvider } from './TitleBar'
@@ -20,7 +20,11 @@ import TitleBar, { TitleBarProvider } from './TitleBar'
  */
 const AppPanelMap = {
   [Panel.Library]: <Library />,
-  [Panel.Editor]: <Editor />,
+  [Panel.Editor]: (
+    <ErrorBoundary primaryButtonLabel="Ok" primaryButtonHandler={onEditorError}>
+      <Editor />
+    </ErrorBoundary>
+  ),
   [Panel.Settings]: <Settings />,
 } as const
 
@@ -106,3 +110,7 @@ const App: React.FC = () => {
 }
 
 export default observer(App)
+
+function onEditorError(resetErrorBoundary: () => void): void {
+  resetErrorBoundary()
+}
