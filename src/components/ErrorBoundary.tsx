@@ -10,7 +10,7 @@ export { useErrorHandler }
  * Custom error class that should be used for errors with a user facing message.
  */
 export class AppError extends Error {
-  constructor(message: string, public internalError?: Error) {
+  constructor(message: string, public internalError?: Error, public recoverable = false) {
     super()
 
     this.message = message
@@ -79,7 +79,11 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
     if (primaryButtonHandler) {
       primaryButtonHandler(resetErrorBoundary)
     } else {
-      window.location.reload()
+      if (error instanceof AppError && error.recoverable) {
+        resetErrorBoundary()
+      } else {
+        window.location.reload()
+      }
     }
   }
 
@@ -89,7 +93,9 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
   ]
 
   if (!(error instanceof MainProcessError)) {
-    buttons.push(<ModalButton children={primaryButtonLabel ?? 'Reload'} onClick={onClickPrimaryButton} />)
+    const label = error instanceof AppError && error.recoverable ? 'Ok' : primaryButtonLabel ?? 'Reload'
+
+    buttons.push(<ModalButton children={label} onClick={onClickPrimaryButton} />)
   }
 
   return (
