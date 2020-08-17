@@ -84,7 +84,7 @@ const Editor: React.FC = () => {
 
       await getIpcRenderer().invoke('closeWindow')
     } catch (error) {
-      handleError(new AppError('Something went wrong while sharing the image.', error))
+      handleError(new AppError('Something went wrong while sharing the image.', error, true))
     } finally {
       lockUi(false)
     }

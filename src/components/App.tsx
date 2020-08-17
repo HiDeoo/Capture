@@ -21,7 +21,7 @@ import TitleBar, { TitleBarProvider } from './TitleBar'
 const AppPanelMap = {
   [Panel.Library]: <Library />,
   [Panel.Editor]: (
-    <ErrorBoundary primaryButtonLabel="Ok" primaryButtonHandler={onEditorError}>
+    <ErrorBoundary>
       <Editor />
     </ErrorBoundary>
   ),
