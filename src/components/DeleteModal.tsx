@@ -8,12 +8,14 @@ import { getIpcRenderer } from '../main/ipc'
 import { useHistory, useSettings } from '../store'
 import { HistoryEntry } from '../store/history'
 import Checkbox from './Checkbox'
+import { AppError, useErrorHandler } from './ErrorBoundary'
 import LoadingBar from './LoadingBar'
 import Modal, { ModalButton, ModalProps } from './Modal'
 
 const initialOptions = { destination: false, disk: false }
 
 const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
+  const handleError = useErrorHandler()
   const { markAsDeletedOnDestination, markAsDeletedOnDisk, selectEntry } = useHistory()
   const { getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
 
@@ -63,8 +65,7 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
         selectEntry()
       }
     } catch (error) {
-      // TODO Handle errors
-      console.log('error ', error)
+      handleError(new AppError('Something went wrong while deleting the image.', error, true))
     } finally {
       setLocked(false)
       open(false)

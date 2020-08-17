@@ -11,6 +11,7 @@ import type { HistoryEntry, HistorySelection, SelectEntry } from '../store/histo
 import { splitFilePath } from '../utils/string'
 import Button from './Button'
 import DeleteModal from './DeleteModal'
+import ErrorBoundary from './ErrorBoundary'
 import Icon, { IconSymbol } from './Icon'
 import Img from './Img'
 import { useModal } from './Modal'
@@ -183,7 +184,9 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
       <Box visible={!entry.deleted.disk} className="previewBox">
         <Preview src={`file://${entry.path}`} />
       </Box>
-      <DeleteModal key={entry.id} opened={isModalOpened} open={openModal} entry={entry} />
+      <ErrorBoundary>
+        <DeleteModal key={entry.id} opened={isModalOpened} open={openModal} entry={entry} />
+      </ErrorBoundary>
     </Content>
   )
 }
