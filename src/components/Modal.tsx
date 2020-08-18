@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
 import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { useShortcut } from '../utils/keyboard'
 import { useOnClickOutside, usePortal } from '../utils/react'
 import Button, { ButtonProps } from './Button'
 
@@ -155,27 +156,25 @@ const Modal: React.FC<ModalProps> = ({
     }
   })
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent): void {
-      if (!opened) {
-        return
-      }
+  useShortcut(
+    {
+      Escape: useCallback(
+        (event: KeyboardEvent) => {
+          if (!opened) {
+            return
+          }
 
-      if (event.key === 'Escape') {
-        if (closable && !locked) {
-          open(false)
-        }
+          if (closable && !locked) {
+            open(false)
+          }
 
-        event.stopImmediatePropagation()
-      }
-    }
-
-    window.addEventListener('keydown', onKeyDown, true)
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown, true)
-    }
-  }, [closable, locked, open, opened])
+          event.stopImmediatePropagation()
+        },
+        [closable, locked, open, opened]
+      ),
+    },
+    { useCapture: true }
+  )
 
   function onClickCloseButton(): void {
     open(false)

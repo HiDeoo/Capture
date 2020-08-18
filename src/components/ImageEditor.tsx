@@ -4,6 +4,7 @@ import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
+import { useShortcut } from '../utils/keyboard'
 import { usePrevious } from '../utils/react'
 import Theme from '../utils/theme'
 import { Color, Colors } from './ColorSelect'
@@ -202,33 +203,31 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
     }
   })
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent): void {
-      if (event.key === 'Escape') {
-        // Disable the current tool.
-        imageEditorDispatch({ type: 'set_tool', tool: undefined })
-
-        // Discard existing selections.
-        discardSelections()
-      } else if (event.key === 'Backspace' || event.key === 'Delete') {
-        // Backspace & delete should be usable when editing text.
-        if (isEditingText) {
-          return
-        }
-
-        if (sketch.current) {
-          // Remove the selections.
-          sketch.current.removeSelected()
-        }
-      }
-    }
-
-    window.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown)
-    }
+  useShortcut({
+    Backspace: onBackspaceOrDeleteShortcut,
+    Delete: onBackspaceOrDeleteShortcut,
+    Escape: onEscapeShortcut,
   })
+
+  function onBackspaceOrDeleteShortcut(): void {
+    // Backspace & delete should be usable when editing text.
+    if (isEditingText) {
+      return
+    }
+
+    if (sketch.current) {
+      // Remove the selections.
+      sketch.current.removeSelected()
+    }
+  }
+
+  function onEscapeShortcut(): void {
+    // Disable the current tool.
+    imageEditorDispatch({ type: 'set_tool', tool: undefined })
+
+    // Discard existing selections.
+    discardSelections()
+  }
 
   function discardSelections(): void {
     if (sketch.current) {
