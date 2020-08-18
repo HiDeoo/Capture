@@ -17,6 +17,7 @@ export enum IconSymbol {
   Circle = '􀀀',
   Doc = '􀈷',
   ExclamationMarkCircle = '􀁞',
+  Folder = '􀈕',
   Gear = '􀍟',
   Link = '􀉣',
   ListDash = '􀋱',
