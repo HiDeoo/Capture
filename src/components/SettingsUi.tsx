@@ -6,7 +6,7 @@ import tw from 'tailwind.macro'
 import Button from './Button'
 import Path, { PathProps } from './Path'
 
-const SettingsP = styled.p`
+const SettingsP = styled.div`
   ${tw`mb-1`}
 
   margin-left: 1px;
