@@ -206,6 +206,11 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
   useShortcut({
     Backspace: onBackspaceOrDeleteShortcut,
     Delete: onBackspaceOrDeleteShortcut,
+    Digit1: onDigitShortcut,
+    Digit2: onDigitShortcut,
+    Digit3: onDigitShortcut,
+    Digit4: onDigitShortcut,
+    Digit5: onDigitShortcut,
     Escape: onEscapeShortcut,
   })
 
@@ -218,6 +223,39 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
     if (sketch.current) {
       // Remove the selections.
       sketch.current.removeSelected()
+    }
+  }
+
+  function onDigitShortcut(event: KeyboardEvent): void {
+    switch (event.code) {
+      case 'Digit1': {
+        toggleTool(Tools.Pencil)
+        break
+      }
+      case 'Digit2': {
+        toggleTool(Tools.Arrow)
+        break
+      }
+      case 'Digit3': {
+        toggleTool(Tools.Rectangle)
+        break
+      }
+      case 'Digit4': {
+        toggleTool(Tools.Circle)
+        break
+      }
+      case 'Digit5': {
+        toggleTool(Tools.Line)
+        break
+      }
+    }
+  }
+
+  function toggleTool(tool: Tools): void {
+    if (imageEditorState.tool === tool) {
+      imageEditorDispatch({ type: 'set_tool', tool: undefined })
+    } else {
+      imageEditorDispatch({ type: 'set_tool', tool })
     }
   }
 
