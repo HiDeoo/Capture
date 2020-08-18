@@ -13,6 +13,7 @@ export enum IconSymbol {
   Camera = '􀌞',
   Checkmark = '􀆅',
   ChevronDown = '􀆈',
+  ChevronRight = '􀆊',
   Circle = '􀀀',
   Doc = '􀈷',
   ExclamationMarkCircle = '􀁞',

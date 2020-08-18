@@ -3,7 +3,7 @@ import React from 'react'
 import { getIpcRenderer } from '../main/ipc'
 import { useHistory, useSettings } from '../store'
 import { pluralize } from '../utils/string'
-import { Button, Group, P } from './SettingsUi'
+import { Button, Group, P, Path } from './SettingsUi'
 
 /**
  * Configuration of the general settings panel.
@@ -30,9 +30,9 @@ const GeneralSettings: React.FC = () => {
 
   return (
     <>
-      <Group title="// TODO">
-        <Button onClick={onClickUpdateScreenshotDirectory}>// TODO</Button>
-        <div>{screenshotDirectory}</div>
+      <Group title="Screenshot Directory">
+        <Path value={screenshotDirectory} />
+        <Button onClick={onClickUpdateScreenshotDirectory}>Change directory</Button>
       </Group>
       <Group title="History">
         <P>

@@ -30,3 +30,12 @@ export function splitFilePath(path: string): [string, string] {
 
   return [parentPath, filename]
 }
+
+/**
+ * Splits directories & filename from a path.
+ * @param  path - The path to split.
+ * @return The path components.
+ */
+export function getPathComponents(path: string): string[] {
+  return path.split('/').filter((component) => component.length > 0)
+}

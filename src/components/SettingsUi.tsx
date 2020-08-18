@@ -4,9 +4,12 @@ import { theme } from 'styled-tools'
 import tw from 'tailwind.macro'
 
 import Button from './Button'
+import Path, { PathProps } from './Path'
 
 const SettingsP = styled.p`
   ${tw`mb-1`}
+
+  margin-left: 1px;
 
   &:last-of-type {
     ${tw`mb-0`}
@@ -37,7 +40,7 @@ const SettingsButton = styled(Button)`
 
 
   ${SettingsP} + & {
-    ${tw`mt-2`}
+    ${tw`mt-3`}
   }
 `
 
@@ -54,6 +57,7 @@ const SettingsGroupTitle = styled.div`
 
   border-color: rgb(255, 255, 255, 0.7);
   padding-bottom: 8px;
+  padding-left: 1px;
 `
 
 const SettingsGroup: React.FC<SettingsGroupProps> = ({ children, title }) => {
@@ -65,8 +69,16 @@ const SettingsGroup: React.FC<SettingsGroupProps> = ({ children, title }) => {
   )
 }
 
+const SettingsPath: React.FC<PathProps> = (props) => {
+  return (
+    <SettingsP>
+      <Path {...props} />
+    </SettingsP>
+  )
+}
+
 interface SettingsGroupProps {
   title: string
 }
 
-export { SettingsP as P, SettingsButton as Button, SettingsGroup as Group }
+export { SettingsP as P, SettingsPath as Path, SettingsButton as Button, SettingsGroup as Group }
