@@ -77,7 +77,7 @@ const EditorToolBar: React.FC<Props> = ({
         <ToolBarButton symbol={IconSymbol.Circle} id={Tools.Circle} />
         <ToolBarButton symbol={IconSymbol.Minus} id={Tools.Line} />
       </ToolBarButtonGroup>
-      <ToolBarButton symbol={IconSymbol.TextCursor} id={Tools.Pencil} onClick={onClickAddText} />
+      <ToolBarButton symbol={IconSymbol.TextCursor} onClick={onClickAddText} />
       <Select
         items={LineWidths}
         onChange={onChangeLineWidth}
