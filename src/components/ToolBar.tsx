@@ -14,11 +14,7 @@ const Wrapper = styled.div<Props>`
   border-top-width: ${ifProp('bottom', '1px', '0')};
 
   & > div {
-    ${tw`h-full mr-2`}
-
-    &:last-child {
-      ${tw`mr-0`}
-    }
+    ${tw`h-full mr-2 last:mr-0`}
   }
 
   button {

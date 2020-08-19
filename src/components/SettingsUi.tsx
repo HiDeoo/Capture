@@ -43,13 +43,7 @@ const SettingsButton = styled(Button)`
   }
 `
 
-const SettingsGroupWrapper = styled.div`
-  ${tw`mt-4`}
-
-  &:first-child {
-    ${tw`mt-0`}
-  }
-`
+const SettingsGroupWrapper = tw.div`mt-4 first:mt-0`
 
 const SettingsGroupTitle = styled.div`
   ${tw`text-lg mb-4 font-semibold border-b border-solid`}

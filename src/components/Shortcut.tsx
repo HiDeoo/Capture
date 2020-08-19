@@ -14,13 +14,9 @@ const Wrapper = styled.div`
 `
 
 const Key = styled.span`
-  ${tw`mx-1 py-1 px-3 inline-block rounded shadow text-xs font-semibold`}
+  ${tw`mx-1 py-1 px-3 inline-block rounded shadow text-xs font-semibold last:mr-0`}
 
   background-color: ${theme('settings.shortcut.background')};
-
-  &:last-child {
-    ${tw`mr-0`}
-  }
 `
 
 const Picker = styled(Button)<ButtonProps>`

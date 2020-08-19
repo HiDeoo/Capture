@@ -41,7 +41,7 @@ const Group = styled.div<GroupProps>`
   ${tw`mr-2 flex`}
 
   ${StyledButton} {
-    ${tw`mr-0 rounded-none border-r-0`}
+    ${tw`mr-0 rounded-none border-r-0 last:rounded-r last:border-r`}
 
     &:first-child {
       ${tw`rounded-l`}
@@ -49,10 +49,6 @@ const Group = styled.div<GroupProps>`
       & .icon {
         top: 7px;
       }
-    }
-
-    &:last-child {
-      ${tw`rounded-r border-r`}
     }
   }
 `

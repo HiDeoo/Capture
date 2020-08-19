@@ -8,18 +8,10 @@ import Icon, { IconSymbol } from './Icon'
 const Wrapper = tw.div`relative`
 
 const Button = styled.button<OpenedProps>`
-  ${tw`rounded pl-3 py-1 appearance-none pr-10 relative text-left`}
+  ${tw`rounded pl-3 py-1 appearance-none pr-10 relative text-left focus:outline-none disabled:cursor-not-allowed`}
 
   border-bottom-left-radius: ${ifProp('opened', 0, '0.25rem')};
   border-bottom-right-radius: ${ifProp('opened', 0, '0.25rem')};
-
-  &:focus {
-    ${tw`outline-none`}
-  }
-
-  &:disabled {
-    ${tw`cursor-not-allowed`}
-  }
 `
 
 const StyledIcon = styled(Icon)<StyledIconProps>`

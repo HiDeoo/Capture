@@ -3,14 +3,10 @@ import { ifProp, theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
 const Wrapper = styled.label<WrapperProps>`
-  ${tw`block flex items-center relative`}
+  ${tw`block flex items-center relative last:mb-0`}
 
   margin-bottom: 0.35rem;
   opacity: ${ifProp('disabled', 0.6, 1)};
-
-  &:last-child {
-    ${tw`mb-0`}
-  }
 
   ${(props) =>
     props.disabled &&
