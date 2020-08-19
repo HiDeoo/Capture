@@ -53,7 +53,7 @@ const Group = styled.div<GroupProps>`
   }
 `
 
-const ToolBarButton: React.FC<ToolBarButtonProps> = ({ active = false, symbol, ...restProps }) => {
+const ToolBarButton: React.FC<ToolBarButtonProps> = ({ active = false, ref, symbol, ...restProps }) => {
   return (
     <StyledButton {...restProps} active={active}>
       <StyledIcon symbol={symbol} />

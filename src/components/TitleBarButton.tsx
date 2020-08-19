@@ -27,7 +27,7 @@ const StyledIcon = styled(Icon)`
   font-size: 20px;
 `
 
-const TitleBarButton: React.FC<Props> = ({ symbol, ...restProps }) => {
+const TitleBarButton: React.FC<Props> = ({ ref, symbol, ...restProps }) => {
   return (
     <StyledButton {...restProps}>
       <StyledIcon symbol={symbol} />
