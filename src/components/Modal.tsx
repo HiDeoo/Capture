@@ -100,7 +100,7 @@ const Footer = styled(Header)`
 `
 
 export const ModalButton = styled(Button)<ModalButtonProps>`
-  ${tw`border border-solid px-4 py-1 rounded mr-2 mb-1 text-sm font-medium`}
+  ${tw`border border-solid px-4 py-1 rounded mr-2 mb-1 text-sm font-medium focus:shadow-outline`}
 
   background-color: ${ifProp('primary', theme('modal.button.primary.background'), theme('modal.button.background'))};
   border-color: ${theme('modal.button.border')};
@@ -121,10 +121,6 @@ export const ModalButton = styled(Button)<ModalButtonProps>`
 
   &:last-of-type {
     ${tw`mr-0`}
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3)
   }
 `
 
