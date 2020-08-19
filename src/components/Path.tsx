@@ -21,7 +21,7 @@ const Path: React.FC<PathProps> = ({ value, ...restProps }) => {
   const components = getPathComponents(value)
 
   return (
-    <div css={tw`flex`}>
+    <div tw="flex">
       <Icon symbol={IconSymbol.Folder} />
       <Wrapper {...restProps}>
         {components.map((component, index) => (

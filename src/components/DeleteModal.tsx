@@ -1,5 +1,6 @@
+import 'twin.macro'
+
 import React, { useEffect, useState } from 'react'
-import tw from 'twin.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
@@ -80,7 +81,7 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
       buttons={[<ModalButton disabled={locked} children="Ok" onClick={onClickOk} />]}
     >
       <LoadingBar enabled={locked} relative />
-      <div css={tw`mb-2`}>Pick where to delete the screenshot:</div>
+      <div tw="mb-2">Pick where to delete the screenshot:</div>
       <Checkbox
         checked={options.disk}
         onChange={onChangeDisk}

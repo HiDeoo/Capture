@@ -11,7 +11,7 @@ const EditorInfoBar: React.FC<Props> = ({ path }) => {
   return (
     <StyledToolbar bottom>
       <div>{path}</div>
-      <div css={tw`flex-1`} />
+      <div tw="flex-1" />
     </StyledToolbar>
   )
 }

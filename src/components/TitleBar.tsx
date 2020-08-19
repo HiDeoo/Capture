@@ -103,7 +103,7 @@ const TitleBar: React.FC = () => {
       </SideBar>
       <Main isFocused={isFocused}>
         Capture
-        <div css={tw`flex-1`} />
+        <div tw="flex-1" />
         {titleBarContent ?? <TitleBarButton symbol={IconSymbol.Camera} onClick={onClickCaptureButton} />}
       </Main>
     </Wrapper>

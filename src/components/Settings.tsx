@@ -1,6 +1,7 @@
+import 'twin.macro'
+
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import tw from 'twin.macro'
 
 import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
@@ -18,7 +19,7 @@ import ShortcutsSettings, { ShortcutsSettingConfiguration } from './ShortcutsSet
 const SidebarEntries: (SettingsSideBarEntry | React.ReactNode)[] = [
   { ...GeneralSettingsConfiguration, panel: GeneralSettings },
   { ...ShortcutsSettingConfiguration, panel: ShortcutsSettings },
-  <div css={tw`h-6`} />,
+  <div tw="h-6" />,
   // Add dynamic destinations settings panels.
   ...Object.entries(getDestinations()).reduce<SettingsSideBarEntry[]>((acc, [id, destination]) => {
     if (destination.getSettingsPanel) {
@@ -56,7 +57,7 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <div css={tw`h-full w-full flex`}>
+    <div tw="h-full w-full flex">
       <SettingsSideBar entries={SidebarEntries} />
       <SettingsPanel>
         <CurrentPanel

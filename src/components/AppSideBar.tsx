@@ -14,7 +14,7 @@ import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryPro
 const Entries: (AppSideBarEntry | React.ReactNode)[] = [
   { id: 'library', panel: Panel.Library, symbol: IconSymbol.ListDash },
   { id: 'editor', panel: Panel.Editor, symbol: IconSymbol.Pencil },
-  <div css={tw`flex-1`} />,
+  <div tw="flex-1" />,
   { id: 'settings', panel: Panel.Settings, symbol: IconSymbol.Gear },
 ]
 

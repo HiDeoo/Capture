@@ -235,8 +235,8 @@ const BoxEntry: React.FC<BoxEntryProps> = ({ label, value }) => {
   return (
     <BoxEntryWrapper>
       <BoxEntryLabel>{label}</BoxEntryLabel>
-      <div css={tw`flex-1 mx-3`} />
-      <div css={tw`truncate`}>{value}</div>
+      <div tw="flex-1 mx-3" />
+      <div tw="truncate">{value}</div>
     </BoxEntryWrapper>
   )
 }
@@ -264,7 +264,7 @@ const PanelButton: React.FC<PanelButtonProps> = ({ label, symbol, ...restProps }
   return (
     <StyledButton {...restProps}>
       <Icon symbol={symbol} />
-      <div css={tw`mt-2`}>{label}</div>
+      <div tw="mt-2">{label}</div>
     </StyledButton>
   )
 }

@@ -94,7 +94,7 @@ const EditorToolBar: React.FC<Props> = ({
         onChangeColor={onChangeFillColor}
         selectedColor={imageEditorState.fillColor}
       />
-      <div css={tw`flex-1`} />
+      <div tw="flex-1" />
       {DestinationToolBar && (
         <DestinationToolBar
           Ui={{ Select }}

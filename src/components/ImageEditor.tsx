@@ -276,7 +276,7 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
   return (
     <Layers>
       <Img src={path} onLoad={onImageLoaded} ref={image} />
-      <div css={tw`absolute inset-0`}>
+      <div tw="absolute inset-0">
         <SketchField
           ref={setSketchRef}
           width={imageDimensions?.width}
