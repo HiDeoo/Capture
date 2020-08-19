@@ -21,6 +21,7 @@ export enum IconSymbol {
   Gear = '􀍟',
   Link = '􀉣',
   ListDash = '􀋱',
+  LockFill = '􀎡',
   Minus = '􀅽',
   MinusCircle = '􀁎',
   Paperclip = '􀉢',

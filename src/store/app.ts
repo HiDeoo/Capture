@@ -2,6 +2,7 @@ import { action, computed, observable } from 'mobx'
 import { ignore } from 'mobx-sync'
 
 import { GeneralSettingsConfiguration } from '../components/GeneralSettings'
+import { ShortcutsSettingConfiguration } from '../components/ShortcutsSettings'
 
 /**
  * The various panels available in the application.
@@ -19,7 +20,7 @@ export default class AppStore {
   /**
    * The current application panel to display.
    */
-  @ignore @observable currentPanel: Panel = Panel.Library
+  @ignore @observable currentPanel: Panel = Panel.Settings
 
   /**
    * Changes the current panel.
@@ -32,7 +33,7 @@ export default class AppStore {
   /**
    * The ID of the current settings panel to display.
    */
-  @ignore @observable currentSettingsPanel: SettingsPanelId = GeneralSettingsConfiguration.id
+  @ignore @observable currentSettingsPanel: SettingsPanelId = ShortcutsSettingConfiguration.id
 
   /**
    * Changes the ID of the current settings panel.

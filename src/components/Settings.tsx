@@ -12,12 +12,14 @@ import GeneralSettings, { GeneralSettingsConfiguration } from './GeneralSettings
 import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
 import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
 import { Button, Group } from './SettingsUi'
+import ShortcutsSettings, { ShortcutsSettingConfiguration } from './ShortcutsSettings'
 
 /**
  * The ordered settings sidebar entries.
  */
 const SidebarEntries: (SettingsSideBarEntry | React.ReactNode)[] = [
   { ...GeneralSettingsConfiguration, panel: GeneralSettings },
+  { ...ShortcutsSettingConfiguration, panel: ShortcutsSettings },
   <div css={tw`h-6`} />,
   // Add dynamic destinations settings panels.
   ...Object.entries(getDestinations()).reduce<SettingsSideBarEntry[]>((acc, [id, destination]) => {
