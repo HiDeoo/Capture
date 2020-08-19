@@ -37,9 +37,7 @@ const Picker = styled(Button)<ButtonProps>`
   }
 `
 
-const ReadOnlyIcon = styled(Icon)`
-  ${tw`block opacity-50`}
-`
+const ReadOnlyIcon = tw(Icon)`block opacity-50`
 
 const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
   const parsedShortcut = parseShortcut(shortcut)

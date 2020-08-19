@@ -1,11 +1,9 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
 
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
 
-const StyledToolbar = styled(ToolBar)`
-  ${tw`text-xs`}
-`
+const StyledToolbar = tw(ToolBar)`text-xs`
 
 const EditorInfoBar: React.FC<Props> = ({ path }) => {
   return (
