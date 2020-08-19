@@ -42,9 +42,7 @@ const Picker = styled(Button)<ButtonProps>`
 `
 
 const ReadOnlyIcon = styled(Icon)`
-  ${tw`block`}
-
-  opacity: 0.5;
+  ${tw`block opacity-50`}
 `
 
 const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {

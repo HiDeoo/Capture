@@ -8,9 +8,8 @@ import Icon, { IconSymbol } from './Icon'
 export { IconSymbol }
 
 const StyledButton = styled(Button)<StyledButtonProps>`
-  ${tw`rounded px-2 py-1 mr-2 relative`}
+  ${tw`rounded px-2 py-1 mr-2 relative flex-shrink-0`}
 
-  flex-shrink: 0;
   width: 40px;
 
   ${(props) =>

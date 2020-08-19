@@ -1,17 +1,12 @@
+import 'twin.macro'
+
 import React from 'react'
-import tw, { styled } from 'twin.macro'
 
 import type { DestinationSettingSetter, DestinationSettingsGetter } from '../destinations/DestinationBase'
 import { Button, Group } from './SettingsUi'
 
-const Wrapper = styled.div`
-  ${tw`flex-1 overflow-y-auto p-3 overflow-x-hidden text-sm`}
-
-  overflow-wrap: break-word;
-`
-
 const SettingsPanel: React.FC = ({ children }) => {
-  return <Wrapper>{children}</Wrapper>
+  return <div tw="flex-1 overflow-y-auto p-3 overflow-x-hidden text-sm break-words">{children}</div>
 }
 
 export default SettingsPanel

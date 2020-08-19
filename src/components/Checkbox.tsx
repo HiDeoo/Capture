@@ -45,15 +45,13 @@ const CheckMark = styled.span`
   }
 
   &:after {
-    ${tw`hidden absolute`}
+    ${tw`hidden absolute transform rotate-45 top-0`}
 
     border: solid ${theme('color.white')};
     border-width: 0 2px 2px 0;
     content: '';
     height: 11px;
     left: 4px;
-    top: 0;
-    transform: rotate(45deg);
     width: 6px;
   }
 
