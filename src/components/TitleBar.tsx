@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React, { useState } from 'react'
-import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import { getIpcRenderer } from '../main/ipc'
 import { useApp } from '../store'

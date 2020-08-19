@@ -1,9 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
-import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import { useShortcut } from '../utils/keyboard'
 import { useOnClickOutside, usePortal } from '../utils/react'

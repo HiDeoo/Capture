@@ -1,7 +1,7 @@
 import { action, computed, observable } from 'mobx'
 import { ignore } from 'mobx-sync'
 
-import { GeneralSettingsConfiguration } from '../components/GeneralSettings'
+// import { GeneralSettingsConfiguration } from '../components/GeneralSettings'
 import { ShortcutsSettingConfiguration } from '../components/ShortcutsSettings'
 
 /**

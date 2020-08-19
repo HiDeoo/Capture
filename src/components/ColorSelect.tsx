@@ -1,8 +1,7 @@
 import { lighten } from 'polished'
 import React from 'react'
-import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import Select from './Select'
 import Svg from './Svg'

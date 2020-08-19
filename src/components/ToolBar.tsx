@@ -1,7 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import type { DestinationSettingsGetter, ShareOptions, ShareOptionSetter } from '../destinations/DestinationBase'
 import type Select from './Select'

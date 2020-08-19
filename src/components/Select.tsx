@@ -1,8 +1,7 @@
 import { useSelect, UseSelectStateChange } from 'downshift'
 import React from 'react'
-import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import Icon, { IconSymbol } from './Icon'
 

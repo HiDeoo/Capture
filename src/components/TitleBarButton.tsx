@@ -1,7 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import Button, { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'

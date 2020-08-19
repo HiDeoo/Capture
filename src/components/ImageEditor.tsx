@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { SelectionCreatedEvent, SketchField, Tools } from 'react-sketch2'
-import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import { useShortcut } from '../utils/keyboard'
 import { usePrevious } from '../utils/react'

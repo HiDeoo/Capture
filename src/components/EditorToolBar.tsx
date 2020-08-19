@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { Tools } from 'react-sketch2'
-import styled from 'styled-components/macro'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import { getDestination } from '../destinations'
 import type { DestinationId, ShareOptions, ShareOptionSetter } from '../destinations/DestinationBase'

@@ -1,7 +1,5 @@
-import 'styled-components/macro'
-
 import React, { useEffect, useState } from 'react'
-import tw from 'tailwind.macro'
+import tw from 'twin.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'

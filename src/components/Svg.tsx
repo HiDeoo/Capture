@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/macro'
 import { prop } from 'styled-tools'
+import { styled } from 'twin.macro'
 
 const Wrapper = styled.div<StyleProps>`
   svg {

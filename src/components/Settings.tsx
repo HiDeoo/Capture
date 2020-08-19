@@ -1,8 +1,6 @@
-import 'styled-components/macro'
-
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import tw from 'tailwind.macro'
+import tw from 'twin.macro'
 
 import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'

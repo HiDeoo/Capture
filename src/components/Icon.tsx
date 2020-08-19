@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import { styled } from 'twin.macro'
 
 const Wrapper = styled.span.attrs({ className: 'icon' })`
   font-family: 'SF Pro Display';

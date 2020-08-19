@@ -1,6 +1,7 @@
 module.exports = {
   styledComponents: {},
-  tailwind: {
-    styled: 'styled-components',
+  twin: {
+    autoCssProp: true,
+    preset: 'styled-components',
   },
 }

@@ -1,9 +1,8 @@
 import filesize from 'filesize'
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
-import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'

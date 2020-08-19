@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import type { DestinationSettingSetter, DestinationSettingsGetter } from '../destinations/DestinationBase'
 import { Button, Group } from './SettingsUi'

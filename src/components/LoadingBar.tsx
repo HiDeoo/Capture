@@ -1,6 +1,6 @@
-import styled, { keyframes } from 'styled-components/macro'
+import { keyframes } from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 const LoadingBarAnimation = keyframes`
   0% {

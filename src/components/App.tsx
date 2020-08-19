@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import styled from 'styled-components/macro'
 import { theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 import { getDestination } from '../destinations'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
@@ -34,10 +33,7 @@ const Wrapper = styled.div`
   background-color: ${theme('window.background')};
 `
 
-const Main = styled.div`
-  ${tw`flex-1 flex h-full overflow-y-hidden`}
-`
-
+const Main = tw.div`flex-1 flex h-full overflow-y-hidden`
 const Content = tw.div`h-full flex-1 overflow-y-auto flex flex-col`
 
 const App: React.FC = () => {

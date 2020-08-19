@@ -1,7 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/macro'
 import { ifProp, theme } from 'styled-tools'
-import tw from 'tailwind.macro'
+import tw, { styled } from 'twin.macro'
 
 const Wrapper = styled.label<WrapperProps>`
   ${tw`block flex items-center relative`}
@@ -22,7 +21,10 @@ const Wrapper = styled.label<WrapperProps>`
   `}
 `
 
-const Input = tw.input`mr-3 invisible`
+const Input = styled.input`
+  ${tw`mr-3 invisible`}
+`
+
 const Label = tw.span`cursor-pointer`
 
 const CheckMark = styled.span`

@@ -88,8 +88,8 @@
     "react-window": "1.8.5",
     "styled-components": "5.1.1",
     "styled-tools": "1.7.2",
-    "tailwind.macro": "1.0.0-alpha.10",
     "tailwindcss": "1.4.6",
+    "twin.macro": "1.7.0",
     "typescript": "3.9.5",
     "wait-on": "5.0.1",
     "wretch": "1.7.2"
