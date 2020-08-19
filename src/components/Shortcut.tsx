@@ -2,7 +2,7 @@ import React from 'react'
 import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
-import { parseShortcut } from '../utils/keyboard'
+import { formatKey, parseShortcut } from '../utils/keyboard'
 import type { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { Button } from './SettingsUi'
@@ -14,14 +14,18 @@ const Wrapper = styled.div`
 `
 
 const Key = styled.span`
-  ${tw`mx-1 py-1 px-3 inline-block rounded shadow text-xs font-semibold last:mr-0`}
+  ${tw`mx-1 px-3 inline-block rounded shadow text-xs font-semibold last:mr-0 text-base`}
 
   background-color: ${theme('settings.shortcut.background')};
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
 `
 
 const Picker = styled(Button)<ButtonProps>`
   && {
-    ${tw`w-40 mr-3 flex justify-end items-center px-2`}
+    ${tw`mr-3 flex justify-end items-center px-2`}
+
+    width: 170px;
 
     &:hover:not(:disabled) {
       & ${Key} {
@@ -48,7 +52,7 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
         {readOnly && <ReadOnlyIcon symbol={IconSymbol.LockFill} />}
         <div>
           {parsedShortcut.map((key, index) => (
-            <Key key={`${key}-${index}`}>{key}</Key>
+            <Key key={`${key}-${index}`}>{formatKey(key)}</Key>
           ))}
         </div>
       </Picker>

@@ -1,6 +1,34 @@
 import { useEffect } from 'react'
 
 /**
+ * Mapping between well known keys and their associated symbols.
+ */
+const KeySymbolMap: Record<string, string> = {
+  AltLeft: '⌥',
+  AltRight: '⌥',
+  ArrowDown: '↓',
+  ArrowLeft: '←',
+  ArrowRight: '→',
+  ArrowUp: '↑',
+  Bacskpace: '⌫',
+  ControlLeft: '⌃',
+  ControlRight: '⌃',
+  Delete: '⌦',
+  End: '⤓',
+  Enter: '↩',
+  Escape: '⎋',
+  Home: '⤒',
+  MetaLeft: '⌘',
+  MetaRight: '⌘',
+  Space: '⎵',
+  PageDown: '⇟',
+  PageUp: '⇞',
+  ShiftLeft: '⇧',
+  ShiftRight: '⇧',
+  Tab: '⭾',
+}
+
+/**
  * Defines keybaord shortcuts and their associated handlers using a React hook.
  * @param shortcuts - An object containing callbacks to trigger when a known shortcut is detected keyed by their
  * shortcut key bindings. Key bindings should match a `KeyboardEvent.code`
@@ -46,6 +74,15 @@ export function useShortcut(
  */
 export function parseShortcut(shortcut: string): string[] {
   return shortcut.split('+')
+}
+
+/**
+ * Formats a key so it can be displayed using known symbols if needed.
+ * @param  key - The key to format.
+ * @return The formatted key.
+ */
+export function formatKey(key: string): string {
+  return KeySymbolMap[key.trim()] ?? key
 }
 
 interface ShortcutHookOptions {
