@@ -23,22 +23,22 @@ const ShortcutsSettings: React.FC = () => {
     <>
       <Group title="General">
         <Shortcuts>
-          <Shortcut readOnly name="Do the thing" shortcut="AltLeft + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Alt + 1" />
           <Shortcut name="Do the thing" shortcut="Bacskpace" />
           <Shortcut readOnly name="Do the thing" shortcut="ArrowDown + 1" />
           <Shortcut name="Do the thing" shortcut="Escape" />
-          <Shortcut readOnly name="Do the thing" shortcut="ControlLeft + ShiftLeft + 1" />
-          <Shortcut name="Do the thing" shortcut="MetaLeft + 1" />
-          <Shortcut readOnly name="Do the thing" shortcut="ControlRight + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Control + Shift + 1" />
+          <Shortcut name="Do the thing" shortcut="Meta + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Control + 1" />
           <Shortcut name="Do the thing" shortcut="Delete + 1" />
-          <Shortcut readOnly name="Do the thing" shortcut="MetaLeft + 1" />
-          <Shortcut name="Do the thing" shortcut="MetaLeft + 1" />
-          <Shortcut readOnly name="Do the thing" shortcut="MetaLeft + 1" />
-          <Shortcut name="Do the thing" shortcut="MetaLeft + 1" />
-          <Shortcut readOnly name="Do the thing" shortcut="MetaLeft + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Meta + 1" />
+          <Shortcut name="Do the thing" shortcut="Meta + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Meta + 1" />
+          <Shortcut name="Do the thing" shortcut="Meta + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Meta + 1" />
           <Shortcut name="Do the thing" shortcut="Space + 1" />
-          <Shortcut readOnly name="Do the thing" shortcut="MetaLeft + 1" />
-          <Shortcut name="Do the thing" shortcut="MetaLeft + 1" />
+          <Shortcut readOnly name="Do the thing" shortcut="Meta + 1" />
+          <Shortcut name="Do the thing" shortcut="Meta + 1" />
         </Shortcuts>
       </Group>
     </>

@@ -1,30 +1,31 @@
 import { useEffect } from 'react'
 
 /**
+ * List of keyboard modifiers.
+ */
+const ShortcutModifiers = ['Meta', 'Control', 'Alt', 'Shift']
+
+/**
  * Mapping between well known keys and their associated symbols.
  */
 const KeySymbolMap: Record<string, string> = {
-  AltLeft: '⌥',
-  AltRight: '⌥',
+  Alt: '⌥',
   ArrowDown: '↓',
   ArrowLeft: '←',
   ArrowRight: '→',
   ArrowUp: '↑',
-  Bacskpace: '⌫',
-  ControlLeft: '⌃',
-  ControlRight: '⌃',
+  Backspace: '⌫',
+  Control: '⌃',
   Delete: '⌦',
   End: '⤓',
   Enter: '↩',
   Escape: '⎋',
   Home: '⤒',
-  MetaLeft: '⌘',
-  MetaRight: '⌘',
+  Meta: '⌘',
   Space: '⎵',
   PageDown: '⇟',
   PageUp: '⇞',
-  ShiftLeft: '⇧',
-  ShiftRight: '⇧',
+  Shift: '⇧',
   Tab: '⭾',
 }
 
@@ -73,6 +74,10 @@ export function useShortcut(
  * @return The individual shortcut keys.
  */
 export function parseShortcut(shortcut: string): string[] {
+  if (shortcut.length === 0) {
+    return []
+  }
+
   return shortcut.split('+')
 }
 
@@ -85,7 +90,59 @@ export function formatKey(key: string): string {
   return KeySymbolMap[key.trim()] ?? key
 }
 
+/**
+ * Composes a shortcut from a keybord event.
+ * @param  event - The keyboard event.
+ * @return The shortcut.
+ */
+export function getShortcutFromEvent(event: KeyboardEvent): NewShortcut {
+  let valid = false
+  let value = ''
+
+  if (event.key === 'Dead') {
+    return { valid, value }
+  }
+
+  // Idendify shortcuts that are only composed of modifiers.
+  valid = !ShortcutModifiers.includes(event.key)
+
+  if (event.metaKey) {
+    value = value.concat('Meta+')
+  }
+
+  if (event.ctrlKey) {
+    value = value.concat('Control+')
+  }
+
+  if (event.altKey) {
+    value = value.concat('Alt+')
+  }
+
+  if (event.shiftKey) {
+    value = value.concat('Shift+')
+  }
+
+  if (!valid) {
+    if (value.endsWith('+')) {
+      value = value.slice(0, -1)
+    }
+  } else {
+    if (event.key === ' ') {
+      value = value.concat(KeySymbolMap['Space'])
+    } else {
+      value = value.concat(event.key)
+    }
+  }
+
+  return { valid, value }
+}
+
 interface ShortcutHookOptions {
   target?: HTMLElement | Window
   useCapture?: boolean
+}
+
+export interface NewShortcut {
+  valid: boolean
+  value: string
 }
