@@ -39,6 +39,15 @@ export function useShortcut(
   }, [shortcuts, userOptions])
 }
 
+/**
+ * Parses a shortcut.
+ * @param  shortcut - The shortcut to parse.
+ * @return The individual shortcut keys.
+ */
+export function parseShortcut(shortcut: string): string[] {
+  return shortcut.split('+')
+}
+
 interface ShortcutHookOptions {
   target?: HTMLElement | Window
   useCapture?: boolean

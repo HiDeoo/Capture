@@ -118,6 +118,12 @@ export default {
         color: color.tint,
       },
     },
+    shortcut: {
+      background: '#55505c',
+      hover: {
+        background: '#4c4753',
+      },
+    },
   },
   // Application sidebar.
   sideBar: {
