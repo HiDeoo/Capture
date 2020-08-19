@@ -43,9 +43,7 @@ const PreviewWrapper = styled.div`
   margin-bottom: 1px;
   width: ${theme('bar.color.size')};
 `
-const PreviewElement = styled.div`
-  ${tw`border border-solid flex-1 flex`}
-`
+const PreviewElement = tw.div`border border-solid flex-1 flex`
 
 const TransparentPreview = styled.div`
   ${tw`border border-solid border-white flex`}

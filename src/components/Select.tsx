@@ -5,9 +5,7 @@ import tw, { styled } from 'twin.macro'
 
 import Icon, { IconSymbol } from './Icon'
 
-const Wrapper = styled.div`
-  ${tw`relative`}
-`
+const Wrapper = tw.div`relative`
 
 const Button = styled.button<OpenedProps>`
   ${tw`rounded pl-3 py-1 appearance-none pr-10 relative text-left`}
