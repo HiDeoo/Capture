@@ -1,11 +1,11 @@
 import 'twin.macro'
 
-import React from 'react'
+import React, { forwardRef } from 'react'
 
-const Button: React.FC<ButtonProps> = (restProps) => {
-  return <button tw="focus:outline-none disabled:cursor-not-allowed" {...restProps} type="button" />
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((restProps, ref) => {
+  return <button ref={ref} tw="focus:outline-none disabled:cursor-not-allowed" {...restProps} type="button" />
+})
 
 export default Button
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
+export type ButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
