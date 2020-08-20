@@ -2,7 +2,7 @@ import { action, observable } from 'mobx'
 
 import { DestinationsSettings, getDestination } from '../destinations'
 import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../destinations/DestinationBase'
-import { UserShortcut } from '../utils/keyboard'
+import { ShortcutId } from '../utils/keyboard'
 
 /**
  * The settings store.
@@ -33,18 +33,18 @@ export default class SettingsStore {
   /**
    * All mutable shortcuts and their associated key bindings.
    */
-  @observable shortcuts: Record<UserShortcut, string> = {
-    [UserShortcut.CaptureScreenshot]: 'Meta+b',
+  @observable shortcuts: Record<ShortcutId, string> = {
+    [ShortcutId.CaptureScreenshot]: 'Meta+b',
   }
 
   /**
    * Updates a specific shortcut.
-   * @param userShortcut - The user shortcut to modify.
+   * @param shortcutId - The user shortcut to modify.
    * @param newShortcut - The new shortcut.
    */
   @action
-  updateShortcut = (userShortcut: UserShortcut, newShortcut: string): void => {
-    this.shortcuts[userShortcut] = newShortcut
+  updateShortcut = (shortcutId: ShortcutId, newShortcut: string): void => {
+    this.shortcuts[shortcutId] = newShortcut
   }
 
   /**

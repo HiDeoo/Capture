@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
-import { formatKey, getShortcutFromEvent, NewShortcut, parseShortcut, UserShortcut } from '../utils/keyboard'
+import { formatKey, getShortcutFromEvent, NewShortcut, parseShortcut, ShortcutId } from '../utils/keyboard'
 import type { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { Button } from './SettingsUi'
@@ -46,7 +46,7 @@ const ReadOnlyIcon = tw(Icon)`block opacity-50`
 
 const BlankNewShortcut: NewShortcut = { valid: false, value: '' }
 
-const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, userShortcut }) => {
+const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, shortcutId }) => {
   const picker = useRef<HTMLButtonElement>(null)
   const [isPicking, setIsPicking] = useState(false)
   const [newShortcut, setNewShortcut] = useState<NewShortcut>(BlankNewShortcut)
@@ -60,8 +60,8 @@ const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, us
       if (event.code === 'Escape' || event.code === 'Tab') {
         disablePicker()
       } else if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        if (isPicking && newShortcut.valid && onChange && typeof userShortcut !== 'undefined') {
-          onChange(userShortcut, newShortcut.value)
+        if (isPicking && newShortcut.valid && onChange && typeof shortcutId !== 'undefined') {
+          onChange(shortcutId, newShortcut.value)
         }
 
         disablePicker()
@@ -86,7 +86,7 @@ const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, us
         window.removeEventListener('keydown', onKeyDown)
       }
     }
-  }, [isPicking, newShortcut, onChange, userShortcut])
+  }, [isPicking, newShortcut, onChange, shortcutId])
 
   function enablePicker(): void {
     if (!readOnly) {
@@ -131,8 +131,8 @@ const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, us
 export default Shortcut
 
 export interface ShortcutProps {
-  userShortcut?: UserShortcut
+  shortcutId?: ShortcutId
   label: string
-  onChange?: (userShortcut: UserShortcut, newShortcut: string) => void
+  onChange?: (shortcutId: ShortcutId, newShortcut: string) => void
   shortcut: string
 }

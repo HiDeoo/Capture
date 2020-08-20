@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
 /**
- * All user customizable shortcuts.
+ * IDs of all user customizable shortcuts.
  */
-export enum UserShortcut {
+export enum ShortcutId {
   CaptureScreenshot,
 }
 

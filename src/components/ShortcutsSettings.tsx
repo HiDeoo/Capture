@@ -3,7 +3,7 @@ import React from 'react'
 import tw, { styled } from 'twin.macro'
 
 import { useSettings } from '../store'
-import { UserShortcut } from '../utils/keyboard'
+import { ShortcutId } from '../utils/keyboard'
 import { Group } from './SettingsUi'
 import Shortcut, { ShortcutProps } from './Shortcut'
 
@@ -15,8 +15,8 @@ export const ShortcutsSettingConfiguration = {
   name: 'Shortcuts',
 } as const
 
-const UserShorcutDescription: Record<UserShortcut, string> = {
-  [UserShortcut.CaptureScreenshot]: 'nmaqksd dkjqk s',
+const UserShorcutDescription: Record<ShortcutId, string> = {
+  [ShortcutId.CaptureScreenshot]: 'nmaqksd dkjqk s',
 }
 
 const Shortcuts = styled.div`
@@ -30,7 +30,7 @@ const ShortcutsSettings: React.FC = () => {
     <>
       <Group title="General">
         <Shortcuts>
-          <MutableShortcut userShortcut={UserShortcut.CaptureScreenshot} />
+          <MutableShortcut shortcutId={ShortcutId.CaptureScreenshot} />
           <Shortcut label="Do the thing" shortcut="Backspace" />
           <Shortcut label="Do the thing" shortcut="ArrowDown + 1" />
           <Shortcut label="Do the thing" shortcut="Escape" />
@@ -59,8 +59,8 @@ const MutableShortcut: React.FC<MutableShortcutProps> = observer((restProps) => 
     <Shortcut
       {...restProps}
       onChange={updateShortcut}
-      shortcut={shortcuts[restProps.userShortcut]}
-      label={UserShorcutDescription[restProps.userShortcut]}
+      shortcut={shortcuts[restProps.shortcutId]}
+      label={UserShorcutDescription[restProps.shortcutId]}
     />
   )
 })
@@ -68,5 +68,5 @@ const MutableShortcut: React.FC<MutableShortcutProps> = observer((restProps) => 
 export default ShortcutsSettings
 
 interface MutableShortcutProps extends Omit<ShortcutProps, 'shortcut' | 'label' | 'onChange'> {
-  userShortcut: NonNullable<ShortcutProps['userShortcut']>
+  shortcutId: NonNullable<ShortcutProps['shortcutId']>
 }
