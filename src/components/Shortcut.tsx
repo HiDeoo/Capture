@@ -112,7 +112,7 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
           ))}
         </div>
       </Picker>
-      <div>{isPicking ? 'Press shortcut and then Enter' : name}</div>
+      <div>{isPicking ? <span tw="italic">Press shortcut and then Enter</span> : name}</div>
     </Wrapper>
   )
 }
