@@ -46,19 +46,22 @@ const ReadOnlyIcon = tw(Icon)`block opacity-50`
 
 const BlankNewShortcut: NewShortcut = { valid: false, value: '' }
 
-const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
+const Shortcut: React.FC<Props> = ({ name, onChange, shortcut }) => {
   const picker = useRef<HTMLButtonElement>(null)
   const [isPicking, setIsPicking] = useState(false)
   const [newShortcut, setNewShortcut] = useState<NewShortcut>(BlankNewShortcut)
 
+  const readOnly = typeof onChange === 'undefined'
   const parsedShortcut = parseShortcut(isPicking ? newShortcut.value : shortcut)
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent): void {
       // Some keys should not be usabled while picking a shortcut and should cancel the picking phase.
       if (event.code === 'Escape' || event.code === 'Tab') {
-        if (picker.current) {
-          picker.current.blur()
+        disablePicker()
+      } else if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        if (isPicking && newShortcut.valid && onChange) {
+          onChange(newShortcut.value)
         }
 
         disablePicker()
@@ -83,7 +86,7 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
         window.removeEventListener('keydown', onKeyDown)
       }
     }
-  }, [isPicking])
+  }, [isPicking, newShortcut, onChange])
 
   function enablePicker(): void {
     if (!readOnly) {
@@ -92,6 +95,10 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
   }
 
   function disablePicker(): void {
+    if (picker.current) {
+      picker.current.blur()
+    }
+
     setIsPicking(false)
     setNewShortcut(BlankNewShortcut)
   }
@@ -125,6 +132,6 @@ export default Shortcut
 
 interface Props {
   name: string
-  readOnly?: boolean
+  onChange?: (newShortcut: string) => void
   shortcut: string
 }
