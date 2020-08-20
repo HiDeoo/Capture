@@ -7,11 +7,7 @@ import type { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { Button } from './SettingsUi'
 
-const Wrapper = styled.div`
-  ${tw`flex items-center`}
-
-  margin-bottom: 0.6rem;
-`
+const Wrapper = tw.div`flex items-center`
 
 const Key = styled.span`
   ${tw`mx-1 px-3 inline-block rounded shadow text-xs font-semibold last:mr-0 text-base`}

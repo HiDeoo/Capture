@@ -13,9 +13,9 @@ export const ShortcutsSettingConfiguration = {
 } as const
 
 const Shortcuts = styled.div`
-  ${tw`grid`}
+  ${tw`grid gap-2`}
 
-  grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
 `
 
 const ShortcutsSettings: React.FC = () => {
