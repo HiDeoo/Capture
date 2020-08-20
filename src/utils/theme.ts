@@ -120,6 +120,10 @@ export default {
     },
     shortcut: {
       background: '#55505c',
+      focus: {
+        alternate: 'rgba(255, 78, 68, 0.4)',
+        outline: 'rgba(255, 78, 68, 0.9)',
+      },
       hover: {
         background: '#4c4753',
       },

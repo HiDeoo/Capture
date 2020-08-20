@@ -1,11 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { keyframes } from 'styled-components'
 import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
 import { formatKey, getShortcutFromEvent, NewShortcut, parseShortcut, ShortcutId } from '../utils/keyboard'
+import Theme from '../utils/theme'
 import type { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { Button } from './SettingsUi'
+
+const PickerAnimation = keyframes`
+  0%,
+  30% {
+    box-shadow: 0 0 0 2px ${Theme.settings.shortcut.focus.outline};
+  }
+  65% {
+    box-shadow: 0 0 0 3px ${Theme.settings.shortcut.focus.alternate};
+  }
+  100% {
+    box-shadow: 0 0 0 2px ${Theme.settings.shortcut.focus.outline};
+  }
+`
 
 const Wrapper = tw.div`flex items-center`
 
@@ -37,7 +52,10 @@ const Picker = styled(Button)<ButtonProps>`
     }
 
     &:focus {
-      background-color: red;
+      animation-duration: 1500ms;
+      animation-iteration-count: infinite;
+      animation-name: ${PickerAnimation};
+      animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
     }
   }
 `
