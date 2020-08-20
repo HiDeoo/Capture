@@ -7,6 +7,7 @@ import { getDestination } from '../destinations'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
+import { ShortcutId } from '../utils/keyboard'
 import AppSideBar from './AppSideBar'
 import Editor from './Editor'
 import ErrorBoundary, { MainProcessError, useErrorHandler } from './ErrorBoundary'
@@ -41,8 +42,10 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handlerError = useErrorHandler()
-  const { getDestinationSettingsSetter, screenshotDirectory, setScreenshotDirectory } = useSettings()
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()
+  const { getDestinationSettingsSetter, screenshotDirectory, setScreenshotDirectory, shortcuts } = useSettings()
+
+  const captureScreenshotShortcut = shortcuts[ShortcutId.CaptureScreenshot]
 
   useEffect(() => {
     function onNewError(event: IpcRendererEvent, message: string, internalError?: string): void {
@@ -105,6 +108,10 @@ const App: React.FC = () => {
       void getDefaultScreenshotDirectory()
     }
   }, [screenshotDirectory, setScreenshotDirectory])
+
+  useEffect(() => {
+    void getIpcRenderer().invoke('newCaptureScreenshotShortcut', captureScreenshotShortcut)
+  }, [captureScreenshotShortcut])
 
   return (
     <Wrapper>

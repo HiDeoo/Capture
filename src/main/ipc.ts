@@ -24,6 +24,7 @@ type CaptureRendererToMainEvents = {
   deleteFile: (path: string) => void
   getBugReportInfos: () => { os: string }
   getDefaultScreenshotDirectory: () => string
+  newCaptureScreenshotShortcut: (shortcut: string) => void
   newScreenshotDirectory: (path: string) => void
   openFile: (path: string) => string
   openUrl: (url: string) => void

@@ -124,25 +124,6 @@ async function createWindow(): Promise<void> {
 
   // Create the application tray.
   appTray = createTray(window)
-
-  // Register global shrotcuts.
-  registerGlobalShortcuts()
-}
-
-/**
- * Registers the application global shortcuts.
- */
-function registerGlobalShortcuts(): void {
-  try {
-    // TODO Make shortcut customizable
-    const shortcut = globalShortcut.register('Cmd+B', captureScreenshot)
-
-    if (!shortcut) {
-      throw new Error('Unable to register global shortcut.')
-    }
-  } catch (error) {
-    handleError(error.message, error, window)
-  }
 }
 
 /**
@@ -156,6 +137,7 @@ function registerIpcHandlers(): void {
   ipcMain.handle('deleteFile', deleteFile)
   ipcMain.handle('getBugReportInfos', getBugReportInfos)
   ipcMain.handle('getDefaultScreenshotDirectory', getDefaultScreenshotDirectory)
+  ipcMain.handle('newCaptureScreenshotShortcut', onNewCaptureScreenshotShortcut)
   ipcMain.handle('newScreenshotDirectory', onNewScreenshotDirectory)
   ipcMain.handle('openFile', openFile)
   ipcMain.handle('openUrl', openUrl)
@@ -174,6 +156,7 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('deleteFile')
   ipcMain.removeHandler('getBugReportInfos')
   ipcMain.removeHandler('getDefaultScreenshotDirectory')
+  ipcMain.removeHandler('newCaptureScreenshotShortcut')
   ipcMain.removeHandler('newScreenshotDirectory')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
@@ -214,6 +197,25 @@ function captureScreenshot(): void {
   child.on('close', function (code) {
     console.log('Done screenshoting')
   })
+}
+
+/**
+ * Triggered when a new shortcut to capture a screenshot is set.
+ * @param shortcut - The new shortcut.
+ */
+function onNewCaptureScreenshotShortcut(event: IpcMainInvokeEvent, shortcut: string): void {
+  try {
+    // Unregister any existing shortcuts.
+    globalShortcut.unregisterAll()
+
+    const newShortcut = globalShortcut.register(shortcut, captureScreenshot)
+
+    if (!newShortcut) {
+      throw new Error('Unable to register global shortcut.')
+    }
+  } catch (error) {
+    handleError(error.message, error, window)
+  }
 }
 
 /**
