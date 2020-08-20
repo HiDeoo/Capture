@@ -15,6 +15,7 @@ const KeySymbolMap: Record<string, string> = {
   ArrowRight: '→',
   ArrowUp: '↑',
   Backspace: '⌫',
+  ContextMenu: '☰',
   Control: '⌃',
   Delete: '⌦',
   End: '⤓',
