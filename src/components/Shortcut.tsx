@@ -25,6 +25,7 @@ const Picker = styled(Button)<ButtonProps>`
   && {
     ${tw`mr-3 flex justify-end items-center px-2`}
 
+    height: 45px;
     width: 170px;
 
     &:hover:not(:disabled) {
