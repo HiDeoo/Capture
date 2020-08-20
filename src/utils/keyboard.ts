@@ -107,7 +107,7 @@ export function getShortcutFromEvent(event: KeyboardEvent): NewShortcut {
   let valid = false
   let value = ''
 
-  if (event.key === 'Dead') {
+  if (event.key === 'Dead' || event.key === 'Clear') {
     return { valid, value }
   }
 

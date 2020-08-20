@@ -211,10 +211,10 @@ function onNewCaptureScreenshotShortcut(event: IpcMainInvokeEvent, shortcut: str
     const newShortcut = globalShortcut.register(shortcut, captureScreenshot)
 
     if (!newShortcut) {
-      throw new Error('Unable to register global shortcut.')
+      throw new Error('Could not register global shortcut.')
     }
   } catch (error) {
-    handleError(error.message, error, window)
+    handleError('Unable to register global shortcut.', error, window)
   }
 }
 
