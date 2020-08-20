@@ -18,7 +18,7 @@ const KeySymbolMap: Record<string, string> = {
   Control: '⌃',
   Delete: '⌦',
   End: '⤓',
-  Enter: '↩',
+  Enter: '⏎',
   Escape: '⎋',
   Home: '⤒',
   Meta: '⌘',
