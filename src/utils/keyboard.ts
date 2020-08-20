@@ -1,6 +1,13 @@
 import { useEffect } from 'react'
 
 /**
+ * All user customizable shortcuts.
+ */
+export enum UserShortcut {
+  CaptureScreenshot,
+}
+
+/**
  * List of keyboard modifiers.
  */
 const ShortcutModifiers = ['Meta', 'Control', 'Alt', 'Shift']

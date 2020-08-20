@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
-import { formatKey, getShortcutFromEvent, NewShortcut, parseShortcut } from '../utils/keyboard'
+import { formatKey, getShortcutFromEvent, NewShortcut, parseShortcut, UserShortcut } from '../utils/keyboard'
 import type { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { Button } from './SettingsUi'
@@ -46,7 +46,7 @@ const ReadOnlyIcon = tw(Icon)`block opacity-50`
 
 const BlankNewShortcut: NewShortcut = { valid: false, value: '' }
 
-const Shortcut: React.FC<Props> = ({ name, onChange, shortcut }) => {
+const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, userShortcut }) => {
   const picker = useRef<HTMLButtonElement>(null)
   const [isPicking, setIsPicking] = useState(false)
   const [newShortcut, setNewShortcut] = useState<NewShortcut>(BlankNewShortcut)
@@ -60,8 +60,8 @@ const Shortcut: React.FC<Props> = ({ name, onChange, shortcut }) => {
       if (event.code === 'Escape' || event.code === 'Tab') {
         disablePicker()
       } else if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        if (isPicking && newShortcut.valid && onChange) {
-          onChange(newShortcut.value)
+        if (isPicking && newShortcut.valid && onChange && typeof userShortcut !== 'undefined') {
+          onChange(userShortcut, newShortcut.value)
         }
 
         disablePicker()
@@ -86,7 +86,7 @@ const Shortcut: React.FC<Props> = ({ name, onChange, shortcut }) => {
         window.removeEventListener('keydown', onKeyDown)
       }
     }
-  }, [isPicking, newShortcut, onChange])
+  }, [isPicking, newShortcut, onChange, userShortcut])
 
   function enablePicker(): void {
     if (!readOnly) {
@@ -130,8 +130,9 @@ const Shortcut: React.FC<Props> = ({ name, onChange, shortcut }) => {
 
 export default Shortcut
 
-interface Props {
-  name: string
-  onChange?: (newShortcut: string) => void
+export interface ShortcutProps {
+  userShortcut?: UserShortcut
+  label: string
+  onChange?: (userShortcut: UserShortcut, newShortcut: string) => void
   shortcut: string
 }

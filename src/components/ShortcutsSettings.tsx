@@ -1,8 +1,11 @@
+import { observer } from 'mobx-react-lite'
 import React from 'react'
 import tw, { styled } from 'twin.macro'
 
+import { useSettings } from '../store'
+import { UserShortcut } from '../utils/keyboard'
 import { Group } from './SettingsUi'
-import Shortcut from './Shortcut'
+import Shortcut, { ShortcutProps } from './Shortcut'
 
 /**
  * Configuration of the shortcuts settings panel.
@@ -12,6 +15,10 @@ export const ShortcutsSettingConfiguration = {
   name: 'Shortcuts',
 } as const
 
+const UserShorcutDescription: Record<UserShortcut, string> = {
+  [UserShortcut.CaptureScreenshot]: 'nmaqksd dkjqk s',
+}
+
 const Shortcuts = styled.div`
   ${tw`grid gap-2`}
 
@@ -19,34 +26,47 @@ const Shortcuts = styled.div`
 `
 
 const ShortcutsSettings: React.FC = () => {
-  function onShortcutChange(newShortcut: string): void {
-    console.log('newShortcut ', newShortcut)
-  }
-
   return (
     <>
       <Group title="General">
         <Shortcuts>
-          <Shortcut name="Do the thing" shortcut="Alt + 1" />
-          <Shortcut name="Do the thing" shortcut="Backspace" onChange={onShortcutChange} />
-          <Shortcut name="Do the thing" shortcut="ArrowDown + 1" />
-          <Shortcut name="Do the thing" shortcut="Escape" />
-          <Shortcut name="Do the thing" shortcut="Control + Shift + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Control + 1" />
-          <Shortcut name="Do the thing" shortcut="Delete + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Space + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
-          <Shortcut name="Do the thing" shortcut="Meta + 1" />
+          <MutableShortcut userShortcut={UserShortcut.CaptureScreenshot} />
+          <Shortcut label="Do the thing" shortcut="Backspace" />
+          <Shortcut label="Do the thing" shortcut="ArrowDown + 1" />
+          <Shortcut label="Do the thing" shortcut="Escape" />
+          <Shortcut label="Do the thing" shortcut="Control + Shift + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Control + 1" />
+          <Shortcut label="Do the thing" shortcut="Delete + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Space + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Do the thing" shortcut="Meta + 1" />
         </Shortcuts>
       </Group>
     </>
   )
 }
 
+const MutableShortcut: React.FC<MutableShortcutProps> = observer((restProps) => {
+  const { shortcuts, updateShortcut } = useSettings()
+
+  return (
+    <Shortcut
+      {...restProps}
+      onChange={updateShortcut}
+      shortcut={shortcuts[restProps.userShortcut]}
+      label={UserShorcutDescription[restProps.userShortcut]}
+    />
+  )
+})
+
 export default ShortcutsSettings
+
+interface MutableShortcutProps extends Omit<ShortcutProps, 'shortcut' | 'label' | 'onChange'> {
+  userShortcut: NonNullable<ShortcutProps['userShortcut']>
+}

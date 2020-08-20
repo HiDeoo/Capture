@@ -2,6 +2,7 @@ import { action, observable } from 'mobx'
 
 import { DestinationsSettings, getDestination } from '../destinations'
 import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../destinations/DestinationBase'
+import { UserShortcut } from '../utils/keyboard'
 
 /**
  * The settings store.
@@ -27,6 +28,23 @@ export default class SettingsStore {
   @action
   setScreenshotDirectory = (newPath: string): void => {
     this.screenshotDirectory = newPath
+  }
+
+  /**
+   * All mutable shortcuts and their associated key bindings.
+   */
+  @observable shortcuts: Record<UserShortcut, string> = {
+    [UserShortcut.CaptureScreenshot]: 'Meta+b',
+  }
+
+  /**
+   * Updates a specific shortcut.
+   * @param userShortcut - The user shortcut to modify.
+   * @param newShortcut - The new shortcut.
+   */
+  @action
+  updateShortcut = (userShortcut: UserShortcut, newShortcut: string): void => {
+    this.shortcuts[userShortcut] = newShortcut
   }
 
   /**
