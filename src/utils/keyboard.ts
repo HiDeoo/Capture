@@ -4,7 +4,7 @@ import { useEffect } from 'react'
  * IDs of all user customizable shortcuts.
  */
 export enum ShortcutId {
-  CaptureScreenshot,
+  CaptureScreenshot = 'capture_screenshot',
 }
 
 /**
