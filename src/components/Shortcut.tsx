@@ -23,10 +23,10 @@ const Key = styled.span`
 
 const Picker = styled(Button)<ButtonProps>`
   && {
-    ${tw`mr-3 flex justify-end items-center px-2`}
+    ${tw`mr-3 flex justify-end items-center px-2 flex-shrink-0`}
 
     height: 45px;
-    width: 170px;
+    min-width: 170px;
 
     &:hover:not(:disabled) {
       & ${Key} {
