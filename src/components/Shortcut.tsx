@@ -89,12 +89,10 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
     }
   }, [isPicking])
 
-  function onFocusPicker(): void {
-    setIsPicking(true)
-  }
-
-  function onBlurPicker(): void {
-    disablePicker()
+  function enablePicker(): void {
+    if (!readOnly) {
+      setIsPicking(true)
+    }
   }
 
   function disablePicker(): void {
@@ -102,9 +100,13 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
     setNewShortcut(BlankNewShortcut)
   }
 
+  function onBlurPicker(): void {
+    disablePicker()
+  }
+
   return (
     <Wrapper>
-      <Picker disabled={readOnly} onFocus={onFocusPicker} ref={picker} onBlur={onBlurPicker}>
+      <Picker disabled={readOnly} onFocus={enablePicker} ref={picker} onBlur={onBlurPicker}>
         {readOnly && <ReadOnlyIcon symbol={IconSymbol.LockFill} />}
         <div>
           {parsedShortcut.map((key, index) => (
@@ -112,7 +114,13 @@ const Shortcut: React.FC<Props> = ({ name, readOnly = false, shortcut }) => {
           ))}
         </div>
       </Picker>
-      <div>{isPicking ? <span tw="italic">Press shortcut and then Enter</span> : name}</div>
+      {isPicking ? (
+        <div tw="italic">Press shortcut and then Enter</div>
+      ) : (
+        <div role={!readOnly ? 'button' : ''} onClick={!readOnly ? enablePicker : undefined}>
+          {name}
+        </div>
+      )}
     </Wrapper>
   )
 }
