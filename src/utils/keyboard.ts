@@ -33,6 +33,7 @@ const KeySymbolMap: Record<string, string> = {
   Space: '⎵',
   PageDown: '⇟',
   PageUp: '⇞',
+  Plus: '+',
   Shift: '⇧',
   Tab: '⭾',
 }
@@ -137,6 +138,8 @@ export function getShortcutFromEvent(event: KeyboardEvent): NewShortcut {
   } else {
     if (event.key === ' ') {
       value = value.concat(KeySymbolMap['Space'])
+    } else if (event.key === '+') {
+      value = value.concat('Plus')
     } else {
       value = value.concat(event.key)
     }
