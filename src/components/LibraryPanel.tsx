@@ -60,7 +60,7 @@ const CloseButton = styled(Button)`
   height: 25px;
   width: 25px;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: ${theme('color.black3')};
     color: ${theme('color.tint')};
   }

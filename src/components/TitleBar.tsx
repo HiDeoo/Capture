@@ -69,7 +69,7 @@ const CloseButton = styled(Button)<IsFocusedProps>`
   margin-right: 19px;
   width: ${theme('titleBar.control.size')};
 
-  &:hover {
+  &:hover:not(:disabled) {
     ${CloseButtonIcon} {
       ${tw`block`}
     }
