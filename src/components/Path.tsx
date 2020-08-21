@@ -1,7 +1,10 @@
 import React from 'react'
+import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
+import { getIpcRenderer } from '../main/ipc'
 import { getPathComponents } from '../utils/string'
+import Button from './Button'
 import Icon, { IconSymbol } from './Icon'
 
 const Wrapper = styled.span`
@@ -17,8 +20,20 @@ const Separator = styled(Icon)`
   margin-right: 0.35rem;
 `
 
+const RevealButton = styled(Button)`
+  ${tw`ml-2`}
+
+  &:hover:not(:disabled) {
+    color: ${theme('settings.button.hover.color')};
+  }
+`
+
 const Path: React.FC<PathProps> = ({ value, ...restProps }) => {
   const components = getPathComponents(value)
+
+  function onClickReveal(): Promise<string> {
+    return getIpcRenderer().invoke('openFile', value)
+  }
 
   return (
     <div tw="flex">
@@ -31,6 +46,9 @@ const Path: React.FC<PathProps> = ({ value, ...restProps }) => {
           </React.Fragment>
         ))}
       </Wrapper>
+      <RevealButton onClick={onClickReveal}>
+        <Icon symbol={IconSymbol.ArrowRightCircle} />
+      </RevealButton>
     </div>
   )
 }
