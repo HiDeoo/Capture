@@ -7,6 +7,7 @@ import {
   globalShortcut,
   ipcMain as unsafeIpcMain,
   IpcMainInvokeEvent,
+  Menu,
   protocol,
   Tray,
 } from 'electron'
@@ -84,6 +85,9 @@ async function createWindow(): Promise<void> {
     },
     width: 1024,
   })
+
+  // Remove default application menu.
+  Menu.setApplicationMenu(null)
 
   // Sets the application as default handler for the `capture://` URI scheme.
   app.setAsDefaultProtocolClient('capture')
