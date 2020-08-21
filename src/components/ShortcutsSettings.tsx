@@ -16,7 +16,7 @@ export const ShortcutsSettingConfiguration = {
 } as const
 
 const UserShorcutDescription: Record<ShortcutId, string> = {
-  [ShortcutId.CaptureScreenshot]: 'nmaqksd dkjqk s',
+  [ShortcutId.CaptureScreenshot]: 'New screenshot',
 }
 
 const Shortcuts = styled.div`
@@ -28,24 +28,20 @@ const Shortcuts = styled.div`
 const ShortcutsSettings: React.FC = () => {
   return (
     <>
-      <Group title="General">
+      <Group title="System">
         <Shortcuts>
           <MutableShortcut shortcutId={ShortcutId.CaptureScreenshot} />
-          <Shortcut label="Do the thing" shortcut="Backspace" />
-          <Shortcut label="Do the thing" shortcut="ArrowDown + 1" />
-          <Shortcut label="Do the thing" shortcut="Escape" />
-          <Shortcut label="Do the thing" shortcut="Control + Shift + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Control + 1" />
-          <Shortcut label="Do the thing" shortcut="Delete + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Space + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
-          <Shortcut label="Do the thing" shortcut="Meta + 1" />
+          <Shortcut label="Cancel screenshot" shortcut="Escape" />
+        </Shortcuts>
+      </Group>
+      <Group title="Screenshot Editor">
+        <Shortcuts>
+          <Shortcut label="Pencil" shortcut="1" />
+          <Shortcut label="Arrow" shortcut="2" />
+          <Shortcut label="Rectangle" shortcut="3" />
+          <Shortcut label="Circle" shortcut="4" />
+          <Shortcut label="Line" shortcut="5" />
+          <Shortcut label="Delete selection" shortcut="Backspace" />
         </Shortcuts>
       </Group>
     </>
