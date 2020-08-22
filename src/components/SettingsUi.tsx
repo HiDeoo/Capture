@@ -3,6 +3,7 @@ import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
 import Button from './Button'
+import Checkbox from './Checkbox'
 import Path, { PathProps } from './Path'
 
 const SettingsP = styled.div`
@@ -70,8 +71,20 @@ const SettingsPath: React.FC<PathProps> = (props) => {
   )
 }
 
+const SettingsCheckbox = styled(Checkbox)`
+  & > span:first-of-type {
+    background-color: ${theme('settings.button.background')};
+  }
+`
+
 interface SettingsGroupProps {
   title: string
 }
 
-export { SettingsP as P, SettingsPath as Path, SettingsButton as Button, SettingsGroup as Group }
+export {
+  SettingsButton as Button,
+  SettingsCheckbox as Checkbox,
+  SettingsGroup as Group,
+  SettingsP as P,
+  SettingsPath as Path,
+}

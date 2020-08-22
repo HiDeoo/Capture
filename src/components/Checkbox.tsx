@@ -56,13 +56,13 @@ const CheckMark = styled.span`
   }
 `
 
-const Checkbox: React.FC<Props> = ({ checked, disabled = false, label, onChange, ...restProps }) => {
+const Checkbox: React.FC<Props> = ({ checked, className, disabled = false, label, onChange, ...restProps }) => {
   function onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     onChange(event.target.checked)
   }
 
   return (
-    <Wrapper disabled={disabled}>
+    <Wrapper disabled={disabled} className={className}>
       <Input {...restProps} type="checkbox" checked={checked} onChange={onInputChange} disabled={disabled} />
       <CheckMark />
       <Label>{label}</Label>

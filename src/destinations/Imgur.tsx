@@ -39,7 +39,7 @@ class Imgur extends Destination {
    * @return The default settings.
    */
   getDefaultSettings(): ImgurSettings {
-    return {}
+    return { shareAnonymouslyByDefault: false }
   }
 
   /**
@@ -48,13 +48,16 @@ class Imgur extends Destination {
    * @return The default share options.
    */
   getDefaultShareOptions(settings: ImgurSettings): ImgurShareOptions {
-    return { account: settings.username ? AccountShareOption.User : AccountShareOption.Anon }
+    return {
+      account:
+        settings.username && !settings.shareAnonymouslyByDefault ? AccountShareOption.User : AccountShareOption.Anon,
+    }
   }
 
   /**
    * Share a file to Imgur.
    * @param path - The path of the file to share.
-   * @param  size - The shared image file size.
+   * @param size - The shared image file size.
    * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
    * @param getSettings - A destination settings getter.
@@ -205,11 +208,24 @@ class Imgur extends Destination {
         return openUrl(request._url)
       }
 
+      function onChangeShareAnonymouslyByDefault(shareAnonymouslyByDefault: boolean): void {
+        setSettings<ImgurSettings>('shareAnonymouslyByDefault', shareAnonymouslyByDefault)
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
           </Ui.Group>
+          {isLoggedIn && (
+            <Ui.Group title="Preferences">
+              <Ui.Checkbox
+                label="Share anonymously by default"
+                checked={settings.shareAnonymouslyByDefault}
+                onChange={onChangeShareAnonymouslyByDefault}
+              />
+            </Ui.Group>
+          )}
         </>
       )
     }
@@ -274,6 +290,7 @@ export interface ImgurSettings extends DestinationSettings {
   expiry?: string
   id?: string
   refreshToken?: string
+  shareAnonymouslyByDefault: boolean
   username?: string
 }
 
