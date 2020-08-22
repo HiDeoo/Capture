@@ -48,15 +48,15 @@ const ShortcutsSettings: React.FC = () => {
   )
 }
 
-const MutableShortcut: React.FC<MutableShortcutProps> = observer((restProps) => {
+const MutableShortcut: React.FC<MutableShortcutProps> = observer((props) => {
   const { shortcuts, updateShortcut } = useSettings()
 
   return (
     <Shortcut
-      {...restProps}
+      {...props}
       onChange={updateShortcut}
-      shortcut={shortcuts[restProps.shortcutId]}
-      label={UserShorcutDescription[restProps.shortcutId]}
+      shortcut={shortcuts[props.shortcutId]}
+      label={UserShorcutDescription[props.shortcutId]}
     />
   )
 })
