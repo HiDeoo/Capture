@@ -213,6 +213,20 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
     Escape: onEscapeShortcut,
   })
 
+  useShortcut({ z: onUndoRedoShortcut }, { useCode: false })
+
+  function onUndoRedoShortcut(event: KeyboardEvent): void {
+    if (!sketch.current || event.ctrlKey || event.altKey || !event.metaKey) {
+      return
+    }
+
+    if (event.shiftKey && sketch.current.canRedo()) {
+      sketch.current.redo()
+    } else if (!event.shiftKey && sketch.current.canUndo()) {
+      sketch.current.undo()
+    }
+  }
+
   function onBackspaceOrDeleteShortcut(): void {
     // Backspace & delete should be usable when editing text.
     if (isEditingText) {

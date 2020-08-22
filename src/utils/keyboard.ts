@@ -41,9 +41,15 @@ const KeySymbolMap: Record<string, string> = {
 /**
  * Defines keybaord shortcuts and their associated handlers using a React hook.
  * @param shortcuts - An object containing callbacks to trigger when a known shortcut is detected keyed by their
- * shortcut key bindings. Key bindings should match a `KeyboardEvent.code`
- * (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code). As event listeners are added/removed using
- * `React.useEffect()`, if the callback has a dependency list, it should be wrapped in `React.useCallback()`.
+ * shortcut key bindings.
+ *
+ * Key bindings should either match:
+ *  - a `KeyboardEvent.code` (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code).
+ *  - a `KeyboardEvent.key` (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key) if the
+ *      `userOptions.useCode` is set to `false`.
+ *
+ * As event listeners are added/removed using `React.useEffect()`, if the callback has a dependency list, it should be
+ * wrapped in `React.useCallback()`.
  * @param target - The event listener target.
  */
 export function useShortcut(
@@ -51,6 +57,8 @@ export function useShortcut(
   userOptions?: ShortcutHookOptions
 ): void {
   useEffect(() => {
+    const options: Required<ShortcutHookOptions> = { target: window, useCapture: false, useCode: true, ...userOptions }
+
     function onKeyDown(event: Event): void {
       // Ignore unrelated events.
       if (!(event instanceof KeyboardEvent)) {
@@ -62,12 +70,16 @@ export function useShortcut(
         return
       }
 
-      if (shortcuts[event.code]) {
+      if (options.useCode && shortcuts[event.code]) {
         shortcuts[event.code](event)
+      } else if (!options.useCode) {
+        const key = event.key.toLowerCase()
+
+        if (shortcuts[key]) {
+          shortcuts[key](event)
+        }
       }
     }
-
-    const options: Required<ShortcutHookOptions> = { target: window, useCapture: false, ...userOptions }
 
     options.target.addEventListener('keydown', onKeyDown, options.useCapture)
 
@@ -151,6 +163,7 @@ export function getShortcutFromEvent(event: KeyboardEvent): NewShortcut {
 interface ShortcutHookOptions {
   target?: HTMLElement | Window
   useCapture?: boolean
+  useCode?: boolean
 }
 
 export interface NewShortcut {

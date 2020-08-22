@@ -42,6 +42,8 @@ const ShortcutsSettings: React.FC = () => {
           <Shortcut label="Circle" shortcut="4" />
           <Shortcut label="Line" shortcut="5" />
           <Shortcut label="Delete selection" shortcut="Backspace" />
+          <Shortcut label="Undo" shortcut="Meta+Z" />
+          <Shortcut label="Redo" shortcut="Meta+Shift+Z" />
         </Shortcuts>
       </Group>
     </>
