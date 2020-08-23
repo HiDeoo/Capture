@@ -29,6 +29,7 @@ class Imgur extends Destination {
    */
   getConfiguration(): DestinationConfiguration {
     return {
+      alwaysAvailable: true,
       id: 'imgur',
       name: 'Imgur',
     }

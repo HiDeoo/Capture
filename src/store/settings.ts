@@ -1,7 +1,13 @@
 import { action, observable } from 'mobx'
 
 import { DestinationsSettings, getDestination } from '../destinations'
-import type { DestinationId, DestinationSettings, DestinationSettingValue } from '../destinations/DestinationBase'
+import type {
+  DestinationId,
+  DestinationSettings,
+  DestinationSettingValue,
+  GetDestinationSettingsGetter,
+  GetDestinationSettingsSetter,
+} from '../destinations/DestinationBase'
 import { ShortcutId } from '../utils/keyboard'
 
 /**
@@ -71,7 +77,7 @@ export default class SettingsStore {
    * Returns a destination-scoped settings getter.
    * @param id - The destination ID.
    */
-  getDestinationSettingsGetter = (id: DestinationId) => {
+  getDestinationSettingsGetter: GetDestinationSettingsGetter = (id: DestinationId) => {
     return <Settings extends DestinationSettings>(): Settings => {
       return this.getDestinationSettings<Settings>(id)
     }
@@ -96,7 +102,7 @@ export default class SettingsStore {
    * Returns a destination-scoped settings setter.
    * @param id - The destination ID.
    */
-  getDestinationSettingsSetter = (id: DestinationId) => {
+  getDestinationSettingsSetter: GetDestinationSettingsSetter = (id: DestinationId) => {
     return <Settings extends DestinationSettings>(
       settingId: KnownKeys<Settings>,
       value: DestinationSettingValue

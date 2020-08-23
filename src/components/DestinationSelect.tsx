@@ -2,6 +2,7 @@ import React from 'react'
 
 import { getDestination, getDestinations } from '../destinations'
 import type { DestinationId } from '../destinations/DestinationBase'
+import { useSettings } from '../store'
 import Select from './Select'
 
 /**
@@ -20,10 +21,13 @@ function destinationRenderer(destinationId: DestinationId): React.ReactNode {
 }
 
 const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps }) => {
+  const { getDestinationSettingsGetter } = useSettings()
+  const destinationIds: DestinationId[] = Object.keys(getDestinations(true, getDestinationSettingsGetter))
+
   return (
     <Select
       {...restProps}
-      items={DestinationIds}
+      items={destinationIds}
       onChange={onChangeDestination}
       itemRenderer={destinationRenderer}
       selectedItem={defaultDestinationId}

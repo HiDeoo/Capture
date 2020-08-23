@@ -57,18 +57,24 @@ export default abstract class Destination {
    * Returns the destination settings panel if any.
    * @return The settings panel.
    */
-  abstract getSettingsPanel?(): React.FC<SettingsPanelProps>
+  getSettingsPanel?(): React.FC<SettingsPanelProps>
 
   /**
    * Returns the destination toolbar if any.
    * @return The destination toolbar visible in the editor.
    */
-  abstract getToolBar?(): React.FC<DestinationToolBarProps<ShareOptions>>
+  getToolBar?(): React.FC<DestinationToolBarProps<ShareOptions>>
+
+  /**
+   * Checks if the destination is available or not.
+   * @param getSettings - A destination settings getter.
+   */
+  isAvailable?(getSettings: DestinationSettingsGetter): boolean
 
   /**
    * Triggered when an associated OAuth request is received for the destination.
    */
-  abstract onOAuthRequest?(
+  onOAuthRequest?(
     setSettings: DestinationSettingSetter,
     queryString: ParsedQueryString,
     hash: Optional<ParsedQueryString>
@@ -144,6 +150,7 @@ export default abstract class Destination {
 export type DestinationId = string
 
 export interface DestinationConfiguration {
+  alwaysAvailable: boolean
   id: DestinationId
   name: string
 }
@@ -175,6 +182,9 @@ export type DestinationSettingSetter = <Settings extends DestinationSettings>(
   settingId: KnownKeys<Settings>,
   value: DestinationSettingValue
 ) => void
+
+export type GetDestinationSettingsGetter = (id: DestinationId) => DestinationSettingsGetter
+export type GetDestinationSettingsSetter = (id: DestinationId) => DestinationSettingSetter
 
 /**
  * Options that can be customized by a destination before sharing or deleting an image.

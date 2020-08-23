@@ -1,4 +1,4 @@
-import Destination, { DestinationId, DestinationSettings } from './DestinationBase'
+import Destination, { DestinationId, DestinationSettings, GetDestinationSettingsGetter } from './DestinationBase'
 import Imgur from './Imgur'
 
 /**
@@ -15,14 +15,42 @@ let destinations: DestinationsList
 
 /**
  * Returns all destinations.
+ * @param  availableOnly - Defines if only available destinations should be returned.
+ * @param  getDestinationSettingsGetter - A getter for a destination settings getter.
  * @return The destinations.
  */
-export function getDestinations(): DestinationsList {
+export function getDestinations(availableOnly?: false): DestinationsList
+export function getDestinations(
+  availableOnly: true,
+  getDestinationSettingsGetter: GetDestinationSettingsGetter
+): DestinationsList
+export function getDestinations(
+  availableOnly = false,
+  getDestinationSettingsGetter?: GetDestinationSettingsGetter
+): DestinationsList {
   if (!destinations) {
     loadDestinations()
   }
 
-  return destinations
+  if (!availableOnly) {
+    return destinations
+  }
+
+  return Object.entries(destinations).reduce((acc, [id, destination]) => {
+    const configuration = destination.getConfiguration()
+
+    if (
+      configuration.alwaysAvailable ||
+      (!configuration.alwaysAvailable &&
+        getDestinationSettingsGetter &&
+        destination.isAvailable &&
+        destination.isAvailable(getDestinationSettingsGetter(id)))
+    ) {
+      acc[id] = destination
+    }
+
+    return acc
+  }, {} as typeof destinations)
 }
 
 /**
