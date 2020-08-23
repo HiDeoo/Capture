@@ -39,3 +39,13 @@ export function splitFilePath(path: string): [string, string] {
 export function getPathComponents(path: string): string[] {
   return path.split('/').filter((component) => component.length > 0)
 }
+
+/**
+ * Converts a base64 string to a base64url string.
+ * @see https://tools.ietf.org/html/rfc4648#section-5
+ * @param  base64 - A base64 string.
+ * @return The base64url string.
+ */
+export function toBase64Url(base64: string): string {
+  return base64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+}
