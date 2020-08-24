@@ -269,7 +269,7 @@ function onOpenUrl(event: Electron.Event, url: string): void {
   // Handle OAuth calls.
   if (parsedUrl.hostname === 'oauth' && parsedUrl.pathname.length > 2) {
     const destinationId = parsedUrl.pathname.substr(1)
-    const queryString = querystring.parse(parsedUrl.search) as ParsedQueryString
+    const queryString = querystring.parse(parsedUrl.search.replace(/^\?/, '')) as ParsedQueryString
 
     let parsedHash: Optional<ParsedQueryString> = undefined
 
