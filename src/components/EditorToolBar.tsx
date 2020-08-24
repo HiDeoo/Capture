@@ -104,7 +104,11 @@ const EditorToolBar: React.FC<Props> = ({
           getSettings={getDestinationSettingsGetter(destinationId)}
         />
       )}
-      <StyledDestinationSelect onChangeDestination={onChangeDestination} disabled={locked} />
+      <StyledDestinationSelect
+        disabled={locked}
+        destinationId={destinationId}
+        onChangeDestination={onChangeDestination}
+      />
     </ToolBar>
   )
 }

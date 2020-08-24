@@ -31,7 +31,7 @@ function destinationRenderer(destinationId: DestinationId): React.ReactNode {
   return getDestination(destinationId).getConfiguration().name
 }
 
-const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps }) => {
+const DestinationSelect: React.FC<Props> = ({ destinationId, onChangeDestination, ...restProps }) => {
   const { getDestinationSettingsGetter } = useSettings()
   const destinationIds: DestinationId[] = Object.keys(getDestinations(true, getDestinationSettingsGetter))
 
@@ -40,9 +40,9 @@ const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps 
       <Select
         {...restProps}
         items={destinationIds}
+        selectedItem={destinationId}
         onChange={onChangeDestination}
         itemRenderer={destinationRenderer}
-        selectedItem={defaultDestinationId}
       />
     </Wrapper>
   )
@@ -51,5 +51,6 @@ const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps 
 export default DestinationSelect
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  destinationId: DestinationId
   onChangeDestination: (destinationId: DestinationId) => void
 }
