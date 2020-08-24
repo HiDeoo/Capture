@@ -1,5 +1,7 @@
+import { addSeconds, formatISO } from 'date-fns'
 import wretch, { Wretcher } from 'wretch'
 
+import { ErrorHandler } from '../components/ErrorBoundary'
 import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
@@ -77,7 +79,8 @@ export default abstract class Destination {
   onOAuthRequest?(
     setSettings: DestinationSettingSetter,
     queryString: ParsedQueryString,
-    hash: Optional<ParsedQueryString>
+    hash: Optional<ParsedQueryString>,
+    handleError: ErrorHandler
   ): void
 
   private wretcher: Wretcher
@@ -144,6 +147,17 @@ export default abstract class Destination {
       shareId: id,
       size,
     }
+  }
+
+  /**
+   * Returns the expiry of an access token in the ISO 8601 format.
+   * @param  expiresIn - Seconds before the token expires.
+   * @return The expiry.
+   */
+  getTokenExpiry(expiresIn: number): string {
+    const expiry = addSeconds(new Date(), expiresIn)
+
+    return formatISO(expiry)
   }
 }
 

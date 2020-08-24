@@ -41,7 +41,7 @@ const App: React.FC = () => {
   const ipcRenderer = getIpcRenderer()
 
   const { selectEntry } = useHistory()
-  const handlerError = useErrorHandler()
+  const handleError = useErrorHandler()
   const { currentPanel, pushToQueue, setWindowFocus } = useApp()
   const { getDestinationSettingsSetter, screenshotDirectory, setScreenshotDirectory, shortcuts } = useSettings()
 
@@ -49,7 +49,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     function onNewError(event: IpcRendererEvent, message: string, internalError?: string): void {
-      handlerError(new MainProcessError(message, internalError))
+      handleError(new MainProcessError(message, internalError))
     }
 
     function onOAuthRequest(
@@ -63,7 +63,7 @@ const App: React.FC = () => {
       const destination = getDestination(destinationId)
 
       if (destination.onOAuthRequest) {
-        destination.onOAuthRequest(getDestinationSettingsSetter(destinationId), queryString, hash)
+        destination.onOAuthRequest(getDestinationSettingsSetter(destinationId), queryString, hash, handleError)
       }
     }
 

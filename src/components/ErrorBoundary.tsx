@@ -172,3 +172,5 @@ interface Props {
   primaryButtonHandler?: (resetErrorBoundary: () => void) => void
   primaryButtonLabel?: string
 }
+
+export type ErrorHandler = React.Dispatch<React.SetStateAction<Error>>

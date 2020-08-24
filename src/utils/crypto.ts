@@ -41,7 +41,7 @@ export async function getPkce(length = 128): Promise<PkceCode> {
   return { challenge, method: 'S256', verifier }
 }
 
-interface PkceCode {
+export interface PkceCode {
   challenge: string
   method: 'S256' | 'plain'
   verifier: string
