@@ -192,7 +192,7 @@ class Imgur extends Destination {
   getSettingsPanel(): React.FC<SettingsPanelProps> {
     return ({ getSettings, openUrl, setSettings, Ui }) => {
       const settings = getSettings<ImgurSettings>()
-      const isLoggedIn = settings.username !== undefined
+      const isLoggedIn = typeof settings.username !== 'undefined'
 
       function logout(): void {
         setSettings<ImgurSettings>('accessToken', undefined)
