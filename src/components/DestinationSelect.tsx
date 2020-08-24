@@ -1,4 +1,5 @@
 import React from 'react'
+import tw, { styled } from 'twin.macro'
 
 import { getDestination, getDestinations } from '../destinations'
 import type { DestinationId } from '../destinations/DestinationBase'
@@ -16,6 +17,16 @@ const DestinationIds: DestinationId[] = Object.keys(getDestinations())
 // TODO This should be a setting
 export const defaultDestinationId = DestinationIds[0]
 
+const Wrapper = styled.div`
+  & > div {
+    min-width: 110px;
+
+    button {
+      ${tw`w-full`}
+    }
+  }
+`
+
 function destinationRenderer(destinationId: DestinationId): React.ReactNode {
   return getDestination(destinationId).getConfiguration().name
 }
@@ -25,13 +36,15 @@ const DestinationSelect: React.FC<Props> = ({ onChangeDestination, ...restProps 
   const destinationIds: DestinationId[] = Object.keys(getDestinations(true, getDestinationSettingsGetter))
 
   return (
-    <Select
-      {...restProps}
-      items={destinationIds}
-      onChange={onChangeDestination}
-      itemRenderer={destinationRenderer}
-      selectedItem={defaultDestinationId}
-    />
+    <Wrapper>
+      <Select
+        {...restProps}
+        items={destinationIds}
+        onChange={onChangeDestination}
+        itemRenderer={destinationRenderer}
+        selectedItem={defaultDestinationId}
+      />
+    </Wrapper>
   )
 }
 
