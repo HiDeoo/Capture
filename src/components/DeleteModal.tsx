@@ -53,7 +53,7 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
 
       if (options.destination) {
         await destination.delete(
-          { anon: entry.anon, deleteId: entry.deleteId },
+          entry,
           getDestinationSettingsGetter(entry.destinationId),
           getDestinationSettingsSetter(entry.destinationId)
         )

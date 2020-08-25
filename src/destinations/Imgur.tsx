@@ -3,12 +3,12 @@ import React from 'react'
 
 import type { ImageDimensions } from '../components/Img'
 import Destination, {
-  DeleteOptions,
   DestinationConfiguration,
   DestinationSettings,
   DestinationSettingSetter,
   DestinationSettingsGetter,
   DestinationToolBarProps,
+  HistoryEntry,
   SettingsPanelProps,
   ShareOptions,
   ShareResponse,
@@ -87,26 +87,26 @@ class Imgur extends Destination {
 
     return this.getShareResponse(path, size, dimensions, {
       anon,
-      id,
       deleteId: deletehash,
+      id,
       link,
     })
   }
 
   /**
    * Deletes a file from Imgur.
-   * @param deleteOptions - The options related to this specific deletion.
+   * @param entry - The entry to delete.
    * @param getSettings - Imgur settings getter.
    * @param setSettings - A destination settings setter.
    */
   async delete(
-    deleteOptions: ImgurDeleteOptions,
+    entry: HistoryEntry,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<void> {
-    const headers = await this.getHeaders(deleteOptions.anon, getSettings, setSettings)
+    const headers = await this.getHeaders(entry.anon, getSettings, setSettings)
 
-    return this.api.url(`/3/image/${deleteOptions.deleteId}`).headers(headers).delete()
+    return this.api.url(`/3/image/${entry.deleteId}`).headers(headers).delete()
   }
 
   /**
@@ -297,11 +297,6 @@ export interface ImgurSettings extends DestinationSettings {
 
 export interface ImgurShareOptions extends ShareOptions {
   account?: AccountShareOption
-}
-
-export interface ImgurDeleteOptions extends DeleteOptions {
-  anon: boolean
-  deleteId: string
 }
 
 interface RefreshTokenApiResponse {

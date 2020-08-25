@@ -8,11 +8,11 @@ import type { ImageDimensions } from '../components/Img'
 import { getPkce, PkceCode } from '../utils/crypto'
 import { splitFilePath } from '../utils/string'
 import Destination, {
-  DeleteOptions,
   DestinationConfiguration,
   DestinationSettings,
   DestinationSettingSetter,
   DestinationSettingsGetter,
+  HistoryEntry,
   SettingsPanelProps,
   ShareOptions,
   ShareResponse,
@@ -67,7 +67,7 @@ class Dropbox extends Destination {
    * @param  settings - The destination settings.
    * @return The default share options.
    */
-  getDefaultShareOptions(settings: DropboxSettings): DropboxShareOptions {
+  getDefaultShareOptions(settings: DropboxSettings): ShareOptions {
     return {}
   }
 
@@ -95,7 +95,7 @@ class Dropbox extends Destination {
     path: string,
     size: number,
     dimensions: ImageDimensions,
-    shareOptions: DropboxShareOptions,
+    shareOptions: ShareOptions,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<ShareResponse> {
@@ -131,6 +131,7 @@ class Dropbox extends Destination {
 
     return this.getShareResponse(path, size, dimensions, {
       anon: false,
+      deleteId: uploadResponse.path_lower,
       id,
       link: url,
     })
@@ -138,16 +139,24 @@ class Dropbox extends Destination {
 
   /**
    * Deletes a file from Dropbox.
-   * @param deleteOptions - The options related to this specific deletion.
+   * @param entry - The entry to delete.
    * @param getSettings - Dropbox settings getter.
    * @param setSettings - A destination settings setter.
    */
-  delete(
-    deleteOptions: DropboxDeleteOptions,
+  async delete(
+    entry: HistoryEntry,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<void> {
-    throw new Error('Not implemented.')
+    const headers = await this.getHeaders(getSettings, setSettings)
+
+    return this.api
+      .url('/2/files/delete_v2')
+      .headers(headers)
+      .post({
+        path: entry.deleteId,
+      })
+      .json()
   }
 
   /**
@@ -343,12 +352,6 @@ export interface DropboxSettings extends DestinationSettings {
   id?: string
   refreshToken?: string
 }
-
-type DropboxShareOptions = ShareOptions
-// export interface DropboxShareOptions extends ShareOptions {}
-
-type DropboxDeleteOptions = DeleteOptions
-// export interface DropboxDeleteOptions extends DeleteOptions {}
 
 interface DropboxAuthState extends PkceCode {
   state: string

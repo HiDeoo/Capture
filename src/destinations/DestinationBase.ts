@@ -5,8 +5,9 @@ import { ErrorHandler } from '../components/ErrorBoundary'
 import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
+import type { HistoryEntry } from '../store/history'
 
-export type { DestinationToolBarProps, SettingsPanelProps }
+export type { DestinationToolBarProps, HistoryEntry, SettingsPanelProps }
 
 /**
  * Abstract definition of a destination.
@@ -45,12 +46,12 @@ export default abstract class Destination {
 
   /**
    * Deletes a file from the destination.
-   * @param deleteOptions - The options related to this specific deletion.
+   * @param entry - The entry to delete.
    * @param getSettings - A destination settings getter.
    * @param setSettings - A destination settings setter.
    */
   abstract delete(
-    deleteOptions: DeleteOptions,
+    entry: HistoryEntry,
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<void>
@@ -201,11 +202,10 @@ export type GetDestinationSettingsGetter = (id: DestinationId) => DestinationSet
 export type GetDestinationSettingsSetter = (id: DestinationId) => DestinationSettingSetter
 
 /**
- * Options that can be customized by a destination before sharing or deleting an image.
+ * Options that can be customized by a destination before sharing an image.
  */
 export type ShareOptionValue = Optional<string | number | boolean>
 export type ShareOptions = Record<string, ShareOptionValue>
-export type DeleteOptions = Record<string, ShareOptionValue>
 
 export type ShareOptionSetter = <DestinationShareOptions extends ShareOptions>(
   key: KnownKeys<DestinationShareOptions>,
