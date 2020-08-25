@@ -9,7 +9,7 @@ import { useSettings } from '../store'
 import ColorSelect, { Color, ColorType } from './ColorSelect'
 import DestinationSelect from './DestinationSelect'
 import { IconSymbol } from './Icon'
-import { ImageEditorStateProps, LineWidth, LineWidths } from './ImageEditor'
+import { ImageEditorStateProps, LINE_WIDTHS, LineWidth } from './ImageEditor'
 import Select from './Select'
 import Svg from './Svg'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
@@ -78,7 +78,7 @@ const EditorToolBar: React.FC<Props> = ({
       </ToolBarButtonGroup>
       <ToolBarButton symbol={IconSymbol.TextCursor} onClick={onClickAddText} />
       <Select
-        items={LineWidths}
+        items={LINE_WIDTHS}
         onChange={onChangeLineWidth}
         itemRenderer={lineWidthRenderer}
         selectedItem={imageEditorState.lineWidth}

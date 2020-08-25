@@ -6,7 +6,7 @@ import tw, { styled } from 'twin.macro'
 import { useShortcut } from '../utils/keyboard'
 import { usePrevious } from '../utils/react'
 import Theme from '../utils/theme'
-import { Color, Colors } from './ColorSelect'
+import { Color, COLORS } from './ColorSelect'
 import Img, { ImageDimensions } from './Img'
 import type { SvgIconName } from './Svg'
 
@@ -21,7 +21,7 @@ const Layers = styled.div`
   }
 `
 
-export const LineWidths: LineWidth[] = [
+export const LINE_WIDTHS: LineWidth[] = [
   { svgIcon: 'lineWidthXs', value: 2 },
   { svgIcon: 'lineWidthSm', value: 4 },
   { svgIcon: 'lineWidthLg', value: 8 },
@@ -37,8 +37,8 @@ export type ImageEditorAction =
 
 const imageEditorInitialState: ImageEditorState = {
   fillColor: undefined,
-  lineColor: Colors[0],
-  lineWidth: LineWidths[1],
+  lineColor: COLORS[0],
+  lineWidth: LINE_WIDTHS[1],
   tool: Tools.Select,
 }
 

@@ -1,7 +1,7 @@
 import { action, computed, observable } from 'mobx'
 import { ignore } from 'mobx-sync'
 
-import { GeneralSettingsConfiguration } from '../components/GeneralSettings'
+import { GENERAL_SETTINGS_CONFIGURATION } from '../components/GeneralSettings'
 
 /**
  * The various panels available in the application.
@@ -32,7 +32,7 @@ export default class AppStore {
   /**
    * The ID of the current settings panel to display.
    */
-  @ignore @observable currentSettingsPanel: SettingsPanelId = GeneralSettingsConfiguration.id
+  @ignore @observable currentSettingsPanel: SettingsPanelId = GENERAL_SETTINGS_CONFIGURATION.id
 
   /**
    * Changes the ID of the current settings panel.

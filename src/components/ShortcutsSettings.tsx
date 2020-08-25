@@ -10,7 +10,7 @@ import Shortcut, { ShortcutProps } from './Shortcut'
 /**
  * Configuration of the shortcuts settings panel.
  */
-export const ShortcutsSettingConfiguration = {
+export const SHORTCUTS_SETTING_CONFIGURATION = {
   id: 'shortcuts',
   name: 'Shortcuts',
 } as const

@@ -7,18 +7,18 @@ import { getDestinations } from '../destinations'
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useSettings } from '../store'
 import { SettingsPanelId } from '../store/app'
-import GeneralSettings, { GeneralSettingsConfiguration } from './GeneralSettings'
+import GeneralSettings, { GENERAL_SETTINGS_CONFIGURATION } from './GeneralSettings'
 import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
 import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
 import { Button, Checkbox, Group } from './SettingsUi'
-import ShortcutsSettings, { ShortcutsSettingConfiguration } from './ShortcutsSettings'
+import ShortcutsSettings, { SHORTCUTS_SETTING_CONFIGURATION } from './ShortcutsSettings'
 
 /**
  * The ordered settings sidebar entries.
  */
 const SidebarEntries: (SettingsSideBarEntry | React.ReactNode)[] = [
-  { ...GeneralSettingsConfiguration, panel: GeneralSettings },
-  { ...ShortcutsSettingConfiguration, panel: ShortcutsSettings },
+  { ...GENERAL_SETTINGS_CONFIGURATION, panel: GeneralSettings },
+  { ...SHORTCUTS_SETTING_CONFIGURATION, panel: ShortcutsSettings },
   <div tw="h-6" />,
   // Add dynamic destinations settings panels.
   ...Object.entries(getDestinations()).reduce<SettingsSideBarEntry[]>((acc, [id, destination]) => {

@@ -8,7 +8,7 @@ import { Button, Group, P, Path } from './SettingsUi'
 /**
  * Configuration of the general settings panel.
  */
-export const GeneralSettingsConfiguration = {
+export const GENERAL_SETTINGS_CONFIGURATION = {
   id: 'general',
   name: 'General',
 } as const

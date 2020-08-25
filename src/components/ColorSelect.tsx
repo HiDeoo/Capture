@@ -11,7 +11,7 @@ export enum ColorType {
   Border,
 }
 
-export const Colors: Color[] = [
+export const COLORS: Color[] = [
   '#ff2700',
   '#fe9400',
   '#fefb05',
@@ -109,7 +109,7 @@ const ColorSelect: React.FC<Props> = ({ allowTransparent = false, onChangeColor,
       onChange={onChange}
       selectedItem={selectedItem}
       itemRenderer={colorRenderer}
-      items={allowTransparent ? [TransparentColor, ...Colors] : Colors}
+      items={allowTransparent ? [TransparentColor, ...COLORS] : COLORS}
     />
   )
 }
