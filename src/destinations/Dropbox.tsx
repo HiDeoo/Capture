@@ -267,7 +267,7 @@ class Dropbox extends Destination {
 
       return (
         <>
-          <Ui.Group title={isLoggedIn ? 'Logged in' : 'User Account'}>
+          <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
             <Ui.Button onClick={debugLogin}>Debug Login</Ui.Button>
           </Ui.Group>
@@ -306,12 +306,14 @@ class Dropbox extends Destination {
 
     if (!authError && code) {
       try {
-        const response = await this.getAccessToken(code)
+        const tokenReponse = await this.getAccessToken(code)
+        const accountResponse = await this.getCurrentAccount(tokenReponse['access_token'])
 
-        setSettings<DropboxSettings>('accessToken', response['access_token'])
-        setSettings<DropboxSettings>('expiry', this.getTokenExpiry(response['expires_in']))
-        setSettings<DropboxSettings>('id', response['account_id'])
-        setSettings<DropboxSettings>('refreshToken', response['refresh_token'])
+        setSettings<DropboxSettings>('accessToken', tokenReponse['access_token'])
+        setSettings<DropboxSettings>('expiry', this.getTokenExpiry(tokenReponse['expires_in']))
+        setSettings<DropboxSettings>('id', tokenReponse['account_id'])
+        setSettings<DropboxSettings>('refreshToken', tokenReponse['refresh_token'])
+        setSettings<DropboxSettings>('username', accountResponse.name.display_name)
       } catch (error) {
         authError = error
       }
@@ -342,6 +344,19 @@ class Dropbox extends Destination {
       .post()
       .json<TokenApiResponse>()
   }
+
+  /**
+   * Gets informations about the current user's account.
+   * @param  accessToken - The access token of the user.
+   * @return The informations about the current user.
+   */
+  async getCurrentAccount(accessToken: string): Promise<CurrentAccountApiResponse> {
+    return this.api
+      .url('/2/users/get_current_account')
+      .headers({ Authorization: `Bearer ${accessToken}` })
+      .post()
+      .json<CurrentAccountApiResponse>()
+  }
 }
 
 export default new Dropbox('https://api.dropboxapi.com')
@@ -351,6 +366,7 @@ export interface DropboxSettings extends DestinationSettings {
   expiry?: string
   id?: string
   refreshToken?: string
+  username?: string
 }
 
 interface DropboxAuthState extends PkceCode {
@@ -397,4 +413,23 @@ interface ShareApiResponse {
   server_modified: string
   size: number
   url: string
+}
+
+interface CurrentAccountApiResponse {
+  account_id: string
+  name: {
+    given_name: string
+    surname: string
+    familiar_name: string
+    display_name: string
+    abbreviated_name: string
+  }
+  email: string
+  email_verified: boolean
+  profile_photo_url: string
+  disabled: boolean
+  country: string
+  locale: string
+  referral_link: string
+  is_paired: boolean
 }
