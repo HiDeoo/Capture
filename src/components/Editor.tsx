@@ -105,8 +105,9 @@ const Editor: React.FC = () => {
   const onChangeDestination = useCallback(
     (newDestinationId: DestinationId) => {
       setDestinationId(newDestinationId)
+      setShareOptions(getDestination(newDestinationId).getDefaultShareOptions(getDestinationSettings(newDestinationId)))
     },
-    [setDestinationId]
+    [getDestinationSettings, setDestinationId]
   )
 
   const addText = useCallback(
