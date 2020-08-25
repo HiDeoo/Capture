@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { ErrorBoundary as Boundary, FallbackProps, useErrorHandler } from 'react-error-boundary'
 
 import { getIpcRenderer } from '../main/ipc'
+import { isDev } from '../utils/env'
 import Modal, { ModalButton, useModal } from './Modal'
 
 export { useErrorHandler }
@@ -57,6 +58,10 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
   useEffect(() => {
     if (error) {
       openModal(true)
+
+      if (isDev() && (error instanceof MainProcessError || error instanceof AppError) && error.internalError) {
+        console.error(error.internalError)
+      }
     } else {
       openModal(false)
     }
