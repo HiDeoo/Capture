@@ -255,10 +255,15 @@ class Dropbox extends Destination {
         return openUrl(request._url)
       }
 
+      function onClickOpenFolder(): Promise<void> {
+        return openUrl('https://www.dropbox.com/home/Apps/Capture%20Screenshots')
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
+            {isLoggedIn && <Ui.Button onClick={onClickOpenFolder}>Open folder</Ui.Button>}
           </Ui.Group>
         </>
       )
