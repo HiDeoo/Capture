@@ -213,10 +213,15 @@ class Imgur extends Destination {
         setSettings<ImgurSettings>('shareAnonymouslyByDefault', shareAnonymouslyByDefault)
       }
 
+      function onClickOpenProfile(): Promise<void> {
+        return openUrl(`https://${settings.username}.imgur.com/all/`)
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
+            {isLoggedIn && <Ui.Button onClick={onClickOpenProfile}>Open profile</Ui.Button>}
           </Ui.Group>
           {isLoggedIn && (
             <Ui.Group title="Preferences">
