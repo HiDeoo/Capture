@@ -26,6 +26,11 @@ const RedirectUri = 'capture://oauth/dropbox'
  */
 class Dropbox extends Destination {
   /**
+   * Authorization wretcher.
+   */
+  private authWretcher = wretch('https://www.dropbox.com')
+
+  /**
    * State used when authorizing with Dropbox.
    */
   private authState: Optional<DropboxAuthState>
@@ -135,8 +140,7 @@ class Dropbox extends Destination {
           state: this.authState.state,
           token_access_type: 'offline',
         }
-        const authWretcher = wretch('https://www.dropbox.com')
-        const request = authWretcher.url('/oauth2/authorize').query(queryParameters)
+        const request = this.authWretcher.url('/oauth2/authorize').query(queryParameters)
 
         return openUrl(request._url)
       }
