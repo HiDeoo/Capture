@@ -255,21 +255,10 @@ class Dropbox extends Destination {
         return openUrl(request._url)
       }
 
-      function debugLogin(): void {
-        setSettings<DropboxSettings>(
-          'accessToken',
-          'sl.AgaOtVuqO8bsp_K8W8P_fve3Nqh7Um7Kp7bxdz1DTFZQ03S8ni85ka1PaBTFvmAgtb6ZiPDkuvpgjNELEc8Pn1sYZ8fWErExnhaElw0ZOiluBEgwszw9A0PxyqgaSggOW-QrssM'
-        )
-        setSettings<DropboxSettings>('expiry', '2020-08-24T19:37:00+02:00')
-        setSettings<DropboxSettings>('id', 'dbid:AAAUJrALXqRUJImIHtpZo0m217FP961v7Zw')
-        setSettings<DropboxSettings>('refreshToken', '3wzCGWTbUqQAAAAAAAAAAakK_3sXUKv1fZewjwGd5ZHqxRX6eXRY5lUHjUq7woB')
-      }
-
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
-            <Ui.Button onClick={debugLogin}>Debug Login</Ui.Button>
           </Ui.Group>
         </>
       )
