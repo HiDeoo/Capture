@@ -1,3 +1,4 @@
+import { isAfter, parseISO } from 'date-fns'
 import { nanoid } from 'nanoid'
 import React from 'react'
 import wretch from 'wretch'
@@ -5,6 +6,7 @@ import wretch from 'wretch'
 import { AppError, ErrorHandler } from '../components/ErrorBoundary'
 import type { ImageDimensions } from '../components/Img'
 import { getPkce, PkceCode } from '../utils/crypto'
+import { splitFilePath } from '../utils/string'
 import Destination, {
   DeleteOptions,
   DestinationConfiguration,
@@ -29,6 +31,11 @@ class Dropbox extends Destination {
    * Authorization wretcher.
    */
   private authWretcher = wretch('https://www.dropbox.com')
+
+  /**
+   * Content wretcher.
+   */
+  private contentWretcher = wretch('https://content.dropboxapi.com')
 
   /**
    * State used when authorizing with Dropbox.
@@ -66,7 +73,7 @@ class Dropbox extends Destination {
 
   /**
    * Checks if the destination is available or not.
-   * @param getSettings - A destination settings getter.
+   * @param getSettings - Dropbox settings getter.
    */
   isAvailable(getSettings: DestinationSettingsGetter): boolean {
     const settings = getSettings<DropboxSettings>()
@@ -81,10 +88,10 @@ class Dropbox extends Destination {
    * @param size - The shared image file size.
    * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
-   * @param getSettings - A destination settings getter.
+   * @param getSettings - Dropbox settings getter.
    * @param setSettings - A destination settings setter.
    */
-  share(
+  async share(
     path: string,
     size: number,
     dimensions: ImageDimensions,
@@ -92,13 +99,47 @@ class Dropbox extends Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<ShareResponse> {
-    throw new Error('Not implemented.')
+    const [, filename] = splitFilePath(path)
+    let headers = await this.getHeaders(getSettings, setSettings, {
+      autorename: true,
+      mode: 'add',
+      mute: true,
+      path: `/${filename}`,
+    })
+    const blob = await this.getFileBlob(path)
+
+    const uploadResponse = await this.contentWretcher
+      .url('/2/files/upload')
+      .content('application/octet-stream')
+      .headers(headers)
+      .body(blob)
+      .post()
+      .json<UploadApiResponse>()
+
+    headers = await this.getHeaders(getSettings, setSettings)
+
+    const shareResponse = await this.api
+      .url('/2/sharing/create_shared_link_with_settings')
+      .headers(headers)
+      .post({
+        path: uploadResponse.path_lower,
+        settings: { requested_visibility: 'public' },
+      })
+      .json<ShareApiResponse>()
+
+    const { id, url } = shareResponse
+
+    return this.getShareResponse(path, size, dimensions, {
+      anon: false,
+      id,
+      link: url,
+    })
   }
 
   /**
    * Deletes a file from Dropbox.
    * @param deleteOptions - The options related to this specific deletion.
-   * @param getSettings - A destination settings getter.
+   * @param getSettings - Dropbox settings getter.
    * @param setSettings - A destination settings setter.
    */
   delete(
@@ -107,6 +148,66 @@ class Dropbox extends Destination {
     setSettings: DestinationSettingSetter
   ): Promise<void> {
     throw new Error('Not implemented.')
+  }
+
+  /**
+   * Returns the headers to use while communicating with Dropbox.
+   * @param getSettings - Dropbox settings getter.
+   * @param setSettings - A destination settings setter.
+   * @param apiArgs - API arguments to append to the `Dropbox-API-Arg` header for queries accepting file content in the
+   * request body.
+   */
+  async getHeaders(
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter,
+    apiArgs?: Record<string, string | boolean>
+  ): Promise<Record<string, string>> {
+    let settings = getSettings<DropboxSettings>()
+
+    if (!settings.accessToken || !settings.expiry || !settings.refreshToken) {
+      throw new Error('Missing access token, refresh token or expiry to share file on Dropbox.')
+    }
+
+    const expiry = parseISO(settings.expiry)
+
+    if (isAfter(new Date(), expiry)) {
+      const refreshedAccessToken = await this.getRefreshedAccessToken(settings.refreshToken)
+
+      setSettings<DropboxSettings>('accessToken', refreshedAccessToken.accessToken)
+      setSettings<DropboxSettings>('expiry', refreshedAccessToken.expiry)
+
+      settings = getSettings<DropboxSettings>()
+    }
+
+    const headers: Record<string, string> = { Authorization: `Bearer ${settings.accessToken}` }
+
+    if (apiArgs) {
+      headers['Dropbox-API-Arg'] = JSON.stringify(apiArgs)
+    }
+
+    return headers
+  }
+
+  /**
+   * Refreshes an expired access token.
+   * @param  refreshToken - The refresh token to use to get a new access token.
+   * @return The new access token and expiry.
+   */
+  async getRefreshedAccessToken(refreshToken: string): Promise<{ accessToken: string; expiry: string }> {
+    const response = await this.api
+      .url('/oauth2/token')
+      .formUrl({
+        client_id: process.env.REACT_APP_DROPBOX_CLIENT_ID,
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      })
+      .post()
+      .json<RefreshTokenApiResponse>()
+
+    return {
+      accessToken: response.access_token,
+      expiry: this.getTokenExpiry(response.expires_in),
+    }
   }
 
   /**
@@ -261,4 +362,36 @@ interface TokenApiResponse {
   scope: string
   token_type: 'bearer'
   uid: string
+}
+
+interface RefreshTokenApiResponse {
+  access_token: string
+  expires_in: number
+  token_type: 'bearer'
+}
+
+interface UploadApiResponse {
+  client_modified: string
+  content_hash: string
+  id: string
+  is_downloadable: boolean
+  name: string
+  path_display: string
+  path_lower: string
+  rev: string
+  server_modified: string
+  size: number
+}
+
+interface ShareApiResponse {
+  '.tag': string
+  client_modified: string
+  id: string
+  name: string
+  path_lower: string
+  preview_type: string
+  rev: string
+  server_modified: string
+  size: number
+  url: string
 }

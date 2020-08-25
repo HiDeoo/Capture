@@ -61,7 +61,7 @@ class Imgur extends Destination {
    * @param size - The shared image file size.
    * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
-   * @param getSettings - A destination settings getter.
+   * @param getSettings - Imgur settings getter.
    * @param setSettings - A destination settings setter.
    */
   async share(
@@ -96,7 +96,7 @@ class Imgur extends Destination {
   /**
    * Deletes a file from Imgur.
    * @param deleteOptions - The options related to this specific deletion.
-   * @param getSettings - A destination settings getter.
+   * @param getSettings - Imgur settings getter.
    * @param setSettings - A destination settings setter.
    */
   async delete(
@@ -112,7 +112,7 @@ class Imgur extends Destination {
   /**
    * Returns the headers to use while communicating with Imgur.
    * @param anon - Defines if the request should be anonymous or not.
-   * @param getSettings - A destination settings getter.
+   * @param getSettings - Imgur settings getter.
    * @param setSettings - A destination settings setter.
    */
   async getHeaders(
@@ -125,7 +125,7 @@ class Imgur extends Destination {
 
     if (!anon) {
       if (!settings.accessToken || !settings.expiry || !settings.refreshToken) {
-        throw new Error('Missing access token, refresh token or expiry to share file.')
+        throw new Error('Missing access token, refresh token or expiry to share file on Imgur.')
       }
 
       const expiry = parseISO(settings.expiry)
