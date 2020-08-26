@@ -8,7 +8,6 @@ import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { mergeImages } from '../utils/image'
 import type { Color } from './ColorSelect'
-import { defaultDestinationId } from './DestinationSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
 import { AppError, useErrorHandler } from './ErrorBoundary'
@@ -29,7 +28,12 @@ const Editor: React.FC = () => {
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
-  const { getDestinationSettings, getDestinationSettingsGetter, getDestinationSettingsSetter } = useSettings()
+  const {
+    defaultDestinationId,
+    getDestinationSettings,
+    getDestinationSettingsGetter,
+    getDestinationSettingsSetter,
+  } = useSettings()
   const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
   const [destinationId, setDestinationId] = useState(defaultDestinationId)

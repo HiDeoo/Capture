@@ -1,8 +1,11 @@
 import React from 'react'
+import { theme } from 'styled-tools'
+import tw, { styled } from 'twin.macro'
 
 import { getIpcRenderer } from '../main/ipc'
 import { useHistory, useSettings } from '../store'
 import { pluralize } from '../utils/string'
+import DestinationSelect from './DestinationSelect'
 import { Button, Group, P, Path } from './SettingsUi'
 
 /**
@@ -13,9 +16,43 @@ export const GENERAL_SETTINGS_CONFIGURATION = {
   name: 'General',
 } as const
 
+const DestinationWrapper = styled(P)`
+  ${tw`flex items-center`}
+
+  & > div > div {
+    ${tw`ml-3`}
+
+    & > button {
+      ${tw`border border-solid px-4 font-semibold`}
+
+      background-color: ${theme('settings.button.background')};
+      border-color: ${theme('settings.button.border')};
+      min-width: 160px;
+      padding-bottom: 7px;
+      padding-top: 7px;
+
+      &:hover:not(:disabled) {
+        background-color: ${theme('settings.button.hover.background')};
+        border-color: ${theme('settings.button.hover.border')};
+        color: ${theme('settings.button.hover.color')};
+      }
+    }
+
+    & > ul {
+      background-color: ${theme('settings.button.background')};
+      border-color: ${theme('settings.button.border')};
+
+      & li {
+        padding-bottom: 7px;
+        padding-top: 7px;
+      }
+    }
+  }
+`
+
 const GeneralSettings: React.FC = () => {
   const { clearHistory, entries } = useHistory()
-  const { screenshotDirectory, setScreenshotDirectory } = useSettings()
+  const { defaultDestinationId, screenshotDirectory, setDefaultDestinationId, setScreenshotDirectory } = useSettings()
 
   async function onClickUpdateScreenshotDirectory(): Promise<void> {
     const newScreenshotDirectory = await getIpcRenderer().invoke(
@@ -30,6 +67,12 @@ const GeneralSettings: React.FC = () => {
 
   return (
     <>
+      <Group title="Destinations">
+        <DestinationWrapper>
+          Default destination
+          <DestinationSelect destinationId={defaultDestinationId} onChangeDestination={setDefaultDestinationId} />
+        </DestinationWrapper>
+      </Group>
       <Group title="Screenshot Directory">
         <Path value={screenshotDirectory} />
         <Button onClick={onClickUpdateScreenshotDirectory}>Change directory</Button>

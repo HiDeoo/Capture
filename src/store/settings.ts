@@ -1,6 +1,6 @@
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 
-import { DestinationsSettings, getDestination } from '../destinations'
+import { DestinationsSettings, getDestination, getDestinations } from '../destinations'
 import type {
   DestinationId,
   DestinationSettings,
@@ -9,6 +9,12 @@ import type {
   GetDestinationSettingsSetter,
 } from '../destinations/DestinationBase'
 import { ShortcutId } from '../utils/keyboard'
+
+/**
+ * The default destination ID to use when no default is configured by the user or the configured default is no longer
+ * available.
+ */
+const DefaultDestinationId = Object.keys(getDestinations())[0]
 
 /**
  * The settings store.
@@ -34,6 +40,41 @@ export default class SettingsStore {
   @action
   setScreenshotDirectory = (newPath: string): void => {
     this.screenshotDirectory = newPath
+  }
+
+  /**
+   * The default destination ID.
+   * Note: the destination can potentially be no longer available.
+   */
+  @observable private _defaultDestinationId = DefaultDestinationId
+
+  /**
+   * Returns the default destination ID or a fallback if the user configured default destination is no longer available.
+   */
+  @computed
+  get defaultDestinationId(): DestinationId {
+    const destination = getDestination(this._defaultDestinationId)
+    const configuration = destination.getConfiguration()
+
+    // We need to ensure the destination is still available.
+    if (
+      configuration.alwaysAvailable ||
+      (destination.isAvailable &&
+        destination.isAvailable(this.getDestinationSettingsGetter(this._defaultDestinationId)))
+    ) {
+      return this._defaultDestinationId
+    }
+
+    return DefaultDestinationId
+  }
+
+  /**
+   * Sets the default destination ID.
+   * @param destinationId - The new default destination ID.
+   */
+  @action
+  setDefaultDestinationId = (destinationId: DestinationId): void => {
+    this._defaultDestinationId = destinationId
   }
 
   /**

@@ -6,17 +6,6 @@ import type { DestinationId } from '../destinations/DestinationBase'
 import { useSettings } from '../store'
 import Select from './Select'
 
-/**
- * List of destinations IDs to use in a <Select />
- */
-const DestinationIds: DestinationId[] = Object.keys(getDestinations())
-
-/**
- * Default destination to select.
- */
-// TODO This should be a setting
-export const defaultDestinationId = DestinationIds[0]
-
 const Wrapper = styled.div`
   & > div {
     min-width: 110px;
