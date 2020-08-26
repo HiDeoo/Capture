@@ -46,7 +46,7 @@ const Path: React.FC<PathProps> = ({ value, ...restProps }) => {
           </React.Fragment>
         ))}
       </Wrapper>
-      <RevealButton onClick={onClickReveal}>
+      <RevealButton onClick={onClickReveal} tooltip="Open folder">
         <Icon symbol={IconSymbol.ArrowRightCircle} />
       </RevealButton>
     </div>

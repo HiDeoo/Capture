@@ -104,7 +104,9 @@ const TitleBar: React.FC = () => {
       <Main isFocused={isFocused}>
         Capture
         <div tw="flex-1" />
-        {titleBarContent ?? <TitleBarButton symbol={IconSymbol.Camera} onClick={onClickCaptureButton} />}
+        {titleBarContent ?? (
+          <TitleBarButton tooltip="Capture screenshot" symbol={IconSymbol.Camera} onClick={onClickCaptureButton} />
+        )}
       </Main>
     </Wrapper>
   )

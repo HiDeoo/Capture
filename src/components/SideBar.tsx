@@ -27,13 +27,15 @@ const SideBar = <GenericEntry extends SideBarEntry>({
         }
 
         const currentEntry = entry as GenericEntry
-        const { content, disabled = false, selected = false } = getEntryProps(currentEntry)
+        const { content, disabled = false, selected = false, tooltip } = getEntryProps(currentEntry)
 
         return (
           <SideBarButton
+            tooltip={tooltip}
             disabled={disabled}
             selected={selected}
             key={currentEntry.id}
+            tooltipPlacement="right"
             className={clsx({ selected })}
             onClick={() => {
               onClick(currentEntry)
@@ -59,6 +61,7 @@ export interface SideBarEntryProps {
   content: React.ReactNode
   disabled?: boolean
   selected?: boolean
+  tooltip?: string
 }
 
 interface SideBarButtonProps {

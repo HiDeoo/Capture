@@ -134,8 +134,8 @@ const Editor: React.FC = () => {
   useEffect(() => {
     setTitleBarContent(
       <>
-        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={onClickCancel} />
-        <TitleBarButton disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
+        <TitleBarButton tooltip="Cancel" disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={onClickCancel} />
+        <TitleBarButton tooltip="Share" disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
       </>
     )
 

@@ -12,10 +12,10 @@ import SideBar, { SideBarButton, SideBarComponent, SideBarEntry, SideBarEntryPro
  * The ordered application sidebar entries.
  */
 const Entries: (AppSideBarEntry | React.ReactNode)[] = [
-  { id: 'library', panel: Panel.Library, symbol: IconSymbol.ListDash },
-  { id: 'editor', panel: Panel.Editor, symbol: IconSymbol.Pencil },
+  { id: 'library', panel: Panel.Library, symbol: IconSymbol.ListDash, tooltip: 'Library' },
+  { id: 'editor', panel: Panel.Editor, symbol: IconSymbol.Pencil, tooltip: 'Editor' },
   <div tw="flex-1" />,
-  { id: 'settings', panel: Panel.Settings, symbol: IconSymbol.Gear },
+  { id: 'settings', panel: Panel.Settings, symbol: IconSymbol.Gear, tooltip: 'Settings' },
 ]
 
 const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)<SideBarProps>`
@@ -61,6 +61,7 @@ const AppSideBar: React.FC = () => {
         (entry.panel === Panel.Editor && !hasPendingScreenshots) ||
         (entry.panel !== Panel.Editor && hasPendingScreenshots),
       selected: entry.panel === currentPanel,
+      tooltip: entry.tooltip,
     }
   }
 
@@ -76,6 +77,7 @@ export default observer(AppSideBar)
 interface AppSideBarEntry extends SideBarEntry {
   symbol: IconSymbol
   panel: Panel
+  tooltip: string
 }
 
 interface SideBarProps {

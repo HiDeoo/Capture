@@ -2,10 +2,31 @@ import 'twin.macro'
 
 import React, { forwardRef } from 'react'
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  return <button ref={ref} tw="focus:outline-none disabled:cursor-not-allowed" {...props} type="button" />
+import { Wrap } from '../utils/react'
+import Tooltip, { TooltipProps } from './Tooltip'
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ tooltip, tooltipPlacement, ...restProps }, ref) => {
+  const hasTooltip = typeof tooltip !== 'undefined'
+
+  function wrapWithTooltip(children: React.ReactElement): React.ReactElement {
+    return (
+      <Tooltip content={tooltip} placement={tooltipPlacement}>
+        {children}
+      </Tooltip>
+    )
+  }
+
+  return (
+    <Wrap condition={hasTooltip} wrapper={wrapWithTooltip}>
+      <button ref={ref} tw="focus:outline-none disabled:cursor-not-allowed" {...restProps} type="button" />
+    </Wrap>
+  )
 })
 
 export default Button
 
-export type ButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+export interface ButtonProps
+  extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+  tooltip?: TooltipProps['content']
+  tooltipPlacement?: TooltipProps['placement']
+}

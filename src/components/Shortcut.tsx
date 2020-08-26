@@ -8,6 +8,7 @@ import Theme from '../utils/theme'
 import type { ButtonProps } from './Button'
 import Icon, { IconSymbol } from './Icon'
 import { Button } from './SettingsUi'
+import Tooltip from './Tooltip'
 
 const PickerAnimation = keyframes`
   0%,
@@ -128,7 +129,11 @@ const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, sh
   return (
     <Wrapper>
       <Picker disabled={readOnly} onFocus={enablePicker} ref={picker} onBlur={onBlurPicker}>
-        {readOnly && <ReadOnlyIcon symbol={IconSymbol.LockFill} />}
+        {readOnly && (
+          <Tooltip content="Non editable">
+            <ReadOnlyIcon symbol={IconSymbol.LockFill} />
+          </Tooltip>
+        )}
         <div>
           {parsedShortcut.map((key, index) => (
             <Key key={`${key}-${index}`}>{formatKey(key)}</Key>

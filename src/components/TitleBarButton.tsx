@@ -29,7 +29,7 @@ const StyledIcon = styled(Icon)`
 
 const TitleBarButton: React.FC<Props> = ({ ref, symbol, ...restProps }) => {
   return (
-    <StyledButton {...restProps}>
+    <StyledButton {...restProps} tooltipPlacement="bottom">
       <StyledIcon symbol={symbol} />
     </StyledButton>
   )

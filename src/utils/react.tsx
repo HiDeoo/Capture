@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 /**
  * Caches previous props or state using a reference.
@@ -90,4 +90,20 @@ export function useOnClickOutside(element: React.RefObject<Element>, callback: (
       document.removeEventListener('mousedown', listener)
     }
   }, [element, callback])
+}
+
+/**
+ * Wraps conditionally a component.
+ * @param children - The content to conditionally wrap.
+ * @param condition - The condition.
+ * @param wrapper - A render prop used to wrap the component.
+ */
+export const Wrap: React.FC<WrapProps> = ({ children, condition, wrapper }) => {
+  return condition ? wrapper(children) : children
+}
+
+interface WrapProps {
+  children: React.ReactElement
+  condition: boolean
+  wrapper: (children: React.ReactElement) => React.ReactElement
 }

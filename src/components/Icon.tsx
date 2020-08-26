@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { styled } from 'twin.macro'
 
 const Wrapper = styled.span.attrs({ className: 'icon' })`
@@ -35,9 +35,13 @@ export enum IconSymbol {
   XMark = '􀆄',
 }
 
-const Icon: React.FC<IconProps> = ({ symbol, ...htmlPros }) => {
-  return <Wrapper {...htmlPros}>{symbol}</Wrapper>
-}
+const Icon: React.FC<IconProps> = forwardRef<HTMLSpanElement, IconProps>(({ symbol, ...restProps }, ref) => {
+  return (
+    <Wrapper {...restProps} ref={ref}>
+      {symbol}
+    </Wrapper>
+  )
+})
 
 export default Icon
 

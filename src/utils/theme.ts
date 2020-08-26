@@ -168,6 +168,9 @@ export default {
       },
     },
   },
+  tooltip: {
+    background: '#434154',
+  },
   window: {
     background: '#1b1a1e',
   },
