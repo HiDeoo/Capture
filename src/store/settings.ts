@@ -1,6 +1,6 @@
 import { action, computed, observable } from 'mobx'
 
-import { DestinationsSettings, getDestination, getDestinations } from '../destinations'
+import { DestinationsSettings, getDestination, getDestinations, isDestinationAvailable } from '../destinations'
 import type {
   DestinationId,
   DestinationSettings,
@@ -54,14 +54,8 @@ export default class SettingsStore {
   @computed
   get defaultDestinationId(): DestinationId {
     const destination = getDestination(this._defaultDestinationId)
-    const configuration = destination.getConfiguration()
 
-    // We need to ensure the destination is still available.
-    if (
-      configuration.alwaysAvailable ||
-      (destination.isAvailable &&
-        destination.isAvailable(this.getDestinationSettingsGetter(this._defaultDestinationId)))
-    ) {
+    if (isDestinationAvailable(destination, this.getDestinationSettingsGetter)) {
       return this._defaultDestinationId
     }
 

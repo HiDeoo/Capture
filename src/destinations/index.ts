@@ -38,20 +38,32 @@ export function getDestinations(
   }
 
   return Object.entries(destinations).reduce((acc, [id, destination]) => {
-    const configuration = destination.getConfiguration()
-
-    if (
-      configuration.alwaysAvailable ||
-      (!configuration.alwaysAvailable &&
-        getDestinationSettingsGetter &&
-        destination.isAvailable &&
-        destination.isAvailable(getDestinationSettingsGetter(id)))
-    ) {
+    if (getDestinationSettingsGetter && isDestinationAvailable(destination, getDestinationSettingsGetter)) {
       acc[id] = destination
     }
 
     return acc
   }, {} as typeof destinations)
+}
+
+/**
+ * Checks if a destination is available.
+ * @param  destination - The destination.
+ * @param  getDestinationSettingsGetter - A getter for a destination settings getter.
+ * @return `true` when the destination is available.
+ */
+export function isDestinationAvailable(
+  destination: Destination,
+  getDestinationSettingsGetter: GetDestinationSettingsGetter
+): boolean {
+  const configuration = destination.getConfiguration()
+
+  return (
+    configuration.alwaysAvailable ||
+    (!configuration.alwaysAvailable &&
+      typeof destination.isAvailable !== 'undefined' &&
+      destination.isAvailable(getDestinationSettingsGetter(configuration.id)))
+  )
 }
 
 /**
