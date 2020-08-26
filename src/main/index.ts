@@ -89,6 +89,9 @@ async function createWindow(): Promise<void> {
   // Remove default application menu.
   Menu.setApplicationMenu(null)
 
+  // Set the user agent for the window.
+  window.webContents.setUserAgent('Capture')
+
   // Sets the application as default handler for the `capture://` URI scheme.
   app.setAsDefaultProtocolClient('capture')
 
