@@ -262,6 +262,7 @@ class Dropbox extends Destination {
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
+            {!isLoggedIn && <Ui.Warning>Sharing screenshots to Dropbox requires to be logged in.</Ui.Warning>}
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
             {isLoggedIn && <Ui.Button onClick={onClickOpenFolder}>Open folder</Ui.Button>}
           </Ui.Group>

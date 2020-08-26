@@ -128,6 +128,9 @@ export default {
         background: '#4c4753',
       },
     },
+    warning: {
+      background: 'rgba(255, 189, 0, 0.05)',
+    },
   },
   // Application sidebar.
   sideBar: {

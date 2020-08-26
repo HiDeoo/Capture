@@ -10,7 +10,7 @@ import { SettingsPanelId } from '../store/app'
 import GeneralSettings, { GENERAL_SETTINGS_CONFIGURATION } from './GeneralSettings'
 import SettingsPanel, { SettingsPanelProps } from './SettingsPanel'
 import SettingsSideBar, { SettingsSideBarEntry } from './SettingsSideBar'
-import { Button, Checkbox, Group } from './SettingsUi'
+import { Button, Checkbox, Group, Warning } from './SettingsUi'
 import ShortcutsSettings, { SHORTCUTS_SETTING_CONFIGURATION } from './ShortcutsSettings'
 
 /**
@@ -62,7 +62,7 @@ const Settings: React.FC = () => {
       <SettingsPanel>
         <CurrentPanel
           openUrl={openUrl}
-          Ui={{ Button, Checkbox, Group }}
+          Ui={{ Button, Checkbox, Group, Warning }}
           getSettings={getDestinationSettingsGetter(currentSettingsPanel)}
           setSettings={getDestinationSettingsSetter(currentSettingsPanel)}
         />

@@ -77,8 +77,15 @@ const SettingsCheckbox = styled(Checkbox)`
   }
 `
 
-interface SettingsGroupProps {
-  title: string
+const SettingsWarningWrapper = styled.div`
+  ${tw`border-orange-500 border p-3 rounded-md mb-4`}
+
+  background-color: ${theme('settings.warning.background')};
+  border-left-width: 5px;
+`
+
+const SettingsWarning: React.FC = ({ children }) => {
+  return <SettingsWarningWrapper>{children}</SettingsWarningWrapper>
 }
 
 export {
@@ -87,4 +94,9 @@ export {
   SettingsGroup as Group,
   SettingsP as P,
   SettingsPath as Path,
+  SettingsWarning as Warning,
+}
+
+interface SettingsGroupProps {
+  title: string
 }
