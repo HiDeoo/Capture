@@ -119,6 +119,17 @@ export function parseShortcut(shortcut: string): string[] {
 }
 
 /**
+ * Formats a shortcut so it can be displayed using known symbols if needed.
+ * @param  shortcut - The shortcut to format.
+ * @return The formatted shortcut.
+ */
+export function formatShortcut(shortcut: string): string {
+  return parseShortcut(shortcut)
+    .map((key) => formatKey(key))
+    .join('+')
+}
+
+/**
  * Formats a key so it can be displayed using known symbols if needed.
  * @param  key - The key to format.
  * @return The formatted key.
@@ -182,9 +193,7 @@ export function getShortcutFromEvent(event: KeyboardEvent): NewShortcut {
  * @return
  */
 export function getEditorShortcut(id: keyof typeof EditorShortcuts): string {
-  return parseShortcut(EditorShortcuts[id].shortcut)
-    .map((key) => formatKey(key))
-    .join('+')
+  return formatShortcut(EditorShortcuts[id].shortcut)
 }
 
 interface ShortcutHookOptions {

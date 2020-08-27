@@ -4,7 +4,8 @@ import { ifProp, theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
 import { getIpcRenderer } from '../main/ipc'
-import { useApp } from '../store'
+import { useApp, useSettings } from '../store'
+import { formatShortcut, ShortcutId } from '../utils/keyboard'
 import Button from './Button'
 import Icon, { IconSymbol } from './Icon'
 import TitleBarButton from './TitleBarButton'
@@ -84,6 +85,7 @@ const Main = styled.div<IsFocusedProps>`
 
 const TitleBar: React.FC = () => {
   const { isFocused } = useApp()
+  const { shortcuts } = useSettings()
   const { titleBarContent } = useTitleBar()
 
   function onClickCloseButton(): Promise<void> {
@@ -105,7 +107,11 @@ const TitleBar: React.FC = () => {
         Capture
         <div tw="flex-1" />
         {titleBarContent ?? (
-          <TitleBarButton tooltip="Capture screenshot" symbol={IconSymbol.Camera} onClick={onClickCaptureButton} />
+          <TitleBarButton
+            symbol={IconSymbol.Camera}
+            onClick={onClickCaptureButton}
+            tooltip={`Share - ${formatShortcut(shortcuts[ShortcutId.CaptureScreenshot])}`}
+          />
         )}
       </Main>
     </Wrapper>
