@@ -65,7 +65,7 @@ const ReadOnlyIcon = tw(Icon)`block opacity-50`
 
 const BlankNewShortcut: NewShortcut = { valid: false, value: '' }
 
-const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, shortcutId }) => {
+const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, shortcutId, ...restProps }) => {
   const picker = useRef<HTMLButtonElement>(null)
   const [isPicking, setIsPicking] = useState(false)
   const [newShortcut, setNewShortcut] = useState<NewShortcut>(BlankNewShortcut)
@@ -127,14 +127,14 @@ const Shortcut: React.FC<ShortcutProps> = ({ label: name, onChange, shortcut, sh
   }
 
   return (
-    <Wrapper>
+    <Wrapper {...restProps}>
       <Picker disabled={readOnly} onFocus={enablePicker} ref={picker} onBlur={onBlurPicker}>
         {readOnly && (
           <Tooltip content="Non editable">
             <ReadOnlyIcon symbol={IconSymbol.LockFill} />
           </Tooltip>
         )}
-        <div>
+        <div tw="flex">
           {parsedShortcut.map((key, index) => (
             <Key key={`${key}-${index}`}>{formatKey(key)}</Key>
           ))}

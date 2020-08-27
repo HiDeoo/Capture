@@ -5,6 +5,7 @@ import tw from 'twin.macro'
 import { useHistory } from '../store'
 import { useShortcut } from '../utils/keyboard'
 import LibraryGrid from './LibraryGrid'
+import LibraryNis from './LibraryNis'
 import LibraryPanel from './LibraryPanel'
 
 const Wrapper = tw.div`flex flex-1 relative`
@@ -22,13 +23,19 @@ const Library: React.FC = () => {
 
   return (
     <Wrapper>
-      <LibraryGrid
-        ids={entries.allIds}
-        selectEntry={selectEntry}
-        selectedEntryId={selection.current?.id}
-        markAsDeletedOnDisk={markAsDeletedOnDisk}
-      />
-      <LibraryPanel selection={selection} selectEntry={selectEntry} />
+      {entries.allIds.length > 0 ? (
+        <>
+          <LibraryGrid
+            ids={entries.allIds}
+            selectEntry={selectEntry}
+            selectedEntryId={selection.current?.id}
+            markAsDeletedOnDisk={markAsDeletedOnDisk}
+          />
+          <LibraryPanel selection={selection} selectEntry={selectEntry} />
+        </>
+      ) : (
+        <LibraryNis />
+      )}
     </Wrapper>
   )
 }
