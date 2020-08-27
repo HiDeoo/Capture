@@ -39,6 +39,22 @@ const KeySymbolMap: Record<string, string> = {
 }
 
 /**
+ * Ordered list of editor shortcuts.
+ */
+export const EditorShortcuts: ShortcutList = {
+  editor_share: { label: 'Share', shortcut: 'Meta+Enter' },
+  editor_cancel: { label: 'Cancel', shortcut: 'Meta+Escape' },
+  editor_pencil: { label: 'Pencil', shortcut: '1' },
+  editor_arrow: { label: 'Arrow', shortcut: '2' },
+  editor_rectangle: { label: 'Rectangle', shortcut: '3' },
+  editor_circle: { label: 'Circle', shortcut: '4' },
+  editor_line: { label: 'Line', shortcut: '5' },
+  editor_delete_selection: { label: 'Delete selection', shortcut: 'Backspace' },
+  editor_undo: { label: 'Undo', shortcut: 'Meta+Z' },
+  editor_redo: { label: 'Redo', shortcut: 'Meta+Shift+Z' },
+}
+
+/**
  * Defines keybaord shortcuts and their associated handlers using a React hook.
  * @param shortcuts - An object containing callbacks to trigger when a known shortcut is detected keyed by their
  * shortcut key bindings.
@@ -160,6 +176,17 @@ export function getShortcutFromEvent(event: KeyboardEvent): NewShortcut {
   return { valid, value }
 }
 
+/**
+ * Returns an editor shortcut based on its ID.
+ * @param id - The shortcut ID.
+ * @return
+ */
+export function getEditorShortcut(id: keyof typeof EditorShortcuts): string {
+  return parseShortcut(EditorShortcuts[id].shortcut)
+    .map((key) => formatKey(key))
+    .join('+')
+}
+
 interface ShortcutHookOptions {
   target?: HTMLElement | Window
   useCapture?: boolean
@@ -170,3 +197,11 @@ export interface NewShortcut {
   valid: boolean
   value: string
 }
+
+type ShortcutList = Record<
+  string,
+  {
+    label: string
+    shortcut: string
+  }
+>

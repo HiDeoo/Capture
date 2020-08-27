@@ -3,7 +3,7 @@ import React from 'react'
 import tw, { styled } from 'twin.macro'
 
 import { useSettings } from '../store'
-import { ShortcutId } from '../utils/keyboard'
+import { EditorShortcuts, ShortcutId } from '../utils/keyboard'
 import { Group } from './SettingsUi'
 import Shortcut, { ShortcutProps } from './Shortcut'
 
@@ -36,16 +36,9 @@ const ShortcutsSettings: React.FC = () => {
       </Group>
       <Group title="Screenshot Editor">
         <Shortcuts>
-          <Shortcut label="Share" shortcut="Meta+Enter" />
-          <Shortcut label="Cancel" shortcut="Meta+Escape" />
-          <Shortcut label="Pencil" shortcut="1" />
-          <Shortcut label="Arrow" shortcut="2" />
-          <Shortcut label="Rectangle" shortcut="3" />
-          <Shortcut label="Circle" shortcut="4" />
-          <Shortcut label="Line" shortcut="5" />
-          <Shortcut label="Delete selection" shortcut="Backspace" />
-          <Shortcut label="Undo" shortcut="Meta+Z" />
-          <Shortcut label="Redo" shortcut="Meta+Shift+Z" />
+          {Object.entries(EditorShortcuts).map(([key, { label, shortcut }]) => (
+            <Shortcut key={key} label={label} shortcut={shortcut} />
+          ))}
         </Shortcuts>
       </Group>
     </>

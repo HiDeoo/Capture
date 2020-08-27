@@ -7,7 +7,7 @@ import type { DestinationId, ShareOptions, ShareOptionValue } from '../destinati
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { mergeImages } from '../utils/image'
-import { useShortcut } from '../utils/keyboard'
+import { getEditorShortcut, useShortcut } from '../utils/keyboard'
 import type { Color } from './ColorSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
@@ -153,8 +153,18 @@ const Editor: React.FC = () => {
   useEffect(() => {
     setTitleBarContent(
       <>
-        <TitleBarButton tooltip="Cancel" disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={cancel} />
-        <TitleBarButton tooltip="Share" disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={share} />
+        <TitleBarButton
+          onClick={cancel}
+          disabled={isUiLocked}
+          symbol={IconSymbol.XMark}
+          tooltip={`Cancel - ${getEditorShortcut('editor_cancel')}`}
+        />
+        <TitleBarButton
+          onClick={share}
+          disabled={isUiLocked}
+          symbol={IconSymbol.PaperPlane}
+          tooltip={`Share - ${getEditorShortcut('editor_share')}`}
+        />
       </>
     )
 
