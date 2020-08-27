@@ -7,6 +7,7 @@ import type { DestinationId, ShareOptions, ShareOptionValue } from '../destinati
 import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { mergeImages } from '../utils/image'
+import { useShortcut } from '../utils/keyboard'
 import type { Color } from './ColorSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
@@ -43,11 +44,11 @@ const Editor: React.FC = () => {
     destination.getDefaultShareOptions(getDestinationSettings(destinationId))
   )
 
-  const onClickCancel = useCallback(() => {
+  const cancel = useCallback(() => {
     shiftFromQueue()
   }, [shiftFromQueue])
 
-  const onClickShare = useCallback(async () => {
+  const share = useCallback(async () => {
     try {
       lockUi()
 
@@ -131,18 +132,36 @@ const Editor: React.FC = () => {
     [setShareOptions, shareOptions]
   )
 
+  useShortcut({
+    Enter: onEnterShortcut,
+    Escape: onEscapeShortcut,
+    NumpadEnter: onEnterShortcut,
+  })
+
+  function onEnterShortcut(event: KeyboardEvent): void {
+    if (event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+      void share()
+    }
+  }
+
+  function onEscapeShortcut(event: KeyboardEvent): void {
+    if (event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+      cancel()
+    }
+  }
+
   useEffect(() => {
     setTitleBarContent(
       <>
-        <TitleBarButton tooltip="Cancel" disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={onClickCancel} />
-        <TitleBarButton tooltip="Share" disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={onClickShare} />
+        <TitleBarButton tooltip="Cancel" disabled={isUiLocked} symbol={IconSymbol.XMark} onClick={cancel} />
+        <TitleBarButton tooltip="Share" disabled={isUiLocked} symbol={IconSymbol.PaperPlane} onClick={share} />
       </>
     )
 
     return () => {
       setTitleBarContent(null)
     }
-  }, [isUiLocked, onClickCancel, onClickShare, setTitleBarContent])
+  }, [cancel, isUiLocked, setTitleBarContent, share])
 
   return (
     <>

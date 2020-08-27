@@ -36,6 +36,8 @@ const ShortcutsSettings: React.FC = () => {
       </Group>
       <Group title="Screenshot Editor">
         <Shortcuts>
+          <Shortcut label="Share" shortcut="Meta+Enter" />
+          <Shortcut label="Cancel" shortcut="Meta+Escape" />
           <Shortcut label="Pencil" shortcut="1" />
           <Shortcut label="Arrow" shortcut="2" />
           <Shortcut label="Rectangle" shortcut="3" />
