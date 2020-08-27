@@ -75,7 +75,7 @@ export default class SettingsStore {
    * All mutable shortcuts and their associated key bindings.
    */
   @observable shortcuts: Record<ShortcutId, string> = {
-    [ShortcutId.CaptureScreenshot]: 'Meta+b',
+    [ShortcutId.CaptureScreenshot]: 'Meta+Shift+2',
   }
 
   /**
