@@ -72,8 +72,11 @@ async function createWindow(): Promise<void> {
   window = new BrowserWindow({
     backgroundColor: Theme.window.background,
     frame: false,
+    fullscreenable: false,
     height: 768,
+    maximizable: false,
     minHeight: 768,
+    minimizable: false,
     minWidth: 1024,
     show: false,
     webPreferences: {
