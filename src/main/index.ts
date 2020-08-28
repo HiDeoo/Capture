@@ -12,6 +12,7 @@ import {
   Tray,
 } from 'electron'
 import isDev from 'electron-is-dev'
+import windowStateKeeper from 'electron-window-state'
 import path from 'path'
 import querystring from 'querystring'
 
@@ -45,6 +46,11 @@ const ipcMain = getIpcMain(unsafeIpcMain)
 let window: BrowserWindow | null = null
 
 /**
+ * Application window state managing its position & size.
+ */
+let windowState: windowStateKeeper.State | null = null
+
+/**
  * Application tray instance.
  */
 let appTray: Tray | null = null
@@ -68,12 +74,20 @@ let isApplicationQuitting = false
  * Creates the application window.
  */
 async function createWindow(): Promise<void> {
+  // Initialize window state.
+  windowState = windowStateKeeper({
+    defaultHeight: 768,
+    defaultWidth: 1024,
+    fullScreen: false,
+    maximize: false,
+  })
+
   // Create the browser window.
   window = new BrowserWindow({
     backgroundColor: Theme.window.background,
     frame: false,
     fullscreenable: false,
-    height: 768,
+    height: windowState.height,
     maximizable: false,
     minHeight: 768,
     minimizable: false,
@@ -87,8 +101,13 @@ async function createWindow(): Promise<void> {
       // This is not an issue in production as we are serving the renderer application from the filesystem in that case.
       webSecurity: !isDev,
     },
-    width: 1024,
+    width: windowState.width,
+    x: windowState.x,
+    y: windowState.y,
   })
+
+  // Persist window position & size.
+  windowState.manage(window)
 
   // Remove default application menu.
   Menu.setApplicationMenu(null)
