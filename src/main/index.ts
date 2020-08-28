@@ -30,6 +30,7 @@ import {
   saveImage,
 } from './ipcHandlers'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
+import { ensurePermissions } from './permissions'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
 
@@ -131,6 +132,9 @@ async function createWindow(): Promise<void> {
 
   // Create the application tray.
   appTray = createTray(window)
+
+  // Check permissions.
+  ensurePermissions()
 }
 
 /**
@@ -175,6 +179,13 @@ function unregisterIpcHandlers(): void {
  * Captures a screenshot.
  */
 function captureScreenshot(): void {
+  // Ensure permissions are still correct.
+  const hasPermissions = ensurePermissions()
+
+  if (!hasPermissions) {
+    return
+  }
+
   if (!screenshotDirectory) {
     handleError(
       'Something went wrong while capturing a screenshot.',
