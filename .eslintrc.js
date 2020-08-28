@@ -16,6 +16,7 @@ module.exports = {
     'simple-import-sort/sort': 'error',
     'no-shadow': 'error',
     'no-debugger': 'off',
+    'jsx-a11y/accessible-emoji': 'off',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',
