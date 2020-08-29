@@ -30,6 +30,10 @@ export default {
   color,
   easing,
   // Toolbars or nested sidebars.
+  about: {
+    description: '#b9b9b9',
+    link: color.tint,
+  },
   bar: {
     background: '#181718',
     border: color.black1,

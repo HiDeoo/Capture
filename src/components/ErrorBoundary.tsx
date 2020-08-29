@@ -120,7 +120,7 @@ export default ErrorBoundary
  * @param  componentStack - The component stack associated to the error.
  * @return The formatted bug report.
  */
-function formatBugReport(
+export function formatBugReport(
   version: string,
   os: string,
   error?: Error | AppError | MainProcessError,
@@ -154,15 +154,19 @@ If applicable, add screenshots to help explain your problem.
 
 **Error**
 
-\`\`\`
+${
+  error
+    ? `\`\`\`
 ${error}${
-    (error instanceof AppError || error instanceof MainProcessError) && error.internalError
-      ? `
+        (error instanceof AppError || error instanceof MainProcessError) && error.internalError
+          ? `
 Internal ${error.internalError}`
-      : ''
-  }
+          : ''
+      }
 ${error instanceof MainProcessError ? '' : componentStack}
-\`\`\`
+\`\`\``
+    : 'Any error you encountered while using the application.'
+}
 
 **Environment**
 
