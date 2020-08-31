@@ -5,6 +5,7 @@ import tw, { styled } from 'twin.macro'
 import IconImage from '../images/icon.png'
 import { getIpcRenderer } from '../main/ipc'
 import { formatBugReport } from './ErrorBoundary'
+import Img from './Img'
 import Link from './Link'
 import { Button, P } from './SettingsUi'
 
@@ -33,8 +34,8 @@ const Wrapper = styled.div`
   }
 `
 
-const AppIcon = styled.img`
-  ${tw`mb-5`}
+const AppIcon = styled(Img)`
+  ${tw`mb-4`}
 
   width: 160px;
 `
