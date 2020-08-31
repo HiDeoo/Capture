@@ -25,6 +25,7 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)<SideB
   border-color: ${theme('sideBar.border')};
   color: ${ifProp('isFocused', theme('sideBar.color'), theme('sideBar.blurred.color'))};
   width: ${theme('sideBar.width')};
+  -webkit-app-region: drag;
 
   & ${SideBarButton} {
     ${tw`rounded-md`}
@@ -33,6 +34,7 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)<SideB
     font-size: 22px;
     height: 34px;
     width: 34px;
+    -webkit-app-region: no-drag;
 
     &:hover:not(:disabled) {
       background-color: ${theme('sideBar.selected.background')};
