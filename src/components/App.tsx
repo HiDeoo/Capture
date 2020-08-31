@@ -7,7 +7,7 @@ import { getDestination } from '../destinations'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
-import { ShortcutId } from '../utils/keyboard'
+import { ShortcutId, useShortcut } from '../utils/keyboard'
 import AppSideBar from './AppSideBar'
 import Editor from './Editor'
 import ErrorBoundary, { MainProcessError, useErrorHandler } from './ErrorBoundary'
@@ -42,7 +42,7 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handleError = useErrorHandler()
-  const { currentPanel, pushToQueue, setWindowFocus } = useApp()
+  const { currentPanel, pushToQueue, setCurrentPanel, setWindowFocus } = useApp()
   const { getDestinationSettingsSetter, screenshotDirectory, setScreenshotDirectory, shortcuts } = useSettings()
 
   const captureScreenshotShortcut = shortcuts[ShortcutId.CaptureScreenshot]
@@ -112,6 +112,14 @@ const App: React.FC = () => {
   useEffect(() => {
     void getIpcRenderer().invoke('newCaptureScreenshotShortcut', captureScreenshotShortcut)
   }, [captureScreenshotShortcut])
+
+  useShortcut({ Comma: onCommaShortcut })
+
+  function onCommaShortcut(event: KeyboardEvent): void {
+    if (event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && currentPanel !== Panel.Editor) {
+      setCurrentPanel(Panel.Settings)
+    }
+  }
 
   return (
     <Wrapper>
