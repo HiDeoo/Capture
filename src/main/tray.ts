@@ -1,4 +1,4 @@
-import { BrowserWindow, Tray } from 'electron'
+import { BrowserWindow, Menu, Tray } from 'electron'
 
 import { getMainProcessImagePath } from './paths'
 
@@ -13,6 +13,10 @@ export function createTray(window: BrowserWindow): Tray {
 
   tray.on('click', () => {
     onClickTray(window)
+  })
+
+  tray.on('right-click', () => {
+    tray.popUpContextMenu(Menu.buildFromTemplate([{ label: 'Quit Capture', role: 'quit' }]))
   })
 
   return tray
