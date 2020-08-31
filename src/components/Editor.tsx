@@ -34,6 +34,7 @@ const Editor: React.FC = () => {
     getDestinationSettings,
     getDestinationSettingsGetter,
     getDestinationSettingsSetter,
+    shouldCopyShareUrlToClipboard,
   } = useSettings()
   const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
@@ -86,6 +87,10 @@ const Editor: React.FC = () => {
 
       shiftFromQueue()
 
+      if (shouldCopyShareUrlToClipboard) {
+        await getIpcRenderer().invoke('copyTextToClipboard', response.link)
+      }
+
       await getIpcRenderer().invoke('closeWindow')
     } catch (error) {
       handleError(new AppError('Something went wrong while sharing the image.', error, true))
@@ -105,6 +110,7 @@ const Editor: React.FC = () => {
     pendingScreenshot,
     shareOptions,
     shiftFromQueue,
+    shouldCopyShareUrlToClipboard,
   ])
 
   const onChangeDestination = useCallback(

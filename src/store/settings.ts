@@ -89,6 +89,20 @@ export default class SettingsStore {
   }
 
   /**
+   * Defines if share URLs should be automatically copied to the clipboard.
+   */
+  @observable shouldCopyShareUrlToClipboard = true
+
+  /**
+   * Sets if share URLs should be automatically copied to the clipboard.
+   * @param shouldCopy - `true` when the URLs should be copied.
+   */
+  @action
+  setShouldCopyShareUrlToClipboard = (shouldCopy: boolean): void => {
+    this.shouldCopyShareUrlToClipboard = shouldCopy
+  }
+
+  /**
    * Destinations individual settings keyed by destination ID.
    */
   @observable private destinations: DestinationsSettings

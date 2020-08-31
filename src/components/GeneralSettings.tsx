@@ -6,7 +6,7 @@ import { getIpcRenderer } from '../main/ipc'
 import { useHistory, useSettings } from '../store'
 import { pluralize } from '../utils/string'
 import DestinationSelect from './DestinationSelect'
-import { Button, Group, P, Path } from './SettingsUi'
+import { Button, Checkbox, Group, P, Path } from './SettingsUi'
 
 /**
  * Configuration of the general settings panel.
@@ -52,7 +52,14 @@ const DestinationWrapper = styled(P)`
 
 const GeneralSettings: React.FC = () => {
   const { clearHistory, entries } = useHistory()
-  const { defaultDestinationId, screenshotDirectory, setDefaultDestinationId, setScreenshotDirectory } = useSettings()
+  const {
+    defaultDestinationId,
+    screenshotDirectory,
+    setDefaultDestinationId,
+    setScreenshotDirectory,
+    setShouldCopyShareUrlToClipboard,
+    shouldCopyShareUrlToClipboard,
+  } = useSettings()
 
   async function onClickUpdateScreenshotDirectory(): Promise<void> {
     const newScreenshotDirectory = await getIpcRenderer().invoke(
@@ -67,6 +74,13 @@ const GeneralSettings: React.FC = () => {
 
   return (
     <>
+      <Group title="Preferences">
+        <Checkbox
+          checked={shouldCopyShareUrlToClipboard}
+          onChange={setShouldCopyShareUrlToClipboard}
+          label="Automatically copy URLs of shared screenshots to the clipboard"
+        />
+      </Group>
       <Group title="Destinations">
         <DestinationWrapper>
           Default destination
