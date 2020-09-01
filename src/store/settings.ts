@@ -103,6 +103,20 @@ export default class SettingsStore {
   }
 
   /**
+   * Defines if the application window should be closed when done sharing.
+   */
+  @observable shouldCloseWindowAfterShare = true
+
+  /**
+   * Sets if the application window should be closed when done sharing.
+   * @param shouldClose - `true` when the window should be closed.
+   */
+  @action
+  setShouldCloseWindowAfterShare = (shouldClose: boolean): void => {
+    this.shouldCloseWindowAfterShare = shouldClose
+  }
+
+  /**
    * Destinations individual settings keyed by destination ID.
    */
   @observable private destinations: DestinationsSettings

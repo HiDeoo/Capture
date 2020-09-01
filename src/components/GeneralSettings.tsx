@@ -57,7 +57,9 @@ const GeneralSettings: React.FC = () => {
     screenshotDirectory,
     setDefaultDestinationId,
     setScreenshotDirectory,
+    setShouldCloseWindowAfterShare,
     setShouldCopyShareUrlToClipboard,
+    shouldCloseWindowAfterShare,
     shouldCopyShareUrlToClipboard,
   } = useSettings()
 
@@ -78,7 +80,12 @@ const GeneralSettings: React.FC = () => {
         <Checkbox
           checked={shouldCopyShareUrlToClipboard}
           onChange={setShouldCopyShareUrlToClipboard}
-          label="Automatically copy URLs of shared screenshots to the clipboard"
+          label="Copy URLs of screenshots to the clipboard after sharing a screenshot"
+        />
+        <Checkbox
+          checked={shouldCloseWindowAfterShare}
+          onChange={setShouldCloseWindowAfterShare}
+          label="Close the application window after sharing a screenshot"
         />
       </Group>
       <Group title="Destinations">
