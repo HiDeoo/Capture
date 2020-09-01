@@ -28,7 +28,7 @@ const Editor: React.FC = () => {
   const handleError = useErrorHandler()
   const { addToHistory } = useHistory()
   const { setTitleBarContent } = useTitleBar()
-  const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
+  const { isUiLocked, lockUi, pendingScreenshot, pendingScreenshotCount, shiftFromQueue } = useApp()
   const {
     closeWindowAfterShare,
     copyShareUrlToClipboard,
@@ -105,7 +105,7 @@ const Editor: React.FC = () => {
         await getIpcRenderer().invoke('copyTextToClipboard', response.link)
       }
 
-      if (closeWindowAfterShare) {
+      if (pendingScreenshotCount === 1 && closeWindowAfterShare) {
         await getIpcRenderer().invoke('closeWindow')
       }
     } catch (error) {
@@ -126,6 +126,7 @@ const Editor: React.FC = () => {
     getDestinationSettingsSetter,
     lockUi,
     pendingScreenshot,
+    pendingScreenshotCount,
     shareOptions,
     shiftFromQueue,
   ])
@@ -213,6 +214,7 @@ const Editor: React.FC = () => {
           readonly={isUiLocked}
           image={imageEditorImage}
           sketch={imageEditorSketch}
+          key={pendingScreenshot.path}
           {...getImageEditorStateProps()}
           path={`file://${pendingScreenshot.path}`}
         />

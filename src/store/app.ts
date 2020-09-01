@@ -69,6 +69,15 @@ export default class AppStore {
   }
 
   /**
+   * Returns the length of the pending screenshot queue.
+   * @return The length.
+   */
+  @computed
+  get pendingScreenshotCount(): number {
+    return this.queue.length
+  }
+
+  /**
    * Adds a new screenshot at the end of the queue.
    * @param path - The new screenshot file path.
    * @param size - The new screenshot file size.
