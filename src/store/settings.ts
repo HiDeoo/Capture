@@ -91,29 +91,29 @@ export default class SettingsStore {
   /**
    * Defines if share URLs should be automatically copied to the clipboard.
    */
-  @observable shouldCopyShareUrlToClipboard = true
+  @observable copyShareUrlToClipboard = true
 
   /**
    * Sets if share URLs should be automatically copied to the clipboard.
-   * @param shouldCopy - `true` when the URLs should be copied.
+   * @param copy - `true` when the URLs should be copied.
    */
   @action
-  setShouldCopyShareUrlToClipboard = (shouldCopy: boolean): void => {
-    this.shouldCopyShareUrlToClipboard = shouldCopy
+  setCopyShareUrlToClipboard = (copy: boolean): void => {
+    this.copyShareUrlToClipboard = copy
   }
 
   /**
    * Defines if the application window should be closed when done sharing.
    */
-  @observable shouldCloseWindowAfterShare = true
+  @observable closeWindowAfterShare = true
 
   /**
    * Sets if the application window should be closed when done sharing.
-   * @param shouldClose - `true` when the window should be closed.
+   * @param close - `true` when the window should be closed.
    */
   @action
-  setShouldCloseWindowAfterShare = (shouldClose: boolean): void => {
-    this.shouldCloseWindowAfterShare = shouldClose
+  setCloseWindowAfterShare = (close: boolean): void => {
+    this.closeWindowAfterShare = close
   }
 
   /**

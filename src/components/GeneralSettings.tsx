@@ -53,14 +53,14 @@ const DestinationWrapper = styled(P)`
 const GeneralSettings: React.FC = () => {
   const { clearHistory, entries } = useHistory()
   const {
+    closeWindowAfterShare,
     defaultDestinationId,
+    copyShareUrlToClipboard,
     screenshotDirectory,
+    setCloseWindowAfterShare,
+    setCopyShareUrlToClipboard,
     setDefaultDestinationId,
     setScreenshotDirectory,
-    setShouldCloseWindowAfterShare,
-    setShouldCopyShareUrlToClipboard,
-    shouldCloseWindowAfterShare,
-    shouldCopyShareUrlToClipboard,
   } = useSettings()
 
   async function onClickUpdateScreenshotDirectory(): Promise<void> {
@@ -78,13 +78,13 @@ const GeneralSettings: React.FC = () => {
     <>
       <Group title="Preferences">
         <Checkbox
-          checked={shouldCopyShareUrlToClipboard}
-          onChange={setShouldCopyShareUrlToClipboard}
+          checked={copyShareUrlToClipboard}
+          onChange={setCopyShareUrlToClipboard}
           label="Copy URLs of screenshots to the clipboard after sharing a screenshot"
         />
         <Checkbox
-          checked={shouldCloseWindowAfterShare}
-          onChange={setShouldCloseWindowAfterShare}
+          checked={closeWindowAfterShare}
+          onChange={setCloseWindowAfterShare}
           label="Close the application window after sharing a screenshot"
         />
       </Group>

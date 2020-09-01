@@ -30,12 +30,12 @@ const Editor: React.FC = () => {
   const { setTitleBarContent } = useTitleBar()
   const { isUiLocked, lockUi, pendingScreenshot, shiftFromQueue } = useApp()
   const {
+    closeWindowAfterShare,
+    copyShareUrlToClipboard,
     defaultDestinationId,
     getDestinationSettings,
     getDestinationSettingsGetter,
     getDestinationSettingsSetter,
-    shouldCloseWindowAfterShare,
-    shouldCopyShareUrlToClipboard,
   } = useSettings()
   const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
@@ -88,11 +88,11 @@ const Editor: React.FC = () => {
 
       shiftFromQueue()
 
-      if (shouldCopyShareUrlToClipboard) {
+      if (copyShareUrlToClipboard) {
         await getIpcRenderer().invoke('copyTextToClipboard', response.link)
       }
 
-      if (shouldCloseWindowAfterShare) {
+      if (closeWindowAfterShare) {
         await getIpcRenderer().invoke('closeWindow')
       }
     } catch (error) {
@@ -102,6 +102,8 @@ const Editor: React.FC = () => {
     }
   }, [
     addToHistory,
+    closeWindowAfterShare,
+    copyShareUrlToClipboard,
     destination,
     destinationId,
     handleError,
@@ -113,8 +115,6 @@ const Editor: React.FC = () => {
     pendingScreenshot,
     shareOptions,
     shiftFromQueue,
-    shouldCloseWindowAfterShare,
-    shouldCopyShareUrlToClipboard,
   ])
 
   const onChangeDestination = useCallback(
