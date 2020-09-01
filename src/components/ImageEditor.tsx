@@ -240,6 +240,11 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
   }
 
   function onDigitShortcut(event: KeyboardEvent): void {
+    // This should not impact text editing.
+    if (isEditingText) {
+      return
+    }
+
     switch (event.code) {
       case 'Digit1': {
         toggleTool(Tools.Pencil)
