@@ -28,7 +28,7 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)<SideB
   -webkit-app-region: drag;
 
   & ${SideBarButton} {
-    ${tw`rounded-md`}
+    ${tw`rounded-md relative`}
 
     color: ${ifProp('isFocused', theme('sideBar.color'), theme('sideBar.blurred.color'))};
     font-size: 22px;
@@ -53,12 +53,36 @@ const StyledSideBar = styled(SideBar as SideBarComponent<AppSideBarEntry>)<SideB
   }
 `
 
+const Counter = styled.div`
+  ${tw`absolute rounded-full border-2 border-solid z-50`}
+
+  background-color: ${theme('sideBar.badge.background')};
+  color: ${theme('sideBar.badge.color')};
+  border-color: ${theme('sideBar.badge.color')};
+  font-size: 11px;
+  padding: 0 5px;
+  right: -10px;
+  top: -10px;
+  z-index: 9999999;
+`
+
 const AppSideBar: React.FC = () => {
-  const { currentPanel, hasPendingScreenshots, isFocused, setCurrentPanel } = useApp()
+  const { currentPanel, hasPendingScreenshots, isFocused, pendingScreenshotCount, setCurrentPanel } = useApp()
 
   function getEntryProps(entry: AppSideBarEntry): SideBarEntryProps {
+    let content = <Icon symbol={entry.symbol} />
+
+    if (entry.panel === Panel.Editor && pendingScreenshotCount > 1) {
+      content = (
+        <>
+          <Icon symbol={entry.symbol} />
+          <Counter>{pendingScreenshotCount}</Counter>
+        </>
+      )
+    }
+
     return {
-      content: <Icon symbol={entry.symbol} />,
+      content,
       disabled:
         (entry.panel === Panel.Editor && !hasPendingScreenshots) ||
         (entry.panel !== Panel.Editor && hasPendingScreenshots),

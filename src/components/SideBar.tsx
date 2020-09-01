@@ -5,7 +5,7 @@ import tw, { styled } from 'twin.macro'
 
 import Button from './Button'
 
-const Wrapper = tw.div`h-full flex flex-col items-center overflow-y-hidden`
+const Wrapper = tw.div`h-full flex flex-col items-center`
 
 export const SideBarButton = styled(Button)<SideBarButtonProps>`
   ${tw`mb-2 flex justify-center items-center`}

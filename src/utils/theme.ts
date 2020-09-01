@@ -139,6 +139,10 @@ export default {
   // Application sidebar.
   sideBar: {
     background: '#25242d',
+    badge: {
+      background: '#f42726',
+      color: '#e6e4e7',
+    },
     blurred: {
       color: '#d2d1d3',
     },
