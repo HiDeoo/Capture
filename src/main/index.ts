@@ -215,17 +215,14 @@ function captureScreenshot(): void {
     return
   }
 
+  const errorMessage = 'Something went wrong while capturing a screenshot.'
+
   if (!screenshotDirectory) {
-    handleError(
-      'Something went wrong while capturing a screenshot.',
-      new Error('No screenshot directory provided'),
-      window
-    )
+    handleError(errorMessage, new Error('No screenshot directory provided.'), window)
 
     return
   }
 
-  // TODO Refactor & extract (maybe extract all shortcuts code)
   const now = new Date()
   const filename = `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss')}.png`
 
@@ -235,20 +232,10 @@ function captureScreenshot(): void {
     args.unshift('-x')
   }
 
-  const child = spawn('screencapture', args)
+  const child = spawn('screencapture2', args)
 
-  child.stdout.setEncoding('utf8')
-  child.stdout.on('data', (data) => {
-    console.log('stdout: ' + data)
-  })
-
-  child.stderr.setEncoding('utf8')
-  child.stderr.on('data', function (data) {
-    console.log('stderr: ' + data)
-  })
-
-  child.on('close', function (code) {
-    console.log('Done screenshoting')
+  child.on('error', (error) => {
+    handleError(errorMessage, error, window)
   })
 }
 
