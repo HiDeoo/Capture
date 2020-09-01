@@ -106,7 +106,15 @@ export function useImageEditor(): ImageEditorHook {
   }
 }
 
-const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorState, path, readonly, sketch }) => {
+const ImageEditor: React.FC<Props> = ({
+  image,
+  imageEditorDispatch,
+  imageEditorState,
+  onLoaded,
+  path,
+  readonly,
+  sketch,
+}) => {
   const [isEditingText, setIsEditingText] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<Optional<ImageDimensions>>()
   const readOnlyPreviousTool = useRef(imageEditorInitialState.tool)
@@ -123,7 +131,10 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
 
   function onImageLoaded(): void {
     if (image.current) {
-      setImageDimensions({ height: image.current.height, width: image.current.width })
+      const dimensions = { height: image.current.height, width: image.current.width }
+
+      setImageDimensions(dimensions)
+      onLoaded(dimensions)
     }
   }
 
@@ -312,6 +323,7 @@ const ImageEditor: React.FC<Props> = ({ image, imageEditorDispatch, imageEditorS
 
 interface Props extends ImageEditorStateProps {
   image: ImageEditorHook['imageEditorImage']
+  onLoaded: (dimensions: ImageDimensions) => void
   path: string
   readonly: boolean
   sketch: ImageEditorHook['imageEditorSketch']

@@ -41,6 +41,7 @@ const Editor: React.FC = () => {
   const { getImageEditorStateProps, imageEditorImage, imageEditorSketch, imageEditorUtils } = useImageEditor()
 
   const [destinationId, setDestinationId] = useState(defaultDestinationId)
+  const [imageDimensions, setImageDimensions] = useState<Optional<ImageDimensions>>()
 
   const destination = getDestination(destinationId)
   const [shareOptions, setShareOptions] = useState<ShareOptions>(
@@ -197,6 +198,10 @@ const Editor: React.FC = () => {
     }
   }, [cancel, isUiLocked, setTitleBarContent, share])
 
+  function onImageEditorLoaded(dimensions: ImageDimensions): void {
+    setImageDimensions(dimensions)
+  }
+
   return (
     <>
       <LoadingBar enabled={isUiLocked} />
@@ -215,11 +220,12 @@ const Editor: React.FC = () => {
           image={imageEditorImage}
           sketch={imageEditorSketch}
           key={pendingScreenshot.path}
+          onLoaded={onImageEditorLoaded}
           {...getImageEditorStateProps()}
           path={`file://${pendingScreenshot.path}`}
         />
       </Content>
-      <EditorInfoBar locked={isUiLocked} path={pendingScreenshot.path} />
+      <EditorInfoBar locked={isUiLocked} dimensions={imageDimensions} path={pendingScreenshot.path} />
     </>
   )
 }
