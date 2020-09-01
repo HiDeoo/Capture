@@ -42,7 +42,7 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handleError = useErrorHandler()
-  const { currentPanel, pushToQueue, setCurrentPanel, setWindowFocus } = useApp()
+  const { currentPanel, pushToQueue, setCurrentPanel, setCurrentSettingsPanel, setWindowFocus } = useApp()
   const {
     getDestinationSettingsSetter,
     playScreenCaptureSounds,
@@ -64,9 +64,10 @@ const App: React.FC = () => {
       queryString: ParsedQueryString,
       hash: Optional<ParsedQueryString>
     ): void {
-      // TODO Ensure settings and proper settings panel are visible.
-
       const destination = getDestination(destinationId)
+
+      setCurrentPanel(Panel.Settings)
+      setCurrentSettingsPanel(destinationId)
 
       if (destination.onOAuthRequest) {
         destination.onOAuthRequest(getDestinationSettingsSetter(destinationId), queryString, hash, handleError)
