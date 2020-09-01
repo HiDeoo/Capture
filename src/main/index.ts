@@ -232,7 +232,7 @@ function captureScreenshot(): void {
     args.unshift('-x')
   }
 
-  const child = spawn('screencapture2', args)
+  const child = spawn('screencapture', args)
 
   child.on('error', (error) => {
     handleError(errorMessage, error, window)
