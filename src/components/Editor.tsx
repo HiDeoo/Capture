@@ -225,7 +225,12 @@ const Editor: React.FC = () => {
           path={`file://${pendingScreenshot.path}`}
         />
       </Content>
-      <EditorInfoBar locked={isUiLocked} dimensions={imageDimensions} path={pendingScreenshot.path} />
+      <EditorInfoBar
+        locked={isUiLocked}
+        dimensions={imageDimensions}
+        path={pendingScreenshot.path}
+        size={pendingScreenshot.size}
+      />
     </>
   )
 }
