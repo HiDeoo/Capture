@@ -56,10 +56,12 @@ const GeneralSettings: React.FC = () => {
     closeWindowAfterShare,
     defaultDestinationId,
     copyShareUrlToClipboard,
+    playScreenCaptureSounds,
     screenshotDirectory,
     setCloseWindowAfterShare,
     setCopyShareUrlToClipboard,
     setDefaultDestinationId,
+    setPlayScreenCaptureSounds,
     setScreenshotDirectory,
   } = useSettings()
 
@@ -86,6 +88,11 @@ const GeneralSettings: React.FC = () => {
           checked={closeWindowAfterShare}
           onChange={setCloseWindowAfterShare}
           label="Close the application window after sharing a screenshot"
+        />
+        <Checkbox
+          checked={playScreenCaptureSounds}
+          onChange={setPlayScreenCaptureSounds}
+          label="Play a sound when capturing a screenshot"
         />
       </Group>
       <Group title="Destinations">

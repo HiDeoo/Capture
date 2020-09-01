@@ -43,7 +43,13 @@ const App: React.FC = () => {
   const { selectEntry } = useHistory()
   const handleError = useErrorHandler()
   const { currentPanel, pushToQueue, setCurrentPanel, setWindowFocus } = useApp()
-  const { getDestinationSettingsSetter, screenshotDirectory, setScreenshotDirectory, shortcuts } = useSettings()
+  const {
+    getDestinationSettingsSetter,
+    playScreenCaptureSounds,
+    screenshotDirectory,
+    setScreenshotDirectory,
+    shortcuts,
+  } = useSettings()
 
   const captureScreenshotShortcut = shortcuts[ShortcutId.CaptureScreenshot]
 
@@ -112,6 +118,10 @@ const App: React.FC = () => {
   useEffect(() => {
     void getIpcRenderer().invoke('newCaptureScreenshotShortcut', captureScreenshotShortcut)
   }, [captureScreenshotShortcut])
+
+  useEffect(() => {
+    void getIpcRenderer().invoke('newScreenCaptureSounds', playScreenCaptureSounds)
+  }, [playScreenCaptureSounds])
 
   useShortcut({ Comma: onCommaShortcut })
 

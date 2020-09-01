@@ -117,6 +117,20 @@ export default class SettingsStore {
   }
 
   /**
+   * Defines if the screencapture utility sounds are enabled or not.
+   */
+  @observable playScreenCaptureSounds = true
+
+  /**
+   * Sets if the screencapture utility sounds are enabled or not.
+   * @param enabled - `true` when the sounds are enabled.
+   */
+  @action
+  setPlayScreenCaptureSounds = (enabled: boolean): void => {
+    this.playScreenCaptureSounds = enabled
+  }
+
+  /**
    * Destinations individual settings keyed by destination ID.
    */
   @observable private destinations: DestinationsSettings

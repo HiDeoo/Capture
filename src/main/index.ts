@@ -71,6 +71,11 @@ let watcher: Optional<FSWatcher>
 let isApplicationQuitting = false
 
 /**
+ * Defines if the screencapture utility sounds are enabled or not.
+ */
+let playScreenCaptureSounds = true
+
+/**
  * Creates the application window.
  */
 async function createWindow(): Promise<void> {
@@ -171,6 +176,7 @@ function registerIpcHandlers(): void {
   ipcMain.handle('getBugReportInfos', getBugReportInfos)
   ipcMain.handle('getDefaultScreenshotDirectory', getDefaultScreenshotDirectory)
   ipcMain.handle('newCaptureScreenshotShortcut', onNewCaptureScreenshotShortcut)
+  ipcMain.handle('newScreenCaptureSounds', onNewScreenCaptureSounds)
   ipcMain.handle('newScreenshotDirectory', onNewScreenshotDirectory)
   ipcMain.handle('openFile', openFile)
   ipcMain.handle('openUrl', openUrl)
@@ -190,6 +196,7 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('getBugReportInfos')
   ipcMain.removeHandler('getDefaultScreenshotDirectory')
   ipcMain.removeHandler('newCaptureScreenshotShortcut')
+  ipcMain.removeHandler('newScreenCaptureSounds')
   ipcMain.removeHandler('newScreenshotDirectory')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
@@ -204,7 +211,7 @@ function captureScreenshot(): void {
   // Ensure permissions are still correct.
   const hasPermissions = ensurePermissions()
 
-  if (!hasPermissions) {
+  if (!hasPermissions || !window) {
     return
   }
 
@@ -222,7 +229,13 @@ function captureScreenshot(): void {
   const now = new Date()
   const filename = `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss')}.png`
 
-  const child = spawn('screencapture', ['-i', '-o', path.join(screenshotDirectory, filename)])
+  const args = ['-i', '-o', path.join(screenshotDirectory, filename)]
+
+  if (!playScreenCaptureSounds) {
+    args.unshift('-x')
+  }
+
+  const child = spawn('screencapture', args)
 
   child.stdout.setEncoding('utf8')
   child.stdout.on('data', (data) => {
@@ -256,6 +269,14 @@ function onNewCaptureScreenshotShortcut(event: IpcMainInvokeEvent, shortcut: str
   } catch (error) {
     handleError('Unable to register global shortcut.', error, window)
   }
+}
+
+/**
+ * Triggered when the screencapture sounds setting is set.
+ * @param enabled - `true` when the sounds are enabled.
+ */
+function onNewScreenCaptureSounds(event: IpcMainInvokeEvent, enabled: boolean): void {
+  playScreenCaptureSounds = enabled
 }
 
 /**
