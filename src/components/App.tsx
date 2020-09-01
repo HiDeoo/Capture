@@ -47,6 +47,7 @@ const App: React.FC = () => {
     getDestinationSettingsSetter,
     playScreenCaptureSounds,
     screenshotDirectory,
+    setOpenAtLogin,
     setScreenshotDirectory,
     shortcuts,
   } = useSettings()
@@ -123,6 +124,16 @@ const App: React.FC = () => {
   useEffect(() => {
     void getIpcRenderer().invoke('newScreenCaptureSounds', playScreenCaptureSounds)
   }, [playScreenCaptureSounds])
+
+  useEffect(() => {
+    async function getOpenAtLogin(): Promise<void> {
+      const openAtLogin = await getIpcRenderer().invoke('getOpenAtLogin')
+
+      setOpenAtLogin(openAtLogin)
+    }
+
+    void getOpenAtLogin()
+  }, [setOpenAtLogin])
 
   useShortcut({ Comma: onCommaShortcut })
 

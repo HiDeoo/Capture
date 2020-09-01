@@ -24,11 +24,13 @@ type CaptureRendererToMainEvents = {
   deleteFile: (path: string) => void
   getBugReportInfos: () => { os: string }
   getDefaultScreenshotDirectory: () => string
+  getOpenAtLogin: () => boolean
   newCaptureScreenshotShortcut: (shortcut: string) => void
   newScreenCaptureSounds: (enabled: boolean) => void
   newScreenshotDirectory: (path: string) => void
   openFile: (path: string) => string
   openUrl: (url: string) => void
+  setOpenAtLogin: (open: boolean) => void
   quit: () => void
   saveImage: (path: string, data: string) => number
 }

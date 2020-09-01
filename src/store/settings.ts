@@ -131,6 +131,20 @@ export default class SettingsStore {
   }
 
   /**
+   * Defines if the application should be opened at login.
+   */
+  @observable openAtLogin = false
+
+  /**
+   * Sets if the application should be opened at login or not.
+   * @param open - `true` when the app should be opened.
+   */
+  @action
+  setOpenAtLogin = (open: boolean): void => {
+    this.openAtLogin = open
+  }
+
+  /**
    * Defines if unshared screenshots should be deleted from the disk.
    */
   @observable deleteUnsharedScreenshots = true

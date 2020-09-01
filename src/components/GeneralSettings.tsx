@@ -57,12 +57,14 @@ const GeneralSettings: React.FC = () => {
     copyShareUrlToClipboard,
     defaultDestinationId,
     deleteUnsharedScreenshots,
+    openAtLogin,
     playScreenCaptureSounds,
     screenshotDirectory,
     setCloseWindowAfterShare,
     setCopyShareUrlToClipboard,
     setDefaultDestinationId,
     setDeleteUnsharedScreenshots,
+    setOpenAtLogin,
     setPlayScreenCaptureSounds,
     setScreenshotDirectory,
   } = useSettings()
@@ -82,6 +84,12 @@ const GeneralSettings: React.FC = () => {
     const defaultScreenshotDirectory = await getIpcRenderer().invoke('getDefaultScreenshotDirectory')
 
     setScreenshotDirectory(defaultScreenshotDirectory)
+  }
+
+  async function onChangeOpenAtLogin(open: boolean): Promise<void> {
+    setOpenAtLogin(open)
+
+    return getIpcRenderer().invoke('setOpenAtLogin', open)
   }
 
   return (
@@ -107,6 +115,7 @@ const GeneralSettings: React.FC = () => {
           onChange={setDeleteUnsharedScreenshots}
           label="Delete unshared screenshots from disk"
         />
+        <Checkbox checked={openAtLogin} onChange={onChangeOpenAtLogin} label="Open application at login" />
       </Group>
       <Group title="Destinations">
         <DestinationWrapper>

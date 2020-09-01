@@ -25,10 +25,12 @@ import {
   deleteFile,
   getBugReportInfos,
   getDefaultScreenshotDirectory,
+  getOpenAtLogin,
   openFile,
   openUrl,
   quit,
   saveImage,
+  setOpenAtLogin,
 } from './ipcHandlers'
 import { getElectronPrebuiltPath, getRendererUri } from './paths'
 import { ensurePermissions } from './permissions'
@@ -175,11 +177,13 @@ function registerIpcHandlers(): void {
   ipcMain.handle('deleteFile', deleteFile)
   ipcMain.handle('getBugReportInfos', getBugReportInfos)
   ipcMain.handle('getDefaultScreenshotDirectory', getDefaultScreenshotDirectory)
+  ipcMain.handle('getOpenAtLogin', getOpenAtLogin)
   ipcMain.handle('newCaptureScreenshotShortcut', onNewCaptureScreenshotShortcut)
   ipcMain.handle('newScreenCaptureSounds', onNewScreenCaptureSounds)
   ipcMain.handle('newScreenshotDirectory', onNewScreenshotDirectory)
   ipcMain.handle('openFile', openFile)
   ipcMain.handle('openUrl', openUrl)
+  ipcMain.handle('setOpenAtLogin', setOpenAtLogin)
   ipcMain.handle('quit', quit)
   ipcMain.handle('saveImage', saveImage)
 }
@@ -195,11 +199,13 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('deleteFile')
   ipcMain.removeHandler('getBugReportInfos')
   ipcMain.removeHandler('getDefaultScreenshotDirectory')
+  ipcMain.removeHandler('getOpenAtLogin')
   ipcMain.removeHandler('newCaptureScreenshotShortcut')
   ipcMain.removeHandler('newScreenCaptureSounds')
   ipcMain.removeHandler('newScreenshotDirectory')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
+  ipcMain.removeHandler('setOpenAtLogin')
   ipcMain.removeHandler('quit')
   ipcMain.removeHandler('saveImage')
 }

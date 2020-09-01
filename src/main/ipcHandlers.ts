@@ -106,3 +106,19 @@ export async function saveImage(event: IpcMainInvokeEvent, filePath: string, dat
 
   return stat.size
 }
+
+/**
+ * Returns if the app is configured to be opened at login.
+ * @return `true` when opened at login time.
+ */
+export function getOpenAtLogin(): boolean {
+  return app.getLoginItemSettings().openAtLogin
+}
+
+/**
+ * Sets if the application should be opened at login.
+ * @param open - `true` when opened at login time.
+ */
+export function setOpenAtLogin(event: IpcMainInvokeEvent, open: boolean): void {
+  app.setLoginItemSettings({ openAtLogin: open })
+}
