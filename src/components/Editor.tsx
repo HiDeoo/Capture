@@ -33,6 +33,7 @@ const Editor: React.FC = () => {
     closeWindowAfterShare,
     copyShareUrlToClipboard,
     defaultDestinationId,
+    deleteUnsharedScreenshots,
     getDestinationSettings,
     getDestinationSettingsGetter,
     getDestinationSettingsSetter,
@@ -46,9 +47,21 @@ const Editor: React.FC = () => {
     destination.getDefaultShareOptions(getDestinationSettings(destinationId))
   )
 
-  const cancel = useCallback(() => {
-    shiftFromQueue()
-  }, [shiftFromQueue])
+  const cancel = useCallback(async () => {
+    try {
+      lockUi()
+
+      if (deleteUnsharedScreenshots) {
+        await getIpcRenderer().invoke('deleteFile', pendingScreenshot.path)
+      }
+
+      shiftFromQueue()
+    } catch (error) {
+      handleError(new AppError('Something went wrong while deleting the image.', error, true))
+    } finally {
+      lockUi(false)
+    }
+  }, [deleteUnsharedScreenshots, handleError, lockUi, pendingScreenshot, shiftFromQueue])
 
   const share = useCallback(async () => {
     try {
@@ -156,7 +169,7 @@ const Editor: React.FC = () => {
 
   function onEscapeShortcut(event: KeyboardEvent): void {
     if (event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
-      cancel()
+      void cancel()
     }
   }
 

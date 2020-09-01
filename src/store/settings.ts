@@ -131,6 +131,20 @@ export default class SettingsStore {
   }
 
   /**
+   * Defines if unshared screenshots should be deleted from the disk.
+   */
+  @observable deleteUnsharedScreenshots = true
+
+  /**
+   * Sets if unshared screenshots should be deleted from the disk.
+   * @param deleteScreenshot - `true` when unshared screenshots should be deleted.
+   */
+  @action
+  setDeleteUnsharedScreenshots = (deleteScreenshot: boolean): void => {
+    this.deleteUnsharedScreenshots = deleteScreenshot
+  }
+
+  /**
    * Destinations individual settings keyed by destination ID.
    */
   @observable private destinations: DestinationsSettings

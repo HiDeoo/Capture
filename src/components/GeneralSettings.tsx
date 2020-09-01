@@ -54,13 +54,15 @@ const GeneralSettings: React.FC = () => {
   const { clearHistory, entries } = useHistory()
   const {
     closeWindowAfterShare,
-    defaultDestinationId,
     copyShareUrlToClipboard,
+    defaultDestinationId,
+    deleteUnsharedScreenshots,
     playScreenCaptureSounds,
     screenshotDirectory,
     setCloseWindowAfterShare,
     setCopyShareUrlToClipboard,
     setDefaultDestinationId,
+    setDeleteUnsharedScreenshots,
     setPlayScreenCaptureSounds,
     setScreenshotDirectory,
   } = useSettings()
@@ -93,6 +95,11 @@ const GeneralSettings: React.FC = () => {
           checked={playScreenCaptureSounds}
           onChange={setPlayScreenCaptureSounds}
           label="Play a sound when capturing a screenshot"
+        />
+        <Checkbox
+          checked={deleteUnsharedScreenshots}
+          onChange={setDeleteUnsharedScreenshots}
+          label="Delete unshared screenshots from disk"
         />
       </Group>
       <Group title="Destinations">
