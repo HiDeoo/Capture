@@ -78,6 +78,12 @@ const GeneralSettings: React.FC = () => {
     }
   }
 
+  async function onClickResetScreenshotDirectory(): Promise<void> {
+    const defaultScreenshotDirectory = await getIpcRenderer().invoke('getDefaultScreenshotDirectory')
+
+    setScreenshotDirectory(defaultScreenshotDirectory)
+  }
+
   return (
     <>
       <Group title="Preferences">
@@ -111,6 +117,7 @@ const GeneralSettings: React.FC = () => {
       <Group title="Screenshot Directory">
         <Path value={screenshotDirectory} />
         <Button onClick={onClickUpdateScreenshotDirectory}>Change directory</Button>
+        <Button onClick={onClickResetScreenshotDirectory}>Reset directory</Button>
       </Group>
       <Group title="History">
         <P>
