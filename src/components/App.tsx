@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
@@ -9,6 +10,7 @@ import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
 import { ShortcutId, useShortcut } from '../utils/keyboard'
 import AppSideBar from './AppSideBar'
+import DropOverlay from './DropOverlay'
 import Editor from './Editor'
 import ErrorBoundary, { MainProcessError, useErrorHandler } from './ErrorBoundary'
 import Library from './Library'
@@ -29,7 +31,7 @@ const AppPanelMap = {
 } as const
 
 const Wrapper = styled.div`
-  ${tw`flex flex-col h-full text-white overflow-y-hidden select-none`}
+  ${tw`flex flex-col h-full text-white overflow-y-hidden select-none outline-none`}
 
   background-color: ${theme('window.background')};
 `
@@ -42,6 +44,7 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handleError = useErrorHandler()
+  const { getRootProps, isDragActive } = useDropzone({ onDrop })
   const { currentPanel, pushToQueue, setCurrentPanel, setCurrentSettingsPanel, setWindowFocus } = useApp()
   const {
     getDestinationSettingsSetter,
@@ -143,8 +146,14 @@ const App: React.FC = () => {
     }
   }
 
+  async function onDrop(files: File[]): Promise<void> {
+    const filePaths = files.map((file) => file.path)
+
+    return getIpcRenderer().invoke('newScreenshotsFromFiles', filePaths)
+  }
+
   return (
-    <Wrapper>
+    <Wrapper {...getRootProps()}>
       <TitleBarProvider>
         <TitleBar />
         <Main>
@@ -152,6 +161,7 @@ const App: React.FC = () => {
           <Content>{AppPanelMap[currentPanel]}</Content>
         </Main>
       </TitleBarProvider>
+      <DropOverlay isDragActive={isDragActive} />
     </Wrapper>
   )
 }

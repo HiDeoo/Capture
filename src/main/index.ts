@@ -1,6 +1,5 @@
 import { spawn } from 'child_process'
 import type { FSWatcher } from 'chokidar'
-import dateFormat from 'date-fns/format'
 import {
   app,
   BrowserWindow,
@@ -13,6 +12,7 @@ import {
 } from 'electron'
 import isDev from 'electron-is-dev'
 import windowStateKeeper from 'electron-window-state'
+import { promises as fs } from 'fs'
 import path from 'path'
 import querystring from 'querystring'
 
@@ -32,7 +32,7 @@ import {
   saveImage,
   setOpenAtLogin,
 } from './ipcHandlers'
-import { getElectronPrebuiltPath, getRendererUri } from './paths'
+import { getElectronPrebuiltPath, getNewScreenshotPath, getRendererUri } from './paths'
 import { ensurePermissions } from './permissions'
 import { createTray } from './tray'
 import { installCreatedFileWatcher, uninstallFileWatcher } from './watcher'
@@ -181,6 +181,7 @@ function registerIpcHandlers(): void {
   ipcMain.handle('newCaptureScreenshotShortcut', onNewCaptureScreenshotShortcut)
   ipcMain.handle('newScreenCaptureSounds', onNewScreenCaptureSounds)
   ipcMain.handle('newScreenshotDirectory', onNewScreenshotDirectory)
+  ipcMain.handle('newScreenshotsFromFiles', onNewScreenshotsFromFiles)
   ipcMain.handle('openFile', openFile)
   ipcMain.handle('openUrl', openUrl)
   ipcMain.handle('setOpenAtLogin', setOpenAtLogin)
@@ -203,6 +204,7 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('newCaptureScreenshotShortcut')
   ipcMain.removeHandler('newScreenCaptureSounds')
   ipcMain.removeHandler('newScreenshotDirectory')
+  ipcMain.removeHandler('newScreenshotsFromFiles')
   ipcMain.removeHandler('openFile')
   ipcMain.removeHandler('openUrl')
   ipcMain.removeHandler('setOpenAtLogin')
@@ -229,10 +231,7 @@ function captureScreenshot(): void {
     return
   }
 
-  const now = new Date()
-  const filename = `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss')}.png`
-
-  const args = ['-i', '-o', path.join(screenshotDirectory, filename)]
+  const args = ['-i', '-o', getNewScreenshotPath(screenshotDirectory)]
 
   if (!playScreenCaptureSounds) {
     args.unshift('-x')
@@ -296,6 +295,28 @@ async function onNewScreenshotDirectory(event: IpcMainInvokeEvent, directoryPath
     })
   } catch (error) {
     handleError(`The screenshot directory (${screenshotDirectory}) does not exist or is not readable.`, error, window)
+  }
+}
+
+/**
+ * Triggered when files are dropped on the application in order to be shared as screenshots.
+ * @param paths - The file paths.
+ */
+export async function onNewScreenshotsFromFiles(event: IpcMainInvokeEvent, paths: string[]): Promise<void> {
+  const errorMessage = 'Something went wrong while capturing a file.'
+
+  if (!screenshotDirectory) {
+    handleError(errorMessage, new Error('No screenshot directory provided.'), window)
+
+    return
+  }
+
+  try {
+    for (const filePath of paths) {
+      await fs.copyFile(filePath, getNewScreenshotPath(screenshotDirectory))
+    }
+  } catch (error) {
+    handleError(errorMessage, error, window)
   }
 }
 

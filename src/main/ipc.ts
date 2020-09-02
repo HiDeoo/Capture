@@ -28,6 +28,7 @@ type CaptureRendererToMainEvents = {
   newCaptureScreenshotShortcut: (shortcut: string) => void
   newScreenCaptureSounds: (enabled: boolean) => void
   newScreenshotDirectory: (path: string) => void
+  newScreenshotsFromFiles: (paths: string[]) => void
   openFile: (path: string) => string
   openUrl: (url: string) => void
   setOpenAtLogin: (open: boolean) => void

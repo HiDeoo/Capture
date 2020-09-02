@@ -1,3 +1,4 @@
+import dateFormat from 'date-fns/format'
 import isDev from 'electron-is-dev'
 import path from 'path'
 
@@ -27,4 +28,15 @@ export function getMainProcessImagePath(image: string): string {
   const extraSegments = isDev ? ['..', 'public'] : []
 
   return path.join(__dirname, '..', ...extraSegments, 'images', image)
+}
+
+/**
+ * Returns the path to use for a new screenshot.
+ * @param  directory - The screenshot directory.
+ * @return The new path.
+ */
+export function getNewScreenshotPath(directory: string): string {
+  const now = new Date()
+
+  return path.join(directory, `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss:SSS')}.png`)
 }
