@@ -44,7 +44,6 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handleError = useErrorHandler()
-  const { getRootProps, isDragActive } = useDropzone({ accept: 'image/*', onDrop })
   const { currentPanel, pushToQueue, setCurrentPanel, setCurrentSettingsPanel, setWindowFocus } = useApp()
   const {
     getDestinationSettingsSetter,
@@ -54,6 +53,14 @@ const App: React.FC = () => {
     setScreenshotDirectory,
     shortcuts,
   } = useSettings()
+
+  const { getRootProps, isDragActive } = useDropzone({
+    accept: 'image/*',
+    multiple: true,
+    noClick: true,
+    noKeyboard: true,
+    onDrop,
+  })
 
   const captureScreenshotShortcut = shortcuts[ShortcutId.CaptureScreenshot]
 
