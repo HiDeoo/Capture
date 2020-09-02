@@ -8,6 +8,7 @@ import { getIpcRenderer } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { mergeImages } from '../utils/image'
 import { getEditorShortcut, useShortcut } from '../utils/keyboard'
+import { getFileExtension } from '../utils/string'
 import type { Color } from './ColorSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
@@ -42,6 +43,9 @@ const Editor: React.FC = () => {
 
   const [destinationId, setDestinationId] = useState(defaultDestinationId)
   const [imageDimensions, setImageDimensions] = useState<Optional<ImageDimensions>>()
+
+  // Annotations should be disabled for GIFs.
+  const disableAnnotations = getFileExtension(pendingScreenshot.path) === 'gif'
 
   const destination = getDestination(destinationId)
   const [shareOptions, setShareOptions] = useState<ShareOptions>(
@@ -211,18 +215,19 @@ const Editor: React.FC = () => {
         shareOptions={shareOptions}
         destinationId={destinationId}
         {...getImageEditorStateProps()}
+        disableAnnotations={disableAnnotations}
         onChangeDestination={onChangeDestination}
         setShareOption={setDestinationShareOption}
       />
       <Content>
         <ImageEditor
-          readonly={isUiLocked}
           image={imageEditorImage}
           sketch={imageEditorSketch}
           key={pendingScreenshot.path}
           onLoaded={onImageEditorLoaded}
           {...getImageEditorStateProps()}
           path={`file://${pendingScreenshot.path}`}
+          readonly={isUiLocked || disableAnnotations}
         />
       </Content>
       <EditorInfoBar

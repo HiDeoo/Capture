@@ -32,6 +32,7 @@ function lineWidthRenderer(item: LineWidth, isOption: boolean): React.ReactNode 
 const EditorToolBar: React.FC<Props> = ({
   addText,
   destinationId,
+  disableAnnotations,
   imageEditorDispatch,
   imageEditorState,
   locked,
@@ -69,29 +70,36 @@ const EditorToolBar: React.FC<Props> = ({
 
   return (
     <ToolBar top>
-      <ToolBarButtonGroup onClick={onClickTool} activeId={imageEditorState.tool} disabled={locked}>
+      <ToolBarButtonGroup
+        onClick={onClickTool}
+        activeId={imageEditorState.tool}
+        disabled={locked || disableAnnotations}
+      >
         <ToolBarButton symbol={IconSymbol.Scribble} id={Tools.Pencil} />
         <ToolBarButton symbol={IconSymbol.ArrowUpRight} id={Tools.Arrow} />
         <ToolBarButton symbol={IconSymbol.Rectangle} id={Tools.Rectangle} />
         <ToolBarButton symbol={IconSymbol.Circle} id={Tools.Circle} />
         <ToolBarButton symbol={IconSymbol.Minus} id={Tools.Line} />
       </ToolBarButtonGroup>
-      <ToolBarButton symbol={IconSymbol.TextCursor} onClick={onClickAddText} />
+      <ToolBarButton disabled={locked || disableAnnotations} symbol={IconSymbol.TextCursor} onClick={onClickAddText} />
       <Select
         items={LINE_WIDTHS}
         onChange={onChangeLineWidth}
         itemRenderer={lineWidthRenderer}
+        disabled={locked || disableAnnotations}
         selectedItem={imageEditorState.lineWidth}
       />
       <ColorSelect
         type={ColorType.Border}
         onChangeColor={onChangeLineColor}
+        disabled={locked || disableAnnotations}
         selectedColor={imageEditorState.lineColor}
       />
       <ColorSelect
         allowTransparent
         type={ColorType.Background}
         onChangeColor={onChangeFillColor}
+        disabled={locked || disableAnnotations}
         selectedColor={imageEditorState.fillColor}
       />
       <div tw="flex-1" />
@@ -118,6 +126,7 @@ export default observer(EditorToolBar)
 interface Props extends ToolbarLockedProps, ImageEditorStateProps {
   addText: (color: Color) => void
   destinationId: DestinationId
+  disableAnnotations: boolean
   onChangeDestination: (destinationId: DestinationId) => void
   setShareOption: ShareOptionSetter
   shareOptions: ShareOptions

@@ -41,6 +41,15 @@ export function getPathComponents(path: string): string[] {
 }
 
 /**
+ * Returns the file extension from a path.
+ * @param  path - The path.
+ * @return The file extension.
+ */
+export function getFileExtension(path: string): string {
+  return path.split('.').pop()?.toLowerCase() ?? ''
+}
+
+/**
  * Converts a base64 string to a base64url string.
  * @see https://tools.ietf.org/html/rfc4648#section-5
  * @param  base64 - A base64 string.

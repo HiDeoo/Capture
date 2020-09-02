@@ -240,7 +240,7 @@ const ImageEditor: React.FC<Props> = ({
 
   function onBackspaceOrDeleteShortcut(): void {
     // Backspace & delete should be usable when editing text.
-    if (isEditingText) {
+    if (isEditingText || readonly) {
       return
     }
 
@@ -252,7 +252,7 @@ const ImageEditor: React.FC<Props> = ({
 
   function onDigitShortcut(event: KeyboardEvent): void {
     // This should not impact text editing.
-    if (isEditingText) {
+    if (isEditingText || readonly) {
       return
     }
 
@@ -289,6 +289,10 @@ const ImageEditor: React.FC<Props> = ({
   }
 
   function onEscapeShortcut(): void {
+    if (readonly) {
+      return
+    }
+
     // Disable the current tool.
     imageEditorDispatch({ type: 'set_tool', tool: undefined })
 

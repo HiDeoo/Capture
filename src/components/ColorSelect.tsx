@@ -65,7 +65,13 @@ const TransparentPreview = styled.div`
   }
 `
 
-const ColorSelect: React.FC<Props> = ({ allowTransparent = false, onChangeColor, selectedColor, type }) => {
+const ColorSelect: React.FC<Props> = ({
+  allowTransparent = false,
+  disabled = false,
+  onChangeColor,
+  selectedColor,
+  type,
+}) => {
   function colorRenderer(color: Optional<Color>, isOption: boolean): React.ReactNode {
     if (!isOption) {
       if (type === ColorType.Border) {
@@ -107,6 +113,7 @@ const ColorSelect: React.FC<Props> = ({ allowTransparent = false, onChangeColor,
   return (
     <Select
       onChange={onChange}
+      disabled={disabled}
       selectedItem={selectedItem}
       itemRenderer={colorRenderer}
       items={allowTransparent ? [TransparentColor, ...COLORS] : COLORS}
@@ -126,6 +133,7 @@ const TransparentBackground: React.FC = () => {
 
 interface Props {
   allowTransparent?: boolean
+  disabled?: boolean
   onChangeColor: (color: Optional<Color>) => void
   selectedColor: Optional<Color>
   type: ColorType
