@@ -66,7 +66,7 @@ const CloseButton = styled(Button)`
   }
 `
 
-const FileName = tw.div`font-bold text-lg`
+const Filename = tw.div`font-bold text-lg`
 
 const Preview = styled(Img)`
   ${tw`border-4 border-solid self-stretch max-w-full max-h-full inline-block`}
@@ -163,7 +163,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
           disabled={entry.deleted.disk && entry.deleted.destination}
         />
       </Buttons>
-      <FileName>{filename}</FileName>
+      <Filename>{filename}</Filename>
       <Box title="Informations">
         <BoxEntry
           label="Shared on"
