@@ -1,5 +1,5 @@
 import filesize from 'filesize'
-import React from 'react'
+import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
@@ -84,7 +84,7 @@ const Buttons = styled.div`
 `
 
 const LibraryPanel: React.FC<Props> = ({ selectEntry, selection }) => {
-  const nodeRef = React.useRef(null)
+  const nodeRef = useRef(null)
   const visible = typeof selection.current !== 'undefined'
   const entry = visible ? selection.current : selection.previous
 

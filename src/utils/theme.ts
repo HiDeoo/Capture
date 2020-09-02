@@ -20,6 +20,7 @@ const color = {
  */
 const easing = {
   easeInCubic: 'cubic-bezier(0.32, 0, 0.67, 0)',
+  easeOutBack: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
   easeOutCubic: 'cubic-bezier(0.33, 1, 0.68, 1)',
 }
 
@@ -55,6 +56,14 @@ export default {
       optionSize: '19px',
       size: '15px',
       transparentBackground: '#ff4e44',
+    },
+  },
+  dropOverlay: {
+    background: 'rgba(0, 0, 0, 0.85)',
+    color: 'rgba(255, 255, 255, 0.8)',
+    inactive: {
+      background: 'rgba(0, 0, 0, 0)',
+      color: 'rgba(255, 255, 255, 0)',
     },
   },
   editor: {

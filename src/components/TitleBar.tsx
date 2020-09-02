@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ifProp, theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
@@ -18,7 +18,7 @@ const TitleBarContext = React.createContext<TitleBarContext>({ titleBarContent: 
 /**
  * A hook to access the title bar context.
  */
-export const useTitleBar = (): TitleBarContext => React.useContext(TitleBarContext)
+export const useTitleBar = (): TitleBarContext => useContext(TitleBarContext)
 
 /**
  * TitleBar context provider component.

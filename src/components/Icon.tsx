@@ -32,6 +32,7 @@ export enum IconSymbol {
   RectangleAndPaperclip = '􀒖',
   Scribble = '􀓨',
   TextCursor = '􀅫',
+  TrayAndArrowDownFill = '􀈨',
   XMark = '􀆄',
 }
 

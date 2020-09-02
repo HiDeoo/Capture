@@ -170,7 +170,7 @@ const App: React.FC = () => {
           <Content>{AppPanelMap[currentPanel]}</Content>
         </Main>
       </TitleBarProvider>
-      <DropOverlay isDragActive={isDragActive} />
+      <DropOverlay active={isDragActive} />
     </Wrapper>
   )
 }

@@ -43,7 +43,7 @@ const Overlay = styled.div`
 
     & ${Wrapper} {
       transform: scale(1);
-      transition: transform ${transitionEnterDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform ${transitionEnterDuration}ms ${theme('easing.easeOutBack')};
     }
   }
 

@@ -3,7 +3,7 @@ import 'mobx-react-lite/batchingForReactDom'
 import localforage from 'localforage'
 import { configure } from 'mobx'
 import { AsyncStorage, AsyncTrunk } from 'mobx-sync'
-import React from 'react'
+import { createContext, useContext } from 'react'
 
 import AppStore from './app'
 import HistoryStore from './history'
@@ -18,16 +18,16 @@ const rootStore = new RootStore()
 /**
  * Various React contexts containing the individual stores.
  */
-const AppContext = React.createContext(rootStore.appStore)
-const HistoryContext = React.createContext(rootStore.historyStore)
-const SettingsContext = React.createContext(rootStore.settingsStore)
+const AppContext = createContext(rootStore.appStore)
+const HistoryContext = createContext(rootStore.historyStore)
+const SettingsContext = createContext(rootStore.settingsStore)
 
 /**
  * Various hooks to access the stores using React context.
  */
-export const useApp = (): AppStore => React.useContext(AppContext)
-export const useHistory = (): HistoryStore => React.useContext(HistoryContext)
-export const useSettings = (): SettingsStore => React.useContext(SettingsContext)
+export const useApp = (): AppStore => useContext(AppContext)
+export const useHistory = (): HistoryStore => useContext(HistoryContext)
+export const useSettings = (): SettingsStore => useContext(SettingsContext)
 
 /**
  * The asynchronous trunk used to auto load/persist parts of the store to local storage.
