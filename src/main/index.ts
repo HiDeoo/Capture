@@ -160,7 +160,7 @@ async function createWindow(): Promise<void> {
   }
 
   // Create the application tray.
-  appTray = createTray(window)
+  appTray = createTray(window, onNewScreenshotsFromFiles)
 
   // Check permissions.
   ensurePermissions()
@@ -302,7 +302,7 @@ async function onNewScreenshotDirectory(event: IpcMainInvokeEvent, directoryPath
  * Triggered when files are dropped on the application in order to be shared as screenshots.
  * @param paths - The file paths.
  */
-export async function onNewScreenshotsFromFiles(event: IpcMainInvokeEvent, paths: string[]): Promise<void> {
+export async function onNewScreenshotsFromFiles(event: Optional<IpcMainInvokeEvent>, paths: string[]): Promise<void> {
   const errorMessage = 'Something went wrong while capturing a file.'
 
   if (!screenshotDirectory) {
