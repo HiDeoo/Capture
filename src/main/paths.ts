@@ -33,10 +33,11 @@ export function getMainProcessImagePath(image: string): string {
 /**
  * Returns the path to use for a new screenshot.
  * @param  directory - The screenshot directory.
+ * @param  ext - The file extension.
  * @return The new path.
  */
-export function getNewScreenshotPath(directory: string): string {
+export function getNewScreenshotPath(directory: string, ext = '.png'): string {
   const now = new Date()
 
-  return path.join(directory, `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss:SSS')}.png`)
+  return path.join(directory, `Screenshot ${dateFormat(now, 'y-MM-dd')} at ${dateFormat(now, 'HH:mm:ss:SSS')}${ext}`)
 }

@@ -2,6 +2,7 @@ import accept from 'attr-accept'
 import { BrowserWindow, Menu, Tray } from 'electron'
 import { lookup } from 'mime-types'
 
+import { ACCEPTED_MIME_TYPES } from './files'
 import { getMainProcessImagePath } from './paths'
 
 /**
@@ -33,7 +34,7 @@ export function createTray(
         return false
       }
 
-      return accept({ name: file, type }, 'image/*')
+      return accept({ name: file, type }, ACCEPTED_MIME_TYPES)
     })
 
     if (acceptedFiles.length > 0) {

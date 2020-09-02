@@ -5,6 +5,7 @@ import { theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
 import { getDestination } from '../destinations'
+import { ACCEPTED_MIME_TYPES } from '../main/files'
 import { getIpcRenderer, IpcRendererEvent } from '../main/ipc'
 import { useApp, useHistory, useSettings } from '../store'
 import { Panel } from '../store/app'
@@ -55,7 +56,7 @@ const App: React.FC = () => {
   } = useSettings()
 
   const { getRootProps, isDragActive } = useDropzone({
-    accept: 'image/*',
+    accept: ACCEPTED_MIME_TYPES,
     multiple: true,
     noClick: true,
     noKeyboard: true,

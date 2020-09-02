@@ -313,7 +313,9 @@ export async function onNewScreenshotsFromFiles(event: Optional<IpcMainInvokeEve
 
   try {
     for (const filePath of paths) {
-      await fs.copyFile(filePath, getNewScreenshotPath(screenshotDirectory))
+      const { ext } = path.parse(filePath)
+
+      await fs.copyFile(filePath, getNewScreenshotPath(screenshotDirectory, ext))
     }
   } catch (error) {
     handleError(errorMessage, error, window)
