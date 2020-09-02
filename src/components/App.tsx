@@ -44,7 +44,7 @@ const App: React.FC = () => {
 
   const { selectEntry } = useHistory()
   const handleError = useErrorHandler()
-  const { getRootProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, isDragActive } = useDropzone({ accept: 'image/*', onDrop })
   const { currentPanel, pushToQueue, setCurrentPanel, setCurrentSettingsPanel, setWindowFocus } = useApp()
   const {
     getDestinationSettingsSetter,
@@ -147,9 +147,11 @@ const App: React.FC = () => {
   }
 
   async function onDrop(files: File[]): Promise<void> {
-    const filePaths = files.map((file) => file.path)
+    if (files.length > 0) {
+      const filePaths = files.map((file) => file.path)
 
-    return getIpcRenderer().invoke('newScreenshotsFromFiles', filePaths)
+      return getIpcRenderer().invoke('newScreenshotsFromFiles', filePaths)
+    }
   }
 
   return (
