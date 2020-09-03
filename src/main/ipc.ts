@@ -20,6 +20,7 @@ type CaptureRendererToMainEvents = {
   captureScreenshot: () => void
   chooseDirectory: (message?: string) => Optional<string>
   closeWindow: () => void
+  copyImageToClipboard: (path: string) => void
   copyTextToClipboard: (text: string) => void
   deleteFile: (path: string) => void
   getBugReportInfos: () => { os: string }

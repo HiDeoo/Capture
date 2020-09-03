@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 
   background-color: ${theme('bar.background')};
   border-color: ${theme('bar.border')};
-  width: 450px;
+  width: 520px;
 
   &.${transitionName}-enter {
     transform: translateX(100%);
@@ -130,6 +130,10 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
     return getIpcRenderer().invoke('copyTextToClipboard', entry.path)
   }
 
+  function copyImage(): Promise<void> {
+    return getIpcRenderer().invoke('copyImageToClipboard', entry.path)
+  }
+
   function openDeleteModal(): void {
     openModal(true)
   }
@@ -156,6 +160,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
           disabled={entry.deleted.disk}
           symbol={IconSymbol.RectangleAndPaperclip}
         />
+        <PanelButton label="Copy image" onClick={copyImage} disabled={entry.deleted.disk} symbol={IconSymbol.Photo} />
         <PanelButton
           label="Delete"
           onClick={openDeleteModal}
@@ -242,7 +247,7 @@ const BoxEntry: React.FC<BoxEntryProps> = ({ label, value }) => {
 }
 
 const StyledButton = styled(Button)`
-  ${tw`mb-5 mx-2`}
+  ${tw`mb-5 mx-1`}
 
   color: ${theme('library.panel.button.color')};
   font-size: 13px;

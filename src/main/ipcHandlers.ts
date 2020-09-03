@@ -1,4 +1,4 @@
-import { app, clipboard, dialog, IpcMainInvokeEvent, shell } from 'electron'
+import { app, clipboard, dialog, IpcMainInvokeEvent, nativeImage, shell } from 'electron'
 import { constants, promises as fs } from 'fs'
 import os from 'os'
 import path from 'path'
@@ -30,6 +30,14 @@ export async function chooseDirectory(event: IpcMainInvokeEvent, message?: strin
  */
 export function copyTextToClipboard(event: IpcMainInvokeEvent, text: string): void {
   clipboard.writeText(text)
+}
+
+/**
+ * Copies an image to the clipboard.
+ * @param filePath - The image path.
+ */
+export function copyImageToClipboard(event: IpcMainInvokeEvent, filePath: string): void {
+  clipboard.writeImage(nativeImage.createFromPath(filePath))
 }
 
 /**

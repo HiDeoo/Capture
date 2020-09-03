@@ -21,6 +21,7 @@ import { handleError, handleFatalError } from './errors'
 import { getIpcMain, sendToRenderer } from './ipc'
 import {
   chooseDirectory,
+  copyImageToClipboard,
   copyTextToClipboard,
   deleteFile,
   getBugReportInfos,
@@ -173,6 +174,7 @@ function registerIpcHandlers(): void {
   ipcMain.handle('captureScreenshot', captureScreenshot)
   ipcMain.handle('chooseDirectory', chooseDirectory)
   ipcMain.handle('closeWindow', onWindowClose)
+  ipcMain.handle('copyImageToClipboard', copyImageToClipboard)
   ipcMain.handle('copyTextToClipboard', copyTextToClipboard)
   ipcMain.handle('deleteFile', deleteFile)
   ipcMain.handle('getBugReportInfos', getBugReportInfos)
@@ -196,6 +198,7 @@ function unregisterIpcHandlers(): void {
   ipcMain.removeHandler('captureScreenshot')
   ipcMain.removeHandler('chooseDirectory')
   ipcMain.removeHandler('closeWindow')
+  ipcMain.removeHandler('copyImageToClipboard')
   ipcMain.removeHandler('copyTextToClipboard')
   ipcMain.removeHandler('deleteFile')
   ipcMain.removeHandler('getBugReportInfos')
