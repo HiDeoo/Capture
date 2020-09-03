@@ -110,7 +110,7 @@ const TitleBar: React.FC = () => {
           <TitleBarButton
             symbol={IconSymbol.Camera}
             onClick={onClickCaptureButton}
-            tooltip={`Share - ${formatShortcut(shortcuts[ShortcutId.CaptureScreenshot])}`}
+            tooltip={`Capture - ${formatShortcut(shortcuts[ShortcutId.CaptureScreenshot])}`}
           />
         )}
       </Main>
