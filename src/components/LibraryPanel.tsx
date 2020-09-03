@@ -186,7 +186,7 @@ const Panel: React.FC<PanelProps> = ({ entry, selectEntry }) => {
         <BoxEntry label="Path" value={!entry.deleted.disk ? parentPath : 'Deleted from disk'} />
       </Box>
       <Box visible={!entry.deleted.disk} className="previewBox">
-        <Preview src={`file://${entry.path}`} />
+        <Preview src={`file://${entry.path}`} draggable />
       </Box>
       <ErrorBoundary>
         <DeleteModal key={entry.id} opened={isModalOpened} open={openModal} entry={entry} />

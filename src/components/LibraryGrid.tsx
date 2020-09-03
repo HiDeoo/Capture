@@ -155,7 +155,7 @@ const LibraryGridEntry: React.FC<LibraryGridEntryProps> = observer(
             <Icon symbol={IconSymbol.ExclamationMarkCircle} />
           </Deleted>
         ) : (
-          <StyledImg src={`file://${entry.path}`} onError={onError} />
+          <StyledImg src={`file://${entry.path}`} onError={onError} draggable />
         )}
       </Entry>
     )
