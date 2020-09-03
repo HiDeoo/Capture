@@ -161,7 +161,7 @@ async function createWindow(): Promise<void> {
   }
 
   // Create the application tray.
-  appTray = createTray(window, onNewScreenshotsFromFiles)
+  appTray = createTray(window, captureScreenshot, onNewScreenshotsFromFiles)
 
   // Check permissions.
   ensurePermissions()
