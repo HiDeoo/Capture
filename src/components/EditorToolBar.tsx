@@ -9,7 +9,7 @@ import { useSettings } from '../store'
 import ColorSelect, { Color, ColorType } from './ColorSelect'
 import DestinationSelect from './DestinationSelect'
 import { IconSymbol } from './Icon'
-import { ImageEditorStateProps, LINE_WIDTHS, LineWidth } from './ImageEditor'
+import { CustomTools, EditorTools, ImageEditorStateProps, LINE_WIDTHS, LineWidth } from './ImageEditor'
 import Select from './Select'
 import Svg from './Svg'
 import ToolBar, { ToolbarLockedProps } from './ToolBar'
@@ -45,8 +45,10 @@ const EditorToolBar: React.FC<Props> = ({
   const destination = getDestination(destinationId)
   const DestinationToolBar = destination.getToolBar && destination.getToolBar()
 
+  const isRedacting = imageEditorState.tool === CustomTools.Redact
+
   function onClickTool(id: Optional<string>): void {
-    imageEditorDispatch({ type: 'set_tool', tool: id as Optional<Tools> })
+    imageEditorDispatch({ type: 'set_tool', tool: id as Optional<EditorTools> })
   }
 
   function onChangeLineWidth(newLineWidth: LineWidth): void {
@@ -80,27 +82,28 @@ const EditorToolBar: React.FC<Props> = ({
         <ToolBarButton symbol={IconSymbol.Rectangle} id={Tools.Rectangle} />
         <ToolBarButton symbol={IconSymbol.Circle} id={Tools.Circle} />
         <ToolBarButton symbol={IconSymbol.Minus} id={Tools.Line} />
+        <ToolBarButton symbol={IconSymbol.PencilTip} id={CustomTools.Redact} />
       </ToolBarButtonGroup>
       <ToolBarButton disabled={locked || disableAnnotations} symbol={IconSymbol.TextCursor} onClick={onClickAddText} />
       <Select
         items={LINE_WIDTHS}
         onChange={onChangeLineWidth}
         itemRenderer={lineWidthRenderer}
-        disabled={locked || disableAnnotations}
         selectedItem={imageEditorState.lineWidth}
+        disabled={locked || disableAnnotations || isRedacting}
       />
       <ColorSelect
         type={ColorType.Border}
         onChangeColor={onChangeLineColor}
-        disabled={locked || disableAnnotations}
         selectedColor={imageEditorState.lineColor}
+        disabled={locked || disableAnnotations || isRedacting}
       />
       <ColorSelect
         allowTransparent
         type={ColorType.Background}
         onChangeColor={onChangeFillColor}
-        disabled={locked || disableAnnotations}
         selectedColor={imageEditorState.fillColor}
+        disabled={locked || disableAnnotations || isRedacting}
       />
       <div tw="flex-1" />
       {DestinationToolBar && (

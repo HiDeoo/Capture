@@ -49,6 +49,7 @@ export const EditorShortcuts: ShortcutList = {
   editor_rectangle: { label: 'Rectangle', shortcut: '3' },
   editor_circle: { label: 'Circle', shortcut: '4' },
   editor_line: { label: 'Line', shortcut: '5' },
+  editor_redact: { label: 'Redact', shortcut: '6' },
   editor_delete_selection: { label: 'Delete selection', shortcut: 'Backspace' },
   editor_undo: { label: 'Undo', shortcut: 'Meta+Z' },
   editor_redo: { label: 'Redo', shortcut: 'Meta+Shift+Z' },

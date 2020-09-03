@@ -21,6 +21,10 @@ const Layers = styled.div`
   }
 `
 
+export enum CustomTools {
+  Redact = 'redact',
+}
+
 export const LINE_WIDTHS: LineWidth[] = [
   { svgIcon: 'lineWidthXs', value: 2 },
   { svgIcon: 'lineWidthSm', value: 4 },
@@ -30,12 +34,13 @@ export const LINE_WIDTHS: LineWidth[] = [
 ]
 
 export type ImageEditorAction =
-  | { type: 'set_tool'; tool: Optional<Tools> }
+  | { type: 'set_tool'; tool: Optional<EditorTools>; self?: boolean }
   | { type: 'set_line_width'; width: LineWidth }
   | { type: 'set_line_color'; color: Color }
   | { type: 'set_fill_color'; color: Optional<Color> }
 
 const imageEditorInitialState: ImageEditorState = {
+  _self: false,
   fillColor: undefined,
   lineColor: COLORS[0],
   lineWidth: LINE_WIDTHS[1],
@@ -45,7 +50,7 @@ const imageEditorInitialState: ImageEditorState = {
 function imageEditorReducer(state: ImageEditorState, action: ImageEditorAction): ImageEditorState {
   switch (action.type) {
     case 'set_tool': {
-      return { ...state, tool: action.tool ?? imageEditorInitialState.tool }
+      return { ...state, tool: action.tool ?? imageEditorInitialState.tool, _self: action.self ?? false }
     }
     case 'set_line_width': {
       return { ...state, lineWidth: action.width }
@@ -145,7 +150,7 @@ const ImageEditor: React.FC<Props> = ({
           // When the editor is transitionning in readonly mode, we save the current tool (to restore it when disabling
           // the readonly mode) and set the current tool to the default one.
           readOnlyPreviousTool.current = imageEditorState.tool
-          imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool })
+          imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool, self: true })
           requestAnimationFrame(() => {
             if (sketch.current) {
               // We also manually update the canvas cursor so it doesn't indicate that some actions are possible while the
@@ -155,17 +160,24 @@ const ImageEditor: React.FC<Props> = ({
           })
         } else {
           // When disabling the readonly mode, restore the previously saved tool that was used before.
-          imageEditorDispatch({ type: 'set_tool', tool: readOnlyPreviousTool.current })
+          imageEditorDispatch({ type: 'set_tool', tool: readOnlyPreviousTool.current, self: true })
         }
       } else if (
         previous.lineWidth.value !== imageEditorState.lineWidth.value ||
-        previous.fillColor !== imageEditorState.fillColor
+        previous.fillColor !== imageEditorState.fillColor ||
+        (previous.tool !== CustomTools.Redact &&
+          imageEditorState.tool === CustomTools.Redact &&
+          imageEditorState._self === false) ||
+        (previous.tool === CustomTools.Redact &&
+          imageEditorState.tool !== CustomTools.Redact &&
+          imageEditorState._self === false)
       ) {
-        // When updating the line width or fill color, we need to reset the current tool to the default one and
-        // immediately restore back the current tool for the changes to take effect.
-        imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool })
+        // When updating the line width or fill color (which is something also happening when the redact tool is used),
+        // we need to reset the current tool to the default one and immediately restore back the current tool for the
+        // changes to take effect.
+        imageEditorDispatch({ type: 'set_tool', tool: Tools.DefaultTool, self: true })
         requestAnimationFrame(() => {
-          imageEditorDispatch({ type: 'set_tool', tool: imageEditorState.tool })
+          imageEditorDispatch({ type: 'set_tool', tool: imageEditorState.tool, self: true })
         })
       }
     }
@@ -174,6 +186,7 @@ const ImageEditor: React.FC<Props> = ({
     imageEditorState.fillColor,
     imageEditorState.lineWidth,
     imageEditorState.tool,
+    imageEditorState._self,
     previous,
     readonly,
     sketch,
@@ -221,6 +234,7 @@ const ImageEditor: React.FC<Props> = ({
     Digit3: onDigitShortcut,
     Digit4: onDigitShortcut,
     Digit5: onDigitShortcut,
+    Digit6: onDigitShortcut,
     Escape: onEscapeShortcut,
   })
 
@@ -277,10 +291,14 @@ const ImageEditor: React.FC<Props> = ({
         toggleTool(Tools.Line)
         break
       }
+      case 'Digit6': {
+        toggleTool(CustomTools.Redact)
+        break
+      }
     }
   }
 
-  function toggleTool(tool: Tools): void {
+  function toggleTool(tool: EditorTools): void {
     if (imageEditorState.tool === tool) {
       imageEditorDispatch({ type: 'set_tool', tool: undefined })
     } else {
@@ -307,6 +325,19 @@ const ImageEditor: React.FC<Props> = ({
     }
   }
 
+  function getSketchFieldProps(): { fillColor?: string; lineColor: string; lineWidth: number; tool: Tools } {
+    const fillColor = isNativeTool(imageEditorState.tool) ? imageEditorState.fillColor : COLORS[COLORS.length - 1]
+    const lineWidth = isNativeTool(imageEditorState.tool) ? imageEditorState.lineWidth.value : 0
+    const tool = isNativeTool(imageEditorState.tool) ? imageEditorState.tool : Tools.Rectangle
+
+    return {
+      fillColor,
+      lineColor: imageEditorState.lineColor,
+      lineWidth,
+      tool,
+    }
+  }
+
   return (
     <Layers>
       <Img src={path} onLoad={onImageLoaded} ref={image} />
@@ -315,14 +346,20 @@ const ImageEditor: React.FC<Props> = ({
           ref={setSketchRef}
           width={imageDimensions?.width}
           height={imageDimensions?.height}
-          tool={imageEditorState.tool}
-          fillColor={imageEditorState.fillColor}
-          lineColor={imageEditorState.lineColor}
-          lineWidth={imageEditorState.lineWidth.value}
+          {...getSketchFieldProps()}
         />
       </div>
     </Layers>
   )
+}
+
+/**
+ * Checks if a tool is not a custom tool.
+ * @param  tool - The tool.
+ * @return `true` when the tool is not a custom tool.
+ */
+function isNativeTool(tool: Optional<EditorTools>): tool is Tools {
+  return tool !== CustomTools.Redact
 }
 
 interface Props extends ImageEditorStateProps {
@@ -352,13 +389,16 @@ export interface ImageEditorStateProps {
 }
 
 export interface ImageEditorState {
+  _self: boolean
   fillColor: Optional<Color>
   lineColor: Color
   lineWidth: LineWidth
-  tool: Optional<Tools>
+  tool: Optional<EditorTools>
 }
 
 export interface LineWidth {
   svgIcon: SvgIconName
   value: number
 }
+
+export type EditorTools = Tools | CustomTools

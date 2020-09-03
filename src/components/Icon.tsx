@@ -28,6 +28,7 @@ export enum IconSymbol {
   Paperclip = '􀉢',
   PaperPlane = '􀈟',
   Pencil = '􀈊',
+  PencilTip = '􀒋',
   Photo = '􀏅',
   Rectangle = '􀏃',
   RectangleAndPaperclip = '􀒖',
