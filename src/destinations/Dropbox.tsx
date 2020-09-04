@@ -89,7 +89,7 @@ class Dropbox extends Destination {
    * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
    * @param getSettings - Dropbox settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param setSettings - Dropbox settings setter.
    */
   async share(
     path: string,
@@ -141,7 +141,7 @@ class Dropbox extends Destination {
    * Deletes a file from Dropbox.
    * @param entry - The entry to delete.
    * @param getSettings - Dropbox settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param setSettings - Dropbox settings setter.
    */
   async delete(
     entry: HistoryEntry,
@@ -162,7 +162,7 @@ class Dropbox extends Destination {
   /**
    * Returns the headers to use while communicating with Dropbox.
    * @param getSettings - Dropbox settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param setSettings - Dropbox settings setter.
    * @param apiArgs - API arguments to append to the `Dropbox-API-Arg` header for queries accepting file content in the
    * request body.
    */

@@ -62,7 +62,7 @@ class Imgur extends Destination {
    * @param dimensions - The shared image dimensions.
    * @param shareOptions - The options related to this specific share.
    * @param getSettings - Imgur settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param setSettings - Imgur settings setter.
    */
   async share(
     path: string,
@@ -97,7 +97,7 @@ class Imgur extends Destination {
    * Deletes a file from Imgur.
    * @param entry - The entry to delete.
    * @param getSettings - Imgur settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param setSettings - Imgur settings setter.
    */
   async delete(
     entry: HistoryEntry,
@@ -113,7 +113,7 @@ class Imgur extends Destination {
    * Returns the headers to use while communicating with Imgur.
    * @param anon - Defines if the request should be anonymous or not.
    * @param getSettings - Imgur settings getter.
-   * @param setSettings - A destination settings setter.
+   * @param setSettings - Imgur settings setter.
    */
   async getHeaders(
     anon: boolean,
