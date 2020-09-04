@@ -3,7 +3,9 @@ import React from 'react'
 import { ifProp, theme } from 'styled-tools'
 import tw, { styled } from 'twin.macro'
 
+import { Wrap } from '../utils/react'
 import Icon, { IconSymbol } from './Icon'
+import Tooltip, { TooltipProps } from './Tooltip'
 
 const Wrapper = tw.div`relative`
 
@@ -54,8 +56,12 @@ export function Select<T>({
   onChange,
   selectedItem,
   style,
+  tooltip,
+  tooltipPlacement,
   ...restProps
 }: Props<T>): JSX.Element {
+  const hasTooltip = typeof tooltip !== 'undefined'
+
   const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect<T>({
     items,
     itemToString: internalItemToString,
@@ -81,12 +87,22 @@ export function Select<T>({
     return itemToString(item)
   }
 
+  function wrapWithTooltip(children: React.ReactElement): React.ReactElement {
+    return (
+      <Tooltip content={tooltip} placement={tooltipPlacement} trigger="mouseenter">
+        {children}
+      </Tooltip>
+    )
+  }
+
   return (
     <Wrapper>
-      <Button {...getToggleButtonProps({ disabled })} opened={isOpen} style={style} {...restProps}>
-        {itemRenderer ? itemRenderer(selectedItem, false) : selectedItem}
-        <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} opened={isOpen} />
-      </Button>
+      <Wrap condition={hasTooltip} wrapper={wrapWithTooltip}>
+        <Button {...getToggleButtonProps({ disabled })} opened={isOpen} style={style} {...restProps}>
+          {itemRenderer ? itemRenderer(selectedItem, false) : selectedItem}
+          <StyledIcon symbol={IconSymbol.ChevronDown} disabled={disabled} opened={isOpen} />
+        </Button>
+      </Wrap>
       <Menu {...getMenuProps()} opened={isOpen}>
         {isOpen &&
           items.map((item, index) => (
@@ -114,6 +130,8 @@ interface Props<T> {
   onChange: (item: T) => void
   selectedItem: T
   style?: React.CSSProperties
+  tooltip?: TooltipProps['content']
+  tooltipPlacement?: TooltipProps['placement']
 }
 
 interface OpenedProps {

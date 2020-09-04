@@ -20,11 +20,12 @@ const StyledTippy = styled(Tippy)`
   }
 `
 
-const Tooltip: React.FC<TooltipProps> = ({ children, content, placement = 'top' }) => {
+const Tooltip: React.FC<TooltipProps> = ({ children, content, placement = 'top', trigger = 'mouseenter focus' }) => {
   return (
     <StyledTippy
       delay={[400, 0]}
       ignoreAttributes
+      trigger={trigger}
       content={content}
       arrow={roundArrow}
       placement={placement}
@@ -41,4 +42,5 @@ export interface TooltipProps {
   children: React.ReactElement
   content: React.ReactNode
   placement?: Placement
+  trigger?: string
 }

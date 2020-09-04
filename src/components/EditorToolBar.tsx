@@ -77,22 +77,29 @@ const EditorToolBar: React.FC<Props> = ({
         activeId={imageEditorState.tool}
         disabled={locked || disableAnnotations}
       >
-        <ToolBarButton symbol={IconSymbol.Scribble} id={Tools.Pencil} />
-        <ToolBarButton symbol={IconSymbol.ArrowUpRight} id={Tools.Arrow} />
-        <ToolBarButton symbol={IconSymbol.Rectangle} id={Tools.Rectangle} />
-        <ToolBarButton symbol={IconSymbol.Circle} id={Tools.Circle} />
-        <ToolBarButton symbol={IconSymbol.Minus} id={Tools.Line} />
-        <ToolBarButton symbol={IconSymbol.PencilTip} id={CustomTools.Redact} />
+        <ToolBarButton tooltip="Pencil" symbol={IconSymbol.Scribble} id={Tools.Pencil} />
+        <ToolBarButton tooltip="Arrow" symbol={IconSymbol.ArrowUpRight} id={Tools.Arrow} />
+        <ToolBarButton tooltip="Rectangle" symbol={IconSymbol.Rectangle} id={Tools.Rectangle} />
+        <ToolBarButton tooltip="Circle" symbol={IconSymbol.Circle} id={Tools.Circle} />
+        <ToolBarButton tooltip="Line" symbol={IconSymbol.Minus} id={Tools.Line} />
+        <ToolBarButton tooltip="Redact" symbol={IconSymbol.PencilTip} id={CustomTools.Redact} />
       </ToolBarButtonGroup>
-      <ToolBarButton disabled={locked || disableAnnotations} symbol={IconSymbol.TextCursor} onClick={onClickAddText} />
+      <ToolBarButton
+        tooltip="Text"
+        onClick={onClickAddText}
+        symbol={IconSymbol.TextCursor}
+        disabled={locked || disableAnnotations}
+      />
       <Select
         items={LINE_WIDTHS}
+        tooltip="Border width"
         onChange={onChangeLineWidth}
         itemRenderer={lineWidthRenderer}
         selectedItem={imageEditorState.lineWidth}
         disabled={locked || disableAnnotations || isRedacting}
       />
       <ColorSelect
+        tooltip="Border color"
         type={ColorType.Border}
         onChangeColor={onChangeLineColor}
         selectedColor={imageEditorState.lineColor}
@@ -100,6 +107,7 @@ const EditorToolBar: React.FC<Props> = ({
       />
       <ColorSelect
         allowTransparent
+        tooltip="Fill color"
         type={ColorType.Background}
         onChangeColor={onChangeFillColor}
         selectedColor={imageEditorState.fillColor}

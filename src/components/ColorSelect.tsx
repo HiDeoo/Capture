@@ -5,6 +5,7 @@ import tw, { styled } from 'twin.macro'
 
 import Select from './Select'
 import Svg from './Svg'
+import { TooltipProps } from './Tooltip'
 
 export enum ColorType {
   Background,
@@ -70,6 +71,8 @@ const ColorSelect: React.FC<Props> = ({
   disabled = false,
   onChangeColor,
   selectedColor,
+  tooltip,
+  tooltipPlacement,
   type,
 }) => {
   function colorRenderer(color: Optional<Color>, isOption: boolean): React.ReactNode {
@@ -112,10 +115,12 @@ const ColorSelect: React.FC<Props> = ({
 
   return (
     <Select
+      tooltip={tooltip}
       onChange={onChange}
       disabled={disabled}
       selectedItem={selectedItem}
       itemRenderer={colorRenderer}
+      tooltipPlacement={tooltipPlacement}
       items={allowTransparent ? [TransparentColor, ...COLORS] : COLORS}
     />
   )
@@ -136,6 +141,8 @@ interface Props {
   disabled?: boolean
   onChangeColor: (color: Optional<Color>) => void
   selectedColor: Optional<Color>
+  tooltip?: TooltipProps['content']
+  tooltipPlacement?: TooltipProps['placement']
   type: ColorType
 }
 
