@@ -4,6 +4,7 @@ import tw, { styled } from 'twin.macro'
 
 import Button from './Button'
 import Checkbox from './Checkbox'
+import Input from './Input'
 import Path, { PathProps } from './Path'
 
 const SettingsP = styled.div`
@@ -17,7 +18,7 @@ const SettingsP = styled.div`
 `
 
 const SettingsButton = styled(Button)`
-  ${tw`border border-solid px-4 rounded-md mb-2 mr-2 font-semibold`}
+  ${tw`border border-solid px-4 rounded-md mb-2 mr-2 font-semibold focus:shadow-outline`}
 
   background-color: ${theme('settings.button.background')};
   border-color: ${theme('settings.button.border')};
@@ -96,10 +97,42 @@ const SettingsLoginRequired: React.FC<SettingsLoginRequiredProps> = ({ destinati
   return <SettingsWarning>Sharing screenshots to {destinationName} requires to be logged in.</SettingsWarning>
 }
 
+const SettingsInput = styled(Input)`
+  ${tw`border border-solid px-4 rounded-md mb-2 mr-2 font-medium`}
+
+  background-color: ${theme('settings.button.background')};
+  border-color: ${theme('settings.button.border')};
+  padding-bottom: 7px;
+  padding-top: 7px;
+
+  &:disabled {
+    opacity: 0.6;
+  }
+
+  &:read-only {
+    ${tw`shadow-none cursor-not-allowed text-gray-200`}
+  }
+
+  &[type=submit] {
+    &:hover:not(:disabled) {
+      ${tw`cursor-pointer`}
+
+      background-color: ${theme('settings.button.hover.background')};
+      border-color: ${theme('settings.button.hover.border')};
+      color: ${theme('settings.button.hover.color')};
+    }
+  }
+
+  ${SettingsP} + & {
+    ${tw`mt-3`}
+  }
+`
+
 export {
   SettingsButton as Button,
   SettingsCheckbox as Checkbox,
   SettingsGroup as Group,
+  SettingsInput as Input,
   SettingsLoginRequired as LoginRequired,
   SettingsP as P,
   SettingsPath as Path,

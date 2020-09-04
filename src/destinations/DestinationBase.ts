@@ -1,4 +1,5 @@
 import { addSeconds, formatISO } from 'date-fns'
+import { lookup } from 'mime-types'
 import wretch, { Wretcher } from 'wretch'
 
 import { ErrorHandler } from '../components/ErrorBoundary'
@@ -6,6 +7,7 @@ import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
 import type { HistoryEntry } from '../store/history'
+import { splitFilePath } from '../utils/string'
 
 export type { DestinationToolBarProps, HistoryEntry, SettingsPanelProps }
 
@@ -109,7 +111,11 @@ export default abstract class Destination {
    */
   async getFileBlob(path: string): Promise<Blob> {
     const response = await fetch(`file://${path}`)
-    return response.blob()
+    const blob = await response.blob()
+    const type = lookup(path) || ''
+    const [, filename] = splitFilePath(path)
+
+    return new File([blob], filename, { type })
   }
 
   /**

@@ -1,11 +1,12 @@
 import Destination, { DestinationId, DestinationSettings, GetDestinationSettingsGetter } from './DestinationBase'
 import Dropbox from './Dropbox'
 import Imgur from './Imgur'
+import VgyMe from './VgyMe'
 
 /**
  * Imported destinations.
  */
-const rawDestinations = [Imgur, Dropbox]
+const rawDestinations = [Imgur, Dropbox, VgyMe]
 
 /**
  * A lazy-loaded list of sanitized destinations.
