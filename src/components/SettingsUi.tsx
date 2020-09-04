@@ -88,15 +88,28 @@ const SettingsWarning: React.FC = ({ children }) => {
   return <SettingsWarningWrapper>{children}</SettingsWarningWrapper>
 }
 
+const SettingsLoginRequired: React.FC<SettingsLoginRequiredProps> = ({ destinationName, visible }) => {
+  if (!visible) {
+    return null
+  }
+
+  return <SettingsWarning>Sharing screenshots to {destinationName} requires to be logged in.</SettingsWarning>
+}
+
 export {
   SettingsButton as Button,
   SettingsCheckbox as Checkbox,
   SettingsGroup as Group,
+  SettingsLoginRequired as LoginRequired,
   SettingsP as P,
   SettingsPath as Path,
-  SettingsWarning as Warning,
 }
 
 interface SettingsGroupProps {
   title: string
+}
+
+interface SettingsLoginRequiredProps {
+  destinationName: string
+  visible: boolean
 }
