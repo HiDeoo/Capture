@@ -13,7 +13,7 @@ module.exports = {
   ],
   plugins: ['simple-import-sort'],
   rules: {
-    'simple-import-sort/sort': 'error',
+    'simple-import-sort/sort': 'warn',
     'no-shadow': 'error',
     'no-debugger': 'off',
     'jsx-a11y/accessible-emoji': 'off',
