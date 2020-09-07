@@ -3,16 +3,17 @@ import { nanoid } from 'nanoid'
 import React from 'react'
 import wretch from 'wretch'
 
-import { AppError, ErrorHandler } from '../components/ErrorBoundary'
-import type { ImageDimensions } from '../components/Img'
 import { getPkce, PkceCode } from '../utils/crypto'
 import { splitFilePath } from '../utils/string'
 import Destination, {
+  AppError,
   DestinationConfiguration,
   DestinationSettings,
   DestinationSettingSetter,
   DestinationSettingsGetter,
+  ErrorHandler,
   HistoryEntry,
+  ImageDimensions,
   SettingsPanelProps,
   ShareOptions,
   ShareResponse,

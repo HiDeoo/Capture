@@ -4,8 +4,11 @@ import tw, { styled } from 'twin.macro'
 
 import Button from './Button'
 import Checkbox from './Checkbox'
+import Form from './Form'
 import Input from './Input'
 import Path, { PathProps } from './Path'
+
+export { Form }
 
 const SettingsP = styled.div`
   ${tw`mb-1`}

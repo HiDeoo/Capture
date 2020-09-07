@@ -36,6 +36,10 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
     setOptions((prevOptions) => ({ ...prevOptions, destination: checked }))
   }
 
+  function openUrl(url: string): Promise<void> {
+    return getIpcRenderer().invoke('openUrl', url)
+  }
+
   async function onClickOk(): Promise<void> {
     if (!options.destination && !options.disk) {
       open(false)
@@ -55,7 +59,8 @@ const DeleteModal: React.FC<Props> = ({ entry, open, opened }) => {
         await destination.delete(
           entry,
           getDestinationSettingsGetter(entry.destinationId),
-          getDestinationSettingsSetter(entry.destinationId)
+          getDestinationSettingsSetter(entry.destinationId),
+          openUrl
         )
         markAsDeletedOnDestination(entry)
       }

@@ -2,14 +2,15 @@ import { addSeconds, formatISO } from 'date-fns'
 import { lookup } from 'mime-types'
 import wretch, { Wretcher } from 'wretch'
 
-import { ErrorHandler } from '../components/ErrorBoundary'
+import { AppError, ErrorHandler, ShareError } from '../components/ErrorBoundary'
 import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
 import type { HistoryEntry } from '../store/history'
 import { splitFilePath } from '../utils/string'
 
-export type { DestinationToolBarProps, HistoryEntry, SettingsPanelProps }
+export type { DestinationToolBarProps, ErrorHandler, HistoryEntry, ImageDimensions, SettingsPanelProps }
+export { AppError, ShareError }
 
 /**
  * Abstract definition of a destination.
@@ -51,11 +52,13 @@ export default abstract class Destination {
    * @param entry - The entry to delete.
    * @param getSettings - A destination settings getter.
    * @param setSettings - A destination settings setter.
+   * @param openUrl - Function to open an URL in the default browser.
    */
   abstract delete(
     entry: HistoryEntry,
     getSettings: DestinationSettingsGetter,
-    setSettings: DestinationSettingSetter
+    setSettings: DestinationSettingSetter,
+    openUrl: (url: string) => Promise<void>
   ): Promise<void>
 
   /**

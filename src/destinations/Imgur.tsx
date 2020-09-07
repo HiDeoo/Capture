@@ -1,7 +1,6 @@
 import { addMonths, formatISO, isAfter, parseISO } from 'date-fns'
 import React from 'react'
 
-import type { ImageDimensions } from '../components/Img'
 import Destination, {
   DestinationConfiguration,
   DestinationSettings,
@@ -9,6 +8,7 @@ import Destination, {
   DestinationSettingsGetter,
   DestinationToolBarProps,
   HistoryEntry,
+  ImageDimensions,
   SettingsPanelProps,
   ShareOptions,
   ShareResponse,

@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 
-import { ShareError } from '../components/ErrorBoundary'
-import Form from '../components/Form'
-import type { ImageDimensions } from '../components/Img'
-import { getIpcRenderer } from '../main/ipc'
 import Destination, {
   DestinationConfiguration,
   DestinationSettings,
   DestinationSettingSetter,
   DestinationSettingsGetter,
   HistoryEntry,
+  ImageDimensions,
   SettingsPanelProps,
+  ShareError,
   ShareOptions,
   ShareResponse,
 } from './DestinationBase'
@@ -119,17 +117,19 @@ class VgyMe extends Destination {
    * @param entry - The entry to delete.
    * @param getSettings - Vgy.me settings getter.
    * @param setSettings - Vgy.me settings setter.
+   * @param openUrl - Function to open an URL in the default browser.
    */
   delete(
     entry: HistoryEntry,
     getSettings: DestinationSettingsGetter,
-    setSettings: DestinationSettingSetter
+    setSettings: DestinationSettingSetter,
+    openUrl: (url: string) => Promise<void>
   ): Promise<void> {
     if (!entry.deleteId) {
       throw new Error('Missing URL to delete screenshot from Vgy.me.')
     }
 
-    return getIpcRenderer().invoke('openUrl', entry.deleteId)
+    return openUrl(entry.deleteId)
   }
 
   /**
@@ -160,7 +160,7 @@ class VgyMe extends Destination {
         <>
           <Ui.Group title={isLoggedIn ? 'Logged in' : 'User Account'}>
             <Ui.LoginRequired destinationName={this.getConfiguration().name} visible={!isLoggedIn} />
-            <Form onSubmit={isLoggedIn ? logout : login}>
+            <Ui.Form onSubmit={isLoggedIn ? logout : login}>
               <Ui.Input
                 value={userKey}
                 onChange={setUserKey}
@@ -170,7 +170,7 @@ class VgyMe extends Destination {
               />
               <Ui.Input type="submit" value={isLoggedIn ? 'Logout' : 'Login'} />
               {!isLoggedIn && <Ui.Button onClick={getUserKey}>Get user key</Ui.Button>}
-            </Form>
+            </Ui.Form>
           </Ui.Group>
         </>
       )
