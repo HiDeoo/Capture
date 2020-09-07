@@ -152,6 +152,10 @@ class VgyMe extends Destination {
         setSettings<VgyMeSettings>('userKey', '')
       }
 
+      function getUserKey(): Promise<void> {
+        return openUrl('https://vgy.me/account/details')
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? 'Logged in' : 'User Account'}>
@@ -165,6 +169,7 @@ class VgyMe extends Destination {
                 tooltip={isLoggedIn ? 'Logout to change your user key' : undefined}
               />
               <Ui.Input type="submit" value={isLoggedIn ? 'Logout' : 'Login'} />
+              {!isLoggedIn && <Ui.Button onClick={getUserKey}>Get user key</Ui.Button>}
             </Form>
           </Ui.Group>
         </>
