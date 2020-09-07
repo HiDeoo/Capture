@@ -34,16 +34,16 @@ export class MainProcessError extends Error {
 }
 
 /**
- * Custom error class that should be used for known errors when sharing a screenshot.
- * Note: these errors should not be reportable to GitHub.
+ * Custom error class that should be used for known errors from destinations.
+ * Note: these errors should be handled, are not be reportable to GitHub and cannot lead to reloading the application.
  */
-export class ShareError extends Error {
+export class DestinationError extends Error {
   constructor(message: string, public internalError?: Error) {
     super()
 
     this.message = message
 
-    Object.setPrototypeOf(this, ShareError.prototype)
+    Object.setPrototypeOf(this, DestinationError.prototype)
   }
 }
 
@@ -67,7 +67,7 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
   const { isModalOpened, openModal } = useModal()
 
   const message =
-    error instanceof AppError || error instanceof MainProcessError || error instanceof ShareError
+    error instanceof AppError || error instanceof MainProcessError || error instanceof DestinationError
       ? error.message
       : 'Something went wrong!'
 
@@ -77,7 +77,7 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
 
       if (
         isDev() &&
-        (error instanceof MainProcessError || error instanceof AppError || error instanceof ShareError) &&
+        (error instanceof MainProcessError || error instanceof AppError || error instanceof DestinationError) &&
         error.internalError
       ) {
         console.error(error.internalError)
@@ -104,7 +104,7 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
     if (primaryButtonHandler) {
       primaryButtonHandler(resetErrorBoundary)
     } else {
-      if ((error instanceof AppError && error.recoverable) || error instanceof ShareError) {
+      if ((error instanceof AppError && error.recoverable) || error instanceof DestinationError) {
         resetErrorBoundary()
       } else {
         window.location.reload()
@@ -114,14 +114,14 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
 
   const buttons = []
 
-  if (!(error instanceof ShareError)) {
+  if (!(error instanceof DestinationError)) {
     buttons.push(<ModalButton children="Quit" onClick={onClickQuit} />)
     buttons.push(<ModalButton children="Report" onClick={onClickReport} />)
   }
 
   if (!(error instanceof MainProcessError)) {
     const label =
-      (error instanceof AppError && error.recoverable) || error instanceof ShareError
+      (error instanceof AppError && error.recoverable) || error instanceof DestinationError
         ? 'Ok'
         : primaryButtonLabel ?? 'Reload'
 

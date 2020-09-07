@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 
 import Destination, {
   DestinationConfiguration,
+  DestinationError,
   DestinationSettings,
   DestinationSettingSetter,
   DestinationSettingsGetter,
   HistoryEntry,
   ImageDimensions,
   SettingsPanelProps,
-  ShareError,
   ShareOptions,
   ShareResponse,
 } from './DestinationBase'
@@ -99,10 +99,10 @@ class VgyMe extends Destination {
           if (vgyMeError.error === true && vgyMeError.messages && 'Unauthorized' in vgyMeError.messages) {
             setSettings<VgyMeSettings>('userKey', '')
 
-            throw new ShareError('Could not share to Vgy.me using your user key. Please login again.', error)
+            throw new DestinationError('Could not share to Vgy.me using your user key. Please login again.', error)
           }
         } catch (parseError) {
-          if (parseError instanceof ShareError) {
+          if (parseError instanceof DestinationError) {
             throw parseError
           }
         }

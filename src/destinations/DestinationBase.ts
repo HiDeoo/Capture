@@ -2,7 +2,7 @@ import { addSeconds, formatISO } from 'date-fns'
 import { lookup } from 'mime-types'
 import wretch, { Wretcher } from 'wretch'
 
-import { AppError, ErrorHandler, ShareError } from '../components/ErrorBoundary'
+import { AppError, DestinationError, ErrorHandler } from '../components/ErrorBoundary'
 import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
@@ -10,7 +10,7 @@ import type { HistoryEntry } from '../store/history'
 import { splitFilePath } from '../utils/string'
 
 export type { DestinationToolBarProps, ErrorHandler, HistoryEntry, ImageDimensions, SettingsPanelProps }
-export { AppError, ShareError }
+export { AppError, DestinationError }
 
 /**
  * Abstract definition of a destination.
