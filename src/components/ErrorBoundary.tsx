@@ -33,6 +33,20 @@ export class MainProcessError extends Error {
   }
 }
 
+/**
+ * Custom error class that should be used for known errors when sharing a screenshot.
+ * Note: these errors should not be reportable to GitHub.
+ */
+export class ShareError extends Error {
+  constructor(message: string, public internalError?: Error) {
+    super()
+
+    this.message = message
+
+    Object.setPrototypeOf(this, ShareError.prototype)
+  }
+}
+
 const ErrorBoundary: React.FC<Props> = ({ children, primaryButtonHandler, primaryButtonLabel }) => {
   function renderFallback(props: FallbackProps): React.ReactElement {
     return (
@@ -53,13 +67,19 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
   const { isModalOpened, openModal } = useModal()
 
   const message =
-    error instanceof AppError || error instanceof MainProcessError ? error.message : 'Something went wrong!'
+    error instanceof AppError || error instanceof MainProcessError || error instanceof ShareError
+      ? error.message
+      : 'Something went wrong!'
 
   useEffect(() => {
     if (error) {
       openModal(true)
 
-      if (isDev() && (error instanceof MainProcessError || error instanceof AppError) && error.internalError) {
+      if (
+        isDev() &&
+        (error instanceof MainProcessError || error instanceof AppError || error instanceof ShareError) &&
+        error.internalError
+      ) {
         console.error(error.internalError)
       }
     } else {
@@ -84,7 +104,7 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
     if (primaryButtonHandler) {
       primaryButtonHandler(resetErrorBoundary)
     } else {
-      if (error instanceof AppError && error.recoverable) {
+      if ((error instanceof AppError && error.recoverable) || error instanceof ShareError) {
         resetErrorBoundary()
       } else {
         window.location.reload()
@@ -92,13 +112,18 @@ const ErrorFallback: React.FC<FallbackProps & Props> = ({
     }
   }
 
-  const buttons = [
-    <ModalButton children="Quit" onClick={onClickQuit} />,
-    <ModalButton children="Report" onClick={onClickReport} />,
-  ]
+  const buttons = []
+
+  if (!(error instanceof ShareError)) {
+    buttons.push(<ModalButton children="Quit" onClick={onClickQuit} />)
+    buttons.push(<ModalButton children="Report" onClick={onClickReport} />)
+  }
 
   if (!(error instanceof MainProcessError)) {
-    const label = error instanceof AppError && error.recoverable ? 'Ok' : primaryButtonLabel ?? 'Reload'
+    const label =
+      (error instanceof AppError && error.recoverable) || error instanceof ShareError
+        ? 'Ok'
+        : primaryButtonLabel ?? 'Reload'
 
     buttons.push(<ModalButton children={label} onClick={onClickPrimaryButton} />)
   }

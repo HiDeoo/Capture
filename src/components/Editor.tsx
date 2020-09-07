@@ -12,7 +12,7 @@ import { getFileExtension } from '../utils/string'
 import type { Color } from './ColorSelect'
 import EditorInfoBar from './EditorInfoBar'
 import EditorToolBar from './EditorToolBar'
-import { AppError, useErrorHandler } from './ErrorBoundary'
+import { AppError, ShareError, useErrorHandler } from './ErrorBoundary'
 import ImageEditor, { useImageEditor } from './ImageEditor'
 import type { ImageDimensions } from './Img'
 import LoadingBar from './LoadingBar'
@@ -114,7 +114,11 @@ const Editor: React.FC = () => {
         await getIpcRenderer().invoke('closeWindow')
       }
     } catch (error) {
-      handleError(new AppError('Something went wrong while sharing the image.', error, true))
+      if (error instanceof ShareError) {
+        handleError(error)
+      } else {
+        handleError(new AppError('Something went wrong while sharing the image.', error, true))
+      }
     } finally {
       lockUi(false)
     }

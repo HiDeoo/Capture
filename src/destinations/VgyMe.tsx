@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { ShareError } from '../components/ErrorBoundary'
 import Form from '../components/Form'
 import type { ImageDimensions } from '../components/Img'
 import { getIpcRenderer } from '../main/ipc'
@@ -77,20 +78,40 @@ class VgyMe extends Destination {
     const settings = getSettings<VgyMeSettings>()
     const blob = await this.getFileBlob(path)
 
-    const response = await this.api
-      .url('/upload')
-      .formData({ file: blob, userkey: settings.userKey })
-      .post()
-      .json<UploadApiResponse>()
+    try {
+      const response = await this.api
+        .url('/upload')
+        .formData({ file: blob, userkey: settings.userKey })
+        .post()
+        .json<UploadApiResponse>()
 
-    const { delete: deleteLink, filename, image } = response
+      const { delete: deleteLink, filename, image } = response
 
-    return this.getShareResponse(path, size, dimensions, {
-      anon: false,
-      deleteId: deleteLink,
-      id: filename,
-      link: image,
-    })
+      return this.getShareResponse(path, size, dimensions, {
+        anon: false,
+        deleteId: deleteLink,
+        id: filename,
+        link: image,
+      })
+    } catch (error) {
+      if (error instanceof Error && error.message.startsWith('{')) {
+        try {
+          const vgyMeError = JSON.parse(error.message)
+
+          if (vgyMeError.error === true && vgyMeError.messages && 'Unauthorized' in vgyMeError.messages) {
+            setSettings<VgyMeSettings>('userKey', '')
+
+            throw new ShareError('Could not share to Vgy.me using your user key. Please login again.', error)
+          }
+        } catch (parseError) {
+          if (parseError instanceof ShareError) {
+            throw parseError
+          }
+        }
+      }
+
+      throw error
+    }
   }
 
   /**
