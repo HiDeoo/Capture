@@ -327,7 +327,7 @@ class Dropbox extends Destination {
    * @param  code - The code returned by Dropbox during the authorization step.
    * @return The login informations including the access token, refresh token and expiry.
    */
-  async getAccessToken(code: string): Promise<TokenApiResponse> {
+  getAccessToken(code: string): Promise<TokenApiResponse> {
     return this.api
       .url('/oauth2/token')
       .formUrl({
@@ -346,7 +346,7 @@ class Dropbox extends Destination {
    * @param  accessToken - The access token of the user.
    * @return The informations about the current user.
    */
-  async getCurrentAccount(accessToken: string): Promise<CurrentAccountApiResponse> {
+  getCurrentAccount(accessToken: string): Promise<CurrentAccountApiResponse> {
     return this.api
       .url('/2/users/get_current_account')
       .headers({ Authorization: `Bearer ${accessToken}` })
