@@ -6,5 +6,6 @@ declare namespace NodeJS {
     REACT_APP_DROPBOX_CLIENT_ID: string
     REACT_APP_IMGUR_CLIENT_ID: string
     REACT_APP_IMGUR_CLIENT_SECRET: string
+    REACT_APP_ONEDRIVE_CLIENT_ID: string
   }
 }
