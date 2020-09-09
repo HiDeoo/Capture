@@ -29,6 +29,26 @@ export default abstract class Destination {
   abstract getDefaultSettings(): DestinationSettings
 
   /**
+   * Checks if the destination is available or not.
+   * @param getSettings - A destination settings getter.
+   */
+  isAvailable?(getSettings: DestinationSettingsGetter): boolean
+
+  /**
+   * Triggered when an associated OAuth request is received for the destination.
+   * @param setSettings - A destination settings setter.
+   * @param queryString - The request parsed query string.
+   * @param hash - The request parsed hash.
+   * @param handleError - Error handler.
+   */
+  onOAuthRequest?(
+    setSettings: DestinationSettingSetter,
+    queryString: ParsedQueryString,
+    hash: Optional<ParsedQueryString>,
+    handleError: ErrorHandler
+  ): void
+
+  /**
    * Shares a file to the destination.
    * @param  path - The path of the file to share.
    * @param  size - The shared image file size.
@@ -74,21 +94,8 @@ export default abstract class Destination {
   getToolBar?(): React.FC<DestinationToolBarProps<ShareOptions>>
 
   /**
-   * Checks if the destination is available or not.
-   * @param getSettings - A destination settings getter.
+   * Main destination API wretcher.
    */
-  isAvailable?(getSettings: DestinationSettingsGetter): boolean
-
-  /**
-   * Triggered when an associated OAuth request is received for the destination.
-   */
-  onOAuthRequest?(
-    setSettings: DestinationSettingSetter,
-    queryString: ParsedQueryString,
-    hash: Optional<ParsedQueryString>,
-    handleError: ErrorHandler
-  ): void
-
   private wretcher: Wretcher
 
   /**
