@@ -137,6 +137,17 @@ export default abstract class Destination {
   }
 
   /**
+   * Returns the filename associated to a file path.
+   * @param  path - The path of the file.
+   * @return The filename.
+   */
+  getFileName(path: string): string {
+    const [, filename] = splitFilePath(path)
+
+    return filename
+  }
+
+  /**
    * Returns the destination default share options.
    * @param  settings - The destination settings.
    * @return The default share options.

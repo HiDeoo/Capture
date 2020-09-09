@@ -3,7 +3,6 @@ import jwtDecode from 'jwt-decode'
 import React from 'react'
 import wretch from 'wretch'
 
-import { splitFilePath } from '../utils/string'
 import Destination, {
   AppError,
   DestinationConfiguration,
@@ -94,7 +93,7 @@ class OneDrive extends Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<ShareResponse> {
-    const [, filename] = splitFilePath(path)
+    const filename = this.getFileName(path)
     const headers = await this.getHeaders(getSettings, setSettings)
     const blob = await this.getFileBlob(path)
 
@@ -137,7 +136,7 @@ class OneDrive extends Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<void> {
-    const [, filename] = splitFilePath(entry.path)
+    const filename = this.getFileName(entry.path)
     const headers = await this.getHeaders(getSettings, setSettings)
 
     return this.api

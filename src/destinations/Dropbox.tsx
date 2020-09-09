@@ -2,7 +2,6 @@ import { isAfter, parseISO } from 'date-fns'
 import React from 'react'
 import wretch from 'wretch'
 
-import { splitFilePath } from '../utils/string'
 import Destination, {
   AppError,
   DestinationConfiguration,
@@ -84,7 +83,7 @@ class Dropbox extends Destination {
     getSettings: DestinationSettingsGetter,
     setSettings: DestinationSettingSetter
   ): Promise<ShareResponse> {
-    const [, filename] = splitFilePath(path)
+    const filename = this.getFileName(path)
     let headers = await this.getHeaders(getSettings, setSettings, {
       autorename: true,
       mode: 'add',
