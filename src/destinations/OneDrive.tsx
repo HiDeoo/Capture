@@ -65,15 +65,6 @@ class OneDrive extends Destination {
   }
 
   /**
-   * Returns the destination default share options.
-   * @param  settings - The destination settings.
-   * @return The default share options.
-   */
-  getDefaultShareOptions(settings: OneDriveSettings): ShareOptions {
-    return {}
-  }
-
-  /**
    * Checks if the destination is available or not.
    * @param getSettings - OneDrive settings getter.
    */

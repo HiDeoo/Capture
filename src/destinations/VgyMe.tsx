@@ -38,15 +38,6 @@ class VgyMe extends Destination {
   }
 
   /**
-   * Returns the destination default share options.
-   * @param  settings - The destination settings.
-   * @return The default share options.
-   */
-  getDefaultShareOptions(settings: VgyMeSettings): ShareOptions {
-    return {}
-  }
-
-  /**
    * Checks if the destination is available or not.
    * @param getSettings - Vgy.me settings getter.
    */
