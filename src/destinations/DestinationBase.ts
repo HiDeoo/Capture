@@ -1,5 +1,6 @@
 import { addSeconds, formatISO } from 'date-fns'
 import { lookup } from 'mime-types'
+import { nanoid } from 'nanoid'
 import wretch, { Wretcher } from 'wretch'
 
 import { AppError, DestinationError, ErrorHandler } from '../components/ErrorBoundary'
@@ -7,6 +8,7 @@ import type { ImageDimensions } from '../components/Img'
 import type { SettingsPanelProps } from '../components/SettingsPanel'
 import type { DestinationToolBarProps } from '../components/ToolBar'
 import type { HistoryEntry } from '../store/history'
+import { getPkce, PkceCode } from '../utils/crypto'
 import { splitFilePath } from '../utils/string'
 
 export type { DestinationToolBarProps, ErrorHandler, HistoryEntry, ImageDimensions, SettingsPanelProps }
@@ -99,6 +101,12 @@ export default abstract class Destination {
   private wretcher: Wretcher
 
   /**
+   * Optionally generated authorization state containing a random value and a PKCE code verifier and challenge using
+   * SHA-256.
+   */
+  protected authState?: AuthState
+
+  /**
    * Creates a new instance of the destination.
    * @class
    */
@@ -176,6 +184,18 @@ export default abstract class Destination {
 
     return formatISO(expiry)
   }
+
+  /**
+   * Generates the authorization state containing a random value and a PKCE code verifier and challenge using SHA-256.
+   * @return The authorization state.
+   */
+  async generateAuthState(): Promise<AuthState> {
+    const pkce = await getPkce()
+
+    this.authState = { ...pkce, random: nanoid() }
+
+    return this.authState
+  }
 }
 
 export type DestinationId = string
@@ -200,6 +220,10 @@ export interface ShareResponse {
 
 interface DestinationShareResponse extends Pick<ShareResponse, 'anon' | 'link' | 'deleteId'> {
   id: ShareResponse['shareId']
+}
+
+interface AuthState extends PkceCode {
+  random: string
 }
 
 /**

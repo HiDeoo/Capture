@@ -1,9 +1,7 @@
 import { isAfter, parseISO } from 'date-fns'
-import { nanoid } from 'nanoid'
 import React from 'react'
 import wretch from 'wretch'
 
-import { getPkce, PkceCode } from '../utils/crypto'
 import { splitFilePath } from '../utils/string'
 import Destination, {
   AppError,
@@ -37,11 +35,6 @@ class Dropbox extends Destination {
    * Content wretcher.
    */
   private contentWretcher = wretch('https://content.dropboxapi.com')
-
-  /**
-   * State used when authorizing with Dropbox.
-   */
-  private authState: Optional<DropboxAuthState>
 
   /**
    * Returns the destination configuration.
@@ -228,18 +221,16 @@ class Dropbox extends Destination {
       }
 
       const authorize = async (): Promise<void> => {
-        const pkce = await getPkce()
-
-        this.authState = { ...pkce, state: nanoid() }
+        const authState = await this.generateAuthState()
 
         const queryParameters = {
           client_id: process.env.REACT_APP_DROPBOX_CLIENT_ID,
-          code_challenge: pkce.challenge,
-          code_challenge_method: pkce.method,
+          code_challenge: authState.challenge,
+          code_challenge_method: authState.method,
           force_reapprove: false,
           redirect_uri: RedirectUri,
           response_type: 'code',
-          state: this.authState.state,
+          state: authState.random,
           token_access_type: 'offline',
         }
         const request = this.authWretcher.url('/oauth2/authorize').query(queryParameters)
@@ -285,7 +276,7 @@ class Dropbox extends Destination {
 
     if (errorCode || errorDescription) {
       authError = new Error(`Dropbox error: ${errorCode} - ${errorDescription}`)
-    } else if (state !== this.authState?.state) {
+    } else if (state !== this.authState?.random) {
       authError = new Error('States do not match.')
     } else if (!code || code.length === 0) {
       authError = new Error('Missing code.')
@@ -354,10 +345,6 @@ export interface DropboxSettings extends DestinationSettings {
   id?: string
   refreshToken?: string
   username?: string
-}
-
-interface DropboxAuthState extends PkceCode {
-  state: string
 }
 
 interface TokenApiResponse {

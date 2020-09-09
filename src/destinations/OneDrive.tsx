@@ -1,10 +1,8 @@
 import { isAfter, parseISO } from 'date-fns'
 import jwtDecode from 'jwt-decode'
-import { nanoid } from 'nanoid'
 import React from 'react'
 import wretch from 'wretch'
 
-import { getPkce, PkceCode } from '../utils/crypto'
 import { splitFilePath } from '../utils/string'
 import Destination, {
   AppError,
@@ -38,11 +36,6 @@ class OneDrive extends Destination {
    * Authorization wretcher.
    */
   private authWretcher = wretch('https://login.microsoftonline.com')
-
-  /**
-   * State used when authorizing with OneDrive.
-   */
-  private authState: Optional<OneDriveAuthState>
 
   /**
    * Returns the destination configuration.
@@ -229,19 +222,17 @@ class OneDrive extends Destination {
       }
 
       const authorize = async (): Promise<void> => {
-        const pkce = await getPkce()
-
-        this.authState = { ...pkce, state: nanoid() }
+        const authState = await this.generateAuthState()
 
         const queryParameters = {
           client_id: process.env.REACT_APP_ONEDRIVE_CLIENT_ID,
-          code_challenge: pkce.challenge,
-          code_challenge_method: pkce.method,
+          code_challenge: authState.challenge,
+          code_challenge_method: authState.method,
           redirect_uri: RedirectUri,
           response_mode: 'query',
           response_type: 'code',
           scope: Scopes,
-          state: this.authState.state,
+          state: authState.random,
         }
         const request = this.authWretcher.url('/common/oauth2/v2.0/authorize').query(queryParameters)
 
@@ -277,7 +268,7 @@ class OneDrive extends Destination {
     const code = queryString['code']
     const state = queryString['state']
 
-    if (state !== this.authState?.state) {
+    if (state !== this.authState?.random) {
       authError = new Error('States do not match.')
     } else if (!code) {
       authError = new Error('Missing code.')
@@ -340,10 +331,6 @@ export interface OneDriveSettings extends DestinationSettings {
   id?: string
   refreshToken?: string
   username?: string
-}
-
-interface OneDriveAuthState extends PkceCode {
-  state: string
 }
 
 interface TokenApiResponse {
