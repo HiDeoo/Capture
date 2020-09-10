@@ -159,6 +159,10 @@ class Gyazo extends Destination {
 
   /**
    * Triggered when an OAuth request is received for the Gyazo destination.
+   * @param setSettings - A destination settings setter.
+   * @param queryString - The request parsed query string.
+   * @param hash - The request parsed hash.
+   * @param handleError - Error handler.
    */
   async onOAuthRequest(
     setSettings: SettingsPanelProps['setSettings'],

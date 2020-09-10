@@ -264,6 +264,9 @@ class Imgur extends Destination {
 
   /**
    * Triggered when an OAuth request is received for the Imgur destination.
+   * @param setSettings - A destination settings setter.
+   * @param queryString - The request parsed query string.
+   * @param hash - The request parsed hash.
    */
   onOAuthRequest(
     setSettings: SettingsPanelProps['setSettings'],
