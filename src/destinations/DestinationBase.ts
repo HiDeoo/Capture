@@ -1,4 +1,5 @@
 import { addSeconds, formatISO, isAfter, parseISO } from 'date-fns'
+import jwtDecode from 'jwt-decode'
 import { lookup } from 'mime-types'
 import { nanoid } from 'nanoid'
 import wretch, { Wretcher } from 'wretch'
@@ -12,7 +13,7 @@ import { getPkce, PkceCode } from '../utils/crypto'
 import { splitFilePath } from '../utils/string'
 
 export type { DestinationToolBarProps, ErrorHandler, HistoryEntry, ImageDimensions, SettingsPanelProps }
-export { AppError, DestinationError }
+export { AppError, DestinationError, jwtDecode }
 
 /**
  * Abstract definition of a destination.

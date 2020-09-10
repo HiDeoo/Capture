@@ -1,4 +1,3 @@
-import jwtDecode from 'jwt-decode'
 import React from 'react'
 
 import Destination, {
@@ -10,6 +9,7 @@ import Destination, {
   ErrorHandler,
   HistoryEntry,
   ImageDimensions,
+  jwtDecode,
   SettingsPanelProps,
   ShareOptions,
   ShareResponse,
