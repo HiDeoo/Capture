@@ -1,5 +1,6 @@
 import Destination, { DestinationId, DestinationSettings, GetDestinationSettingsGetter } from './DestinationBase'
 import Dropbox from './Dropbox'
+import Gyazo from './Gyazo'
 import Imgur from './Imgur'
 import OneDrive from './OneDrive'
 import VgyMe from './VgyMe'
@@ -7,7 +8,7 @@ import VgyMe from './VgyMe'
 /**
  * Imported destinations.
  */
-const rawDestinations = [Imgur, Dropbox, OneDrive, VgyMe]
+const rawDestinations = [Imgur, Dropbox, OneDrive, Gyazo, VgyMe]
 
 /**
  * A lazy-loaded list of sanitized destinations.
