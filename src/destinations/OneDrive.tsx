@@ -67,11 +67,12 @@ class OneDrive extends Destination {
 
   /**
    * Cleans a filename by removing characters forbidden on OneDrive.
+   * @see https://docs.microsoft.com/en-us/onedrive/developer/rest-api/concepts/addressing-driveitems?view=odsp-graph-online#onedrive-reserved-characters
    * @param  filename - The filename to clean.
    * @return The cleaned filename.
    */
   cleanFilename(filename: string): string {
-    return filename.replace(/:/g, '-')
+    return filename.replace(/[:/\\*<>?|]/g, '-')
   }
 
   /**
