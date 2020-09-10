@@ -146,11 +146,16 @@ class Gyazo extends Destination {
         return openUrl(request._url)
       }
 
+      function onClickOpenProfile(): Promise<void> {
+        return openUrl('https://gyazo.com/captures')
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.LoginRequired destinationName={this.getConfiguration().name} visible={!isLoggedIn} />
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
+            {isLoggedIn && <Ui.Button onClick={onClickOpenProfile}>Open profile</Ui.Button>}
           </Ui.Group>
         </>
       )
