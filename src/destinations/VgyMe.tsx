@@ -147,6 +147,10 @@ class VgyMe extends Destination {
         return openUrl('https://vgy.me/account/details')
       }
 
+      function onClickOpenProfile(): Promise<void> {
+        return openUrl('https://vgy.me/account/uploads')
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? 'Logged in' : 'User Account'}>
@@ -161,6 +165,7 @@ class VgyMe extends Destination {
               />
               <Ui.Input type="submit" value={isLoggedIn ? 'Logout' : 'Login'} />
               {!isLoggedIn && <Ui.Button onClick={getUserKey}>Get user key</Ui.Button>}
+              {isLoggedIn && <Ui.Button onClick={onClickOpenProfile}>Open profile</Ui.Button>}
             </Ui.Form>
           </Ui.Group>
         </>
