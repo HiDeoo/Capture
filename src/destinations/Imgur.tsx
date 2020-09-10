@@ -1,4 +1,3 @@
-import { addMonths, formatISO } from 'date-fns'
 import React from 'react'
 
 import Destination, {
@@ -18,6 +17,12 @@ enum AccountShareOption {
   Anon = 'Share anonymously',
   User = 'Share as',
 }
+
+/**
+ * Hardcoded duration of a token according to the documentation (1 month) as the value returned from the API in the
+ * `expires_in` field usually used to calculate the expiry is wrong (10 years ^^).
+ */
+const TokenDuration = 2592000
 
 /**
  * Imgur destination.
@@ -166,21 +171,9 @@ class Imgur extends Destination {
 
     return {
       accessToken: response.access_token,
-      expiry: this.getTokenExpiry(),
+      expiry: this.getTokenExpiry(TokenDuration),
       refreshToken: response.refresh_token,
     }
-  }
-
-  /**
-   * Returns the expiry of an access token in the ISO 8601 format.
-   * @return The expiry.
-   */
-  getTokenExpiry(): string {
-    // We are not using the `expires_in` field returned by the API to calculate the expiry as the documentation states
-    // that the access token expires after 1 month but returns 315360000 (10 years ^^).
-    const expiry = addMonths(new Date(), 1)
-
-    return formatISO(expiry)
   }
 
   /**
@@ -279,7 +272,7 @@ class Imgur extends Destination {
   ): void {
     if (hash) {
       setSettings<ImgurSettings>('accessToken', hash['access_token'])
-      setSettings<ImgurSettings>('expiry', this.getTokenExpiry())
+      setSettings<ImgurSettings>('expiry', this.getTokenExpiry(TokenDuration))
       setSettings<ImgurSettings>('id', hash['account_id'])
       setSettings<ImgurSettings>('refreshToken', hash['refresh_token'])
       setSettings<ImgurSettings>('username', hash['account_username'])
