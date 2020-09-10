@@ -1,5 +1,4 @@
 import React from 'react'
-import wretch from 'wretch'
 
 import Destination, {
   AppError,
@@ -25,14 +24,14 @@ const RedirectUri = 'capture://oauth/dropbox'
  */
 class Dropbox extends Destination {
   /**
-   * Authorization wretcher.
+   * Authorization API.
    */
-  private authWretcher = wretch('https://www.dropbox.com')
+  private authApi = Destination.addApi('https://www.dropbox.com')
 
   /**
-   * Content wretcher.
+   * Content API.
    */
-  private contentWretcher = wretch('https://content.dropboxapi.com')
+  private contentApi = Destination.addApi('https://content.dropboxapi.com')
 
   /**
    * Returns the destination configuration.
@@ -91,7 +90,7 @@ class Dropbox extends Destination {
     })
     const blob = await this.getFileBlob(path)
 
-    const uploadResponse = await this.contentWretcher
+    const uploadResponse = await this.contentApi
       .url('/2/files/upload')
       .content('application/octet-stream')
       .headers(headers)
@@ -229,7 +228,7 @@ class Dropbox extends Destination {
           state: authState.random,
           token_access_type: 'offline',
         }
-        const request = this.authWretcher.url('/oauth2/authorize').query(queryParameters)
+        const request = this.authApi.url('/oauth2/authorize').query(queryParameters)
 
         return openUrl(request._url)
       }

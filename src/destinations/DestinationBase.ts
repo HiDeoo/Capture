@@ -96,6 +96,15 @@ export default abstract class Destination {
   getToolBar?(): React.FC<DestinationToolBarProps<ShareOptions>>
 
   /**
+   * Adds a new API wretcher.
+   * @param  baseUrl - The API base URL.
+   * @return The API wretcher.
+   */
+  static addApi(baseUrl: string): Wretcher {
+    return wretch(baseUrl)
+  }
+
+  /**
    * Main destination API wretcher.
    */
   private wretcher: Wretcher
@@ -108,10 +117,11 @@ export default abstract class Destination {
 
   /**
    * Creates a new instance of the destination.
+   * @param baseUrl - The destination main API base URL.
    * @class
    */
   constructor(private readonly baseUrl: string) {
-    this.wretcher = wretch(baseUrl)
+    this.wretcher = Destination.addApi(baseUrl)
   }
 
   /**

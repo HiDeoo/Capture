@@ -1,6 +1,5 @@
 import jwtDecode from 'jwt-decode'
 import React from 'react'
-import wretch from 'wretch'
 
 import Destination, {
   AppError,
@@ -31,9 +30,9 @@ const Scopes = 'offline_access openid profile Files.ReadWrite.AppFolder'
  */
 class OneDrive extends Destination {
   /**
-   * Authorization wretcher.
+   * Authorization API.
    */
-  private authWretcher = wretch('https://login.microsoftonline.com')
+  private authApi = Destination.addApi('https://login.microsoftonline.com')
 
   /**
    * Returns the destination configuration.
@@ -180,7 +179,7 @@ class OneDrive extends Destination {
   async getRefreshedAccessToken(
     refreshToken: string
   ): Promise<{ accessToken: string; expiry: string; refreshToken: string }> {
-    const response = await this.authWretcher
+    const response = await this.authApi
       .url('/common/oauth2/v2.0/token')
       .formUrl({
         client_id: process.env.REACT_APP_ONEDRIVE_CLIENT_ID,
@@ -230,7 +229,7 @@ class OneDrive extends Destination {
           scope: Scopes,
           state: authState.random,
         }
-        const request = this.authWretcher.url('/common/oauth2/v2.0/authorize').query(queryParameters)
+        const request = this.authApi.url('/common/oauth2/v2.0/authorize').query(queryParameters)
 
         return openUrl(request._url)
       }
@@ -298,7 +297,7 @@ class OneDrive extends Destination {
    * @return The login informations including the access token, refresh token and expiry.
    */
   getAccessToken(code: string): Promise<TokenApiResponse> {
-    return this.authWretcher
+    return this.authApi
       .url('/common/oauth2/v2.0/token')
       .formUrl({
         client_id: process.env.REACT_APP_ONEDRIVE_CLIENT_ID,
@@ -315,7 +314,7 @@ class OneDrive extends Destination {
    * Signs the user out.
    */
   signOut(): Promise<void> {
-    return this.authWretcher.url('/common/oauth2/v2.0/logout').query({ post_logout_redirect_uri: RedirectUri }).get()
+    return this.authApi.url('/common/oauth2/v2.0/logout').query({ post_logout_redirect_uri: RedirectUri }).get()
   }
 }
 
