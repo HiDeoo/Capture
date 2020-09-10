@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Destination, {
   AppError,
@@ -207,10 +207,23 @@ class OneDrive extends Destination {
       const settings = getSettings<OneDriveSettings>()
       const isLoggedIn = typeof settings.id !== 'undefined'
 
+      useEffect(() => {
+        const getMetaData = async (): Promise<void> => {
+          const metadata = await this.getAppFolderMetadata(getSettings, setSettings)
+
+          setSettings<OneDriveSettings>('appFolderUrl', metadata.webUrl)
+        }
+
+        if (settings.id && !settings.appFolderUrl) {
+          void getMetaData()
+        }
+      }, [getSettings, setSettings, settings.appFolderUrl, settings.id])
+
       const logout = async (): Promise<void> => {
         await this.signOut()
 
         setSettings<OneDriveSettings>('accessToken', undefined)
+        setSettings<OneDriveSettings>('appFolderUrl', undefined)
         setSettings<OneDriveSettings>('expiry', undefined)
         setSettings<OneDriveSettings>('id', undefined)
         setSettings<OneDriveSettings>('refreshToken', undefined)
@@ -235,11 +248,16 @@ class OneDrive extends Destination {
         return openUrl(request._url)
       }
 
+      function onClickOpenFolder(): Promise<void> {
+        return openUrl(settings.appFolderUrl ?? 'https://onedrive.live.com')
+      }
+
       return (
         <>
           <Ui.Group title={isLoggedIn ? `Logged in as ${settings.username}` : 'User Account'}>
             <Ui.LoginRequired destinationName={this.getConfiguration().name} visible={!isLoggedIn} />
             <Ui.Button onClick={isLoggedIn ? logout : authorize}>{isLoggedIn ? 'Logout' : 'Login'}</Ui.Button>
+            {isLoggedIn && settings.appFolderUrl && <Ui.Button onClick={onClickOpenFolder}>Open folder</Ui.Button>}
           </Ui.Group>
         </>
       )
@@ -321,12 +339,28 @@ class OneDrive extends Destination {
   signOut(): Promise<void> {
     return this.authApi.url('/common/oauth2/v2.0/logout').query({ post_logout_redirect_uri: RedirectUri }).get()
   }
+
+  /**
+   * Gets app folder metadata.
+   * @param getSettings - OneDrive settings getter.
+   * @param setSettings - OneDrive settings setter.
+   * @return The app folder metadata.
+   */
+  async getAppFolderMetadata(
+    getSettings: DestinationSettingsGetter,
+    setSettings: DestinationSettingSetter
+  ): Promise<MetadataApiResponse> {
+    const headers = await this.getHeaders(getSettings, setSettings)
+
+    return this.api.url('/drive/special/approot').headers(headers).get().json<MetadataApiResponse>()
+  }
 }
 
 export default new OneDrive('https://graph.microsoft.com/v1.0')
 
 export interface OneDriveSettings extends DestinationSettings {
   accessToken?: string
+  appFolderUrl?: string
   expiry?: string
   id?: string
   refreshToken?: string
@@ -392,4 +426,15 @@ interface ShareApiResponse {
       id: string
     }
   }
+}
+
+interface MetadataApiResponse {
+  createdDateTime: string
+  cTag: string
+  eTag: string
+  id: string
+  lastModifiedDateTime: string
+  name: string
+  size: number
+  webUrl: string
 }
