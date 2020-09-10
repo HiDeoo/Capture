@@ -1,4 +1,3 @@
-import { isAfter, parseISO } from 'date-fns'
 import jwtDecode from 'jwt-decode'
 import React from 'react'
 import wretch from 'wretch'
@@ -160,9 +159,7 @@ class OneDrive extends Destination {
       throw new Error('Missing access token, refresh token or expiry to share file on OneDrive.')
     }
 
-    const expiry = parseISO(settings.expiry)
-
-    if (isAfter(new Date(), expiry)) {
+    if (this.isTokenExpired(settings.expiry)) {
       const refreshedAccessToken = await this.getRefreshedAccessToken(settings.refreshToken)
 
       setSettings<OneDriveSettings>('accessToken', refreshedAccessToken.accessToken)

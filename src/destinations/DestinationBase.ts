@@ -1,4 +1,4 @@
-import { addSeconds, formatISO } from 'date-fns'
+import { addSeconds, formatISO, isAfter, parseISO } from 'date-fns'
 import { lookup } from 'mime-types'
 import { nanoid } from 'nanoid'
 import wretch, { Wretcher } from 'wretch'
@@ -194,6 +194,15 @@ export default abstract class Destination {
     const expiry = addSeconds(new Date(), expiresIn)
 
     return formatISO(expiry)
+  }
+
+  /**
+   * Checks if a token is expired or not.
+   * @param  expiry - The expiry date in the ISO 8601 format.
+   * @return `true` when the token is expired.
+   */
+  isTokenExpired(expiry: string): boolean {
+    return isAfter(new Date(), parseISO(expiry))
   }
 
   /**

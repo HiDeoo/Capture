@@ -1,4 +1,4 @@
-import { addMonths, formatISO, isAfter, parseISO } from 'date-fns'
+import { addMonths, formatISO } from 'date-fns'
 import React from 'react'
 
 import Destination, {
@@ -128,9 +128,7 @@ class Imgur extends Destination {
         throw new Error('Missing access token, refresh token or expiry to share file on Imgur.')
       }
 
-      const expiry = parseISO(settings.expiry)
-
-      if (isAfter(new Date(), expiry)) {
+      if (this.isTokenExpired(settings.expiry)) {
         const refreshedAccessToken = await this.getRefreshedAccessToken(settings.refreshToken)
 
         setSettings<ImgurSettings>('accessToken', refreshedAccessToken.accessToken)

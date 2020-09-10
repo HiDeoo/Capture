@@ -1,4 +1,3 @@
-import { isAfter, parseISO } from 'date-fns'
 import React from 'react'
 import wretch from 'wretch'
 
@@ -161,9 +160,7 @@ class Dropbox extends Destination {
       throw new Error('Missing access token, refresh token or expiry to share file on Dropbox.')
     }
 
-    const expiry = parseISO(settings.expiry)
-
-    if (isAfter(new Date(), expiry)) {
+    if (this.isTokenExpired(settings.expiry)) {
       const refreshedAccessToken = await this.getRefreshedAccessToken(settings.refreshToken)
 
       setSettings<DropboxSettings>('accessToken', refreshedAccessToken.accessToken)
