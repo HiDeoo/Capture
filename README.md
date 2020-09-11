@@ -4,17 +4,17 @@
 </p>
 
 <p align="center">
-  <a href="https://i.imgur.com/oYWO6j1.png" title="Library"><img alt="Capture" src="https://i.imgur.com/oYWO6j1.png" width="192"></a>
-  <a href="https://i.imgur.com/FCAvfh4.png" title="Details"><img alt="Capture" src="https://i.imgur.com/FCAvfh4.png" width="192"></a>
-  <a href="https://i.imgur.com/MbeEYod.png" title="Delete"><img alt="Capture" src="https://i.imgur.com/MbeEYod.png" width="192"></a>
-  <a href="https://i.imgur.com/2vIzyWm.png" title="Editor"><img alt="Capture" src="https://i.imgur.com/2vIzyWm.png" width="192"></a>
-  <a href="https://i.imgur.com/Dl9tKXK.png" title="Annotations"><img alt="Capture" src="https://i.imgur.com/Dl9tKXK.png" width="192"></a>
+  <a href="https://i.imgur.com/oYWO6j1.png" title="Library"><img alt="Capture" src="https://i.imgur.com/oYWO6j1.png" width="180"></a>
+  <a href="https://i.imgur.com/FCAvfh4.png" title="Details"><img alt="Capture" src="https://i.imgur.com/FCAvfh4.png" width="180"></a>
+  <a href="https://i.imgur.com/MbeEYod.png" title="Delete"><img alt="Capture" src="https://i.imgur.com/MbeEYod.png" width="180"></a>
+  <a href="https://i.imgur.com/2vIzyWm.png" title="Editor"><img alt="Capture" src="https://i.imgur.com/2vIzyWm.png" width="180"></a>
+  <a href="https://i.imgur.com/Dl9tKXK.png" title="Annotations"><img alt="Capture" src="https://i.imgur.com/Dl9tKXK.png" width="180"></a>
 </p>
 <p align="center">
-  <a href="https://i.imgur.com/Pp5bQhf.png" title="Settings"><img alt="Capture" src="https://i.imgur.com/Pp5bQhf.png" width="192"></a>
-  <a href="https://i.imgur.com/g6cSeAX.png" title="Shortcuts"><img alt="Capture" src="https://i.imgur.com/g6cSeAX.png" width="192"></a>
-  <a href="https://i.imgur.com/Y7ShPaZ.png" title="Imgur"><img alt="Capture" src="https://i.imgur.com/Y7ShPaZ.png" width="192"></a>
-  <a href="https://i.imgur.com/ubFxJlv.png" title="Dropbox"><img alt="Capture" src="https://i.imgur.com/ubFxJlv.png" width="192"></a>
+  <a href="https://i.imgur.com/Pp5bQhf.png" title="Settings"><img alt="Capture" src="https://i.imgur.com/Pp5bQhf.png" width="180"></a>
+  <a href="https://i.imgur.com/g6cSeAX.png" title="Shortcuts"><img alt="Capture" src="https://i.imgur.com/g6cSeAX.png" width="180"></a>
+  <a href="https://i.imgur.com/Y7ShPaZ.png" title="Imgur"><img alt="Capture" src="https://i.imgur.com/Y7ShPaZ.png" width="180"></a>
+  <a href="https://i.imgur.com/ubFxJlv.png" title="Dropbox"><img alt="Capture" src="https://i.imgur.com/ubFxJlv.png" width="180"></a>
 </p>
 
 <p align="center">
